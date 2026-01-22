@@ -1,0 +1,388 @@
+/**
+ * Icon System Consistency CSS
+ * Ensures consistent icon sizing, spacing, and styling across the admin panel
+ */
+
+/* ============================================
+   ICON BASE STYLES
+   ============================================ */
+
+/* RemixIcon Base */
+[class^="ri-"],
+[class*=" ri-"] {
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ============================================
+   ICON SIZES
+   ============================================ */
+
+.icon-xs {
+  font-size: 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.icon-sm {
+  font-size: 0.875rem;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.icon-md {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon-lg {
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.icon-xl {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-2xl {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-3xl {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+/* ============================================
+   ICON WITH TEXT SPACING
+   ============================================ */
+
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-text-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row;
+}
+
+.icon-text-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row-reverse;
+}
+
+/* Button Icons */
+.btn i,
+.btn [class^="ri-"],
+.btn [class*=" ri-"] {
+  font-size: 1rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.btn-sm i,
+.btn-sm [class^="ri-"],
+.btn-sm [class*=" ri-"] {
+  font-size: 0.875rem;
+}
+
+.btn-lg i,
+.btn-lg [class^="ri-"],
+.btn-lg [class*=" ri-"] {
+  font-size: 1.125rem;
+}
+
+/* ============================================
+   WIDGET ICONS
+   ============================================ */
+
+.widget-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+  line-height: 1;
+}
+
+/* ============================================
+   NAVIGATION ICONS
+   ============================================ */
+
+.side-nav-link i,
+.side-nav-link [class^="ri-"],
+.side-nav-link [class*=" ri-"] {
+  font-size: 1.25rem;
+  width: 1.25rem;
+  text-align: center;
+  margin-right: 0.75rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* ============================================
+   CARD ICONS
+   ============================================ */
+
+.card-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--ds-primary);
+}
+
+.card-icon-success {
+  color: var(--ds-success);
+}
+
+.card-icon-info {
+  color: var(--ds-info);
+}
+
+.card-icon-warning {
+  color: var(--ds-warning);
+}
+
+.card-icon-danger {
+  color: var(--ds-danger);
+}
+
+/* ============================================
+   STATISTIC ICONS
+   ============================================ */
+
+.stat-icon {
+  font-size: 3rem;
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.stat-icon-lg {
+  font-size: 4rem;
+  opacity: 0.15;
+  line-height: 1;
+}
+
+/* ============================================
+   ICON COLORS
+   ============================================ */
+
+.icon-primary {
+  color: var(--ds-primary);
+}
+
+.icon-success {
+  color: var(--ds-success);
+}
+
+.icon-info {
+  color: var(--ds-info);
+}
+
+.icon-warning {
+  color: var(--ds-warning);
+}
+
+.icon-danger {
+  color: var(--ds-danger);
+}
+
+.icon-secondary {
+  color: var(--ds-secondary);
+}
+
+.icon-dark {
+  color: var(--ds-dark);
+}
+
+.icon-light {
+  color: var(--ds-light);
+}
+
+.icon-muted {
+  color: var(--ds-gray-500);
+  opacity: 0.7;
+}
+
+/* ============================================
+   ICON ANIMATIONS
+   ============================================ */
+
+.icon-spin {
+  animation: icon-spin 2s linear infinite;
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-pulse {
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.icon-bounce {
+  animation: icon-bounce 1s ease infinite;
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ============================================
+   ICON BUTTONS
+   ============================================ */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--ds-radius-md);
+  border: 1px solid var(--ds-gray-300);
+  background: white;
+  color: var(--ds-gray-700);
+  transition: all var(--ds-transition-fast);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.icon-btn:hover {
+  background: var(--ds-gray-50);
+  border-color: var(--ds-primary);
+  color: var(--ds-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--ds-shadow-md);
+}
+
+.icon-btn-sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
+}
+
+.icon-btn-lg {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+}
+
+.icon-btn-primary {
+  background: var(--ds-primary);
+  border-color: var(--ds-primary);
+  color: white;
+}
+
+.icon-btn-primary:hover {
+  background: var(--ds-primary-dark);
+  border-color: var(--ds-primary-dark);
+  color: white;
+}
+
+.icon-btn-success {
+  background: var(--ds-success);
+  border-color: var(--ds-success);
+  color: white;
+}
+
+.icon-btn-danger {
+  background: var(--ds-danger);
+  border-color: var(--ds-danger);
+  color: white;
+}
+
+/* ============================================
+   BADGE ICONS
+   ============================================ */
+
+.badge i,
+.badge [class^="ri-"],
+.badge [class*=" ri-"] {
+  font-size: 0.75em;
+  margin-right: 0.25rem;
+  vertical-align: baseline;
+}
+
+.badge i:only-child {
+  margin-right: 0;
+}
+
+/* ============================================
+   ALERT ICONS
+   ============================================ */
+
+.alert i,
+.alert [class^="ri-"],
+.alert [class*=" ri-"] {
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+  vertical-align: middle;
+}
+
+/* ============================================
+   TABLE ACTION ICONS
+   ============================================ */
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.table-actions .icon-btn {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   RESPONSIVE ICON SIZES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .widget-icon {
+    font-size: 2rem;
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+  }
+  
+  .icon-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+

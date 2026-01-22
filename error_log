@@ -1,0 +1,133 @@
+[26-Apr-2025 07:31:46 UTC] PHP Warning:  mysqli::__construct(): (08004/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[21-May-2025 12:15:16 UTC] PHP Warning:  mysqli::__construct(): (08004/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[21-May-2025 12:15:17 UTC] PHP Warning:  mysqli::__construct(): (08004/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[27-May-2025 04:19:15 UTC] PHP Warning:  mysqli::__construct(): (HY000/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[27-May-2025 04:19:16 UTC] PHP Warning:  mysqli::__construct(): (HY000/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[27-May-2025 04:19:18 UTC] PHP Warning:  mysqli::__construct(): (HY000/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[16-Jun-2025 19:56:17 UTC] PHP Warning:  mysqli::__construct(): (08004/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[16-Jun-2025 19:56:17 UTC] PHP Warning:  mysqli::__construct(): (08004/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[18-Jun-2025 19:13:13 UTC] PHP Warning:  mysqli::__construct(): (HY000/1040): Too many connections in /home/ethiosdt/public_html/include/config.php on line 3
+[24-Dec-2025 19:56:30 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\ethiosocialworks\include\member-auth.php on line 2
+[24-Dec-2025 20:52:53 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 20:54:34 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 20:56:13 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:02:56 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:04:40 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:05:24 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:13:47 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:14:06 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:16:12 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:16:15 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:17:19 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:19:43 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:20:50 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:21:26 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:21:38 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:22:29 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:22:43 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:25:16 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:28:45 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\ethiosocialworks\include\register.php:202
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\include\register.php(202): mysqli_stmt->bind_param('sssssssssisssss', 'ESWPA-2025-0000...', 'Salem Mohammed', 'Male', 'info@lebawi.net', '0912202767', 'Addis Ababa, Et...', 'BA Degree in co...', '1_year', 'bank', 1, 'uploads/members...', 'uploads/banksli...', '2026-12-24', '2025-12-24 21:2...')
+#1 C:\xampp\htdocs\ethiosocialworks\register-handler.php(6): include('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\include\register.php on line 202
+[24-Dec-2025 21:36:13 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\ethiosocialworks\include\member-auth.php on line 2
+[24-Dec-2025 21:39:29 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:41:05 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:41:07 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:45:21 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:46:31 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:53:58 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 21:54:15 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:03:07 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:04:57 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:10:08 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:16:28 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:16:37 Europe/Berlin] PHP Warning:  Undefined variable $isset in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:16:37 Europe/Berlin] PHP Fatal error:  Uncaught Error: Value of type null is not callable in C:\xampp\htdocs\ethiosocialworks\resources.php:114
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:16:53 Europe/Berlin] PHP Warning:  Undefined variable $isset in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:16:53 Europe/Berlin] PHP Fatal error:  Uncaught Error: Value of type null is not callable in C:\xampp\htdocs\ethiosocialworks\resources.php:114
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:16:54 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:16:55 Europe/Berlin] PHP Warning:  Undefined variable $isset in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:16:55 Europe/Berlin] PHP Fatal error:  Uncaught Error: Value of type null is not callable in C:\xampp\htdocs\ethiosocialworks\resources.php:114
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\resources.php on line 114
+[24-Dec-2025 22:17:40 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:21:45 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:25:32 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:29:06 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:31:19 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:33:53 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:37:04 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:37:11 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:43:29 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:45:06 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 22:46:10 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:01:47 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:02:07 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:05:35 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:05:45 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:05:54 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[24-Dec-2025 23:05:56 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[25-Dec-2025 00:15:38 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[25-Dec-2025 00:16:12 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[25-Dec-2025 03:05:13 Europe/Berlin] PHP Warning:  Undefined variable $member_id in C:\xampp\htdocs\ethiosocialworks\member-dashboard.php on line 15
+[13-Jan-2026 12:48:27 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 12:48:27 UTC] PHP Stack trace:
+[13-Jan-2026 12:48:27 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 12:48:27 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 12:48:27 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 12:49:16 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 12:49:16 UTC] PHP Stack trace:
+[13-Jan-2026 12:49:16 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 12:49:16 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 12:49:16 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 12:58:28 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 12:58:28 UTC] PHP Stack trace:
+[13-Jan-2026 12:58:28 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 12:58:28 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 12:58:28 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 12:58:38 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 12:58:38 UTC] PHP Stack trace:
+[13-Jan-2026 12:58:38 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 12:58:38 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 12:58:38 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 13:04:19 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 13:04:19 UTC] PHP Stack trace:
+[13-Jan-2026 13:04:19 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 13:04:19 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 13:04:19 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 13:04:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 13:04:30 UTC] PHP Stack trace:
+[13-Jan-2026 13:04:30 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 13:04:30 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 13:04:30 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 13:04:39 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 13:04:39 UTC] PHP Stack trace:
+[13-Jan-2026 13:04:39 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 13:04:39 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 13:04:39 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 13:04:48 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 13:04:48 UTC] PHP Stack trace:
+[13-Jan-2026 13:04:48 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 13:04:48 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 13:04:48 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[13-Jan-2026 13:05:04 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\include\member-auth.php on line 2
+[13-Jan-2026 13:05:04 UTC] PHP Stack trace:
+[13-Jan-2026 13:05:04 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\member-login-handler.php:0
+[13-Jan-2026 13:05:04 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\member-login-handler.php:9
+[13-Jan-2026 13:05:04 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\include\member-auth.php:2
+[14-Jan-2026 06:29:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\wamp64\www\ethiosocialworks\include\config.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\include\config.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\index.php(6): include('C:\\wamp64\\www\\e...')
+#2 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\include\config.php on line 27

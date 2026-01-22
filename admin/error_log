@@ -1,0 +1,236 @@
+[24-Dec-2025 20:24:55 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 20:24:55 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 20:24:55 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 20:25:19 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(1, 'member_updated', 'Updated member ...')
+#2 C:\xampp\htdocs\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(118, Array, Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Dec-2025 20:25:22 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(1, 'member_updated', 'Updated member ...')
+#2 C:\xampp\htdocs\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(118, Array, Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Dec-2025 20:25:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 20:25:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 20:25:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:15:31 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:15:31 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:15:31 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:15:46 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:15:46 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:15:46 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:15:50 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:15:50 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:15:50 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:23:09 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:23:09 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:23:09 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:23:21 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-11-24', '2025-12-24')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php on line 62
+[24-Dec-2025 21:28:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:28:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:28:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:36:25 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:36:25 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:36:25 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:36:58 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:36:58 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:36:58 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:37:10 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(1, 'member_updated', 'Updated member ...')
+#2 C:\xampp\htdocs\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(119, Array, Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Dec-2025 21:37:13 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:37:13 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:37:13 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:38:02 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:38:02 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:38:02 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[24-Dec-2025 21:38:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[24-Dec-2025 21:38:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[24-Dec-2025 21:38:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 01:53:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 01:53:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 01:53:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 02:11:50 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Column 'created_at' in where clause is ambiguous in C:\xampp\htdocs\ethiosocialworks\admin\reports_dashboard.php:183
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\reports_dashboard.php(183): mysqli->query('SELECT r.*, ma....')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\reports_dashboard.php(56): generateMembersReport(Object(mysqli), 'WHERE created_a...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\reports_dashboard.php on line 183
+[25-Dec-2025 02:12:15 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 02:12:15 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 02:12:15 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 02:12:24 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-11-25', '2025-12-25')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php on line 62
+[25-Dec-2025 02:12:26 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 02:12:26 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 02:12:26 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 02:25:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 02:25:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 02:25:39 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:01:04 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-11-25', '2025-12-25')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php on line 62
+[25-Dec-2025 03:01:32 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:01:32 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:01:32 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:01:51 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-11-25', '2025-12-25')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php on line 62
+[25-Dec-2025 03:01:54 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-11-25', '2025-12-25')
+#2 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\member_analytics.php on line 62
+[25-Dec-2025 03:02:20 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:02:20 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:02:20 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:03:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:03:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:03:27 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:03:34 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:03:34 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:03:34 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:04:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:04:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:04:04 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:04:08 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:04:08 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:04:08 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:10:14 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:10:14 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:10:14 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:10:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 50
+[25-Dec-2025 03:10:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 53
+[25-Dec-2025 03:10:19 Europe/Berlin] PHP Warning:  Undefined variable $statusFilter in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 56
+[25-Dec-2025 03:18:47 Europe/Berlin] PHP Parse error:  Unmatched '}' in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 459
+[25-Dec-2025 03:18:56 Europe/Berlin] PHP Parse error:  Unmatched '}' in C:\xampp\htdocs\ethiosocialworks\admin\members_list.php on line 459
+[25-Dec-2025 04:33:46 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'u.user_name' in 'field list' in C:\xampp\htdocs\ethiosocialworks\admin\reports_activity.php:164
+Stack trace:
+#0 C:\xampp\htdocs\ethiosocialworks\admin\reports_activity.php(164): mysqli->prepare('SELECT al.id, a...')
+#1 {main}
+  thrown in C:\xampp\htdocs\ethiosocialworks\admin\reports_activity.php on line 164
+[14-Jan-2026 06:42:34 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[14-Jan-2026 06:42:34 UTC] PHP Stack trace:
+[14-Jan-2026 06:42:34 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[14-Jan-2026 06:42:34 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[14-Jan-2026 06:42:34 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[14-Jan-2026 06:43:01 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[14-Jan-2026 06:43:01 UTC] PHP Stack trace:
+[14-Jan-2026 06:43:01 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[14-Jan-2026 06:43:01 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[14-Jan-2026 06:43:01 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[14-Jan-2026 06:43:08 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[14-Jan-2026 06:43:08 UTC] PHP Stack trace:
+[14-Jan-2026 06:43:08 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[14-Jan-2026 06:43:08 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[14-Jan-2026 06:43:08 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[14-Jan-2026 06:46:46 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[14-Jan-2026 06:46:46 UTC] PHP Stack trace:
+[14-Jan-2026 06:46:46 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[14-Jan-2026 06:46:46 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[14-Jan-2026 06:46:46 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[14-Jan-2026 08:39:27 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 178
+[14-Jan-2026 08:39:27 UTC] PHP Stack trace:
+[14-Jan-2026 08:39:27 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[14-Jan-2026 08:39:27 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:178
+[15-Jan-2026 07:06:37 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[15-Jan-2026 07:06:37 UTC] PHP Stack trace:
+[15-Jan-2026 07:06:37 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[15-Jan-2026 07:06:37 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[15-Jan-2026 07:06:37 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[21-Jan-2026 07:11:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[21-Jan-2026 07:11:23 UTC] PHP Stack trace:
+[21-Jan-2026 07:11:23 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[21-Jan-2026 07:11:23 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[21-Jan-2026 07:11:23 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[21-Jan-2026 07:11:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[21-Jan-2026 07:14:41 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[21-Jan-2026 07:14:41 UTC] PHP Stack trace:
+[21-Jan-2026 07:14:41 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[21-Jan-2026 07:14:41 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[21-Jan-2026 07:14:41 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[21-Jan-2026 13:24:22 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 178
+[21-Jan-2026 13:24:22 UTC] PHP Stack trace:
+[21-Jan-2026 13:24:22 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[21-Jan-2026 13:24:22 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:178
+[21-Jan-2026 13:35:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'u.user_name' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\reports_activity.php:164
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\reports_activity.php(164): mysqli->prepare('SELECT al.id, a...')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\reports_activity.php on line 164
+[21-Jan-2026 13:35:54 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'u.user_name' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\reports_notes.php:126
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\reports_notes.php(126): mysqli->prepare('SELECT u.user_n...')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\reports_notes.php on line 126
+[21-Jan-2026 13:36:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'member_id' in 'where clause' in C:\wamp64\www\ethiosocialworks\admin\member_analytics.php:62
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_analytics.php(62): mysqli->prepare('SELECT COUNT(*)...')
+#1 C:\wamp64\www\ethiosocialworks\admin\member_analytics.php(108): calculateEngagementScore(Object(mysqli), '118', '2025-12-22', '2026-01-21')
+#2 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_analytics.php on line 62
+[22-Jan-2026 06:45:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[22-Jan-2026 06:45:24 UTC] PHP Stack trace:
+[22-Jan-2026 06:45:24 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[22-Jan-2026 06:45:24 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[22-Jan-2026 06:45:24 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[22-Jan-2026 06:45:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[22-Jan-2026 06:46:12 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[22-Jan-2026 06:46:12 UTC] PHP Stack trace:
+[22-Jan-2026 06:46:12 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[22-Jan-2026 06:46:12 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[22-Jan-2026 06:46:12 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[22-Jan-2026 06:46:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[22-Jan-2026 07:14:28 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[22-Jan-2026 07:14:28 UTC] PHP Stack trace:
+[22-Jan-2026 07:14:28 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[22-Jan-2026 07:14:28 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[22-Jan-2026 07:14:28 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[22-Jan-2026 07:14:58 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[22-Jan-2026 07:14:58 UTC] PHP Stack trace:
+[22-Jan-2026 07:14:58 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[22-Jan-2026 07:14:58 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[22-Jan-2026 07:14:58 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2

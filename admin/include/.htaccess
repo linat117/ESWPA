@@ -1,0 +1,30 @@
+# Protect Admin Include Directory
+# Deny direct access to handler files
+# Last Updated: January 21, 2026
+#
+# This version is compatible with Apache 2.4+ (no deprecated "Order/Deny" directives)
+#
+
+<IfModule mod_authz_core.c>
+    # Apache 2.4+ syntax – deny everything by default
+    Require all denied
+
+    # Allow specific handler scripts to be called from the admin panel
+    <Files "upload_resource.php">
+        Require all granted
+    </Files>
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    # Fallback for older Apache versions (2.2) if ever used
+    Order deny,allow
+    Deny from all
+    <Files "upload_resource.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+</IfModule>
+
+# Note: Handler files should only be accessed via POST requests from admin pages
+# Direct URL access is blocked for security
+

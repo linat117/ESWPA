@@ -1,0 +1,750 @@
+/* ========== ID Card Print Styles - Red/White Design with Geometric Shapes ========== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ========== Print Controls ========== */
+.print-controls {
+    width: 100%;
+    max-width: 1200px;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.print-controls-content h2 {
+    color: #1a237e;
+    margin-bottom: 8px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.print-controls-content p {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.print-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-print, .btn-close, .btn-back {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-print {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-close, .btn-back {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.btn-close:hover, .btn-back:hover {
+    background: #e0e0e0;
+}
+
+/* ========== ID Card Container ========== */
+.id-card-print-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 120px;
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 80px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    min-height: 600px;
+    width: 100%;
+}
+
+/* ========== ID Card Wrapper (for cutting guide) ========== */
+.id-card-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 2mm;
+    border: 0.5mm dashed #ff0000;
+    border-radius: 0;
+    background: transparent;
+    transform: scale(3);
+    transform-origin: top center;
+    transition: transform 0.3s ease;
+}
+
+.id-card-wrapper:hover {
+    transform: scale(3.1) translateY(-2px);
+    transform-origin: top center;
+}
+
+/* Corner cutting marks */
+.id-card-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    background-image: 
+        linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
+        linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm);
+    background-position:
+        top left, top left,
+        top right, top right,
+        bottom left, bottom left,
+        bottom right, bottom right;
+    background-size:
+        3mm 0.5mm, 0.5mm 3mm,
+        3mm 0.5mm, 0.5mm 3mm,
+        3mm 0.5mm, 0.5mm 3mm,
+        3mm 0.5mm, 0.5mm 3mm;
+    background-repeat: no-repeat;
+    opacity: 1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* ========== ID Card Base Styles ========== */
+.id-card-front,
+.id-card-back {
+    width: 85.6mm;
+    height: 53.98mm;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    transform: none;
+    border-radius: 4mm;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+}
+
+/* ========== Front Card Design ========== */
+.id-card-front {
+    background: #ffffff;
+    border: none;
+    padding: 0;
+    display: block;
+}
+
+/* Top Red Banner with Angular Cut */
+.id-card-top-banner {
+    background: #dc2626;
+    height: 8mm;
+    display: flex;
+    align-items: center;
+    padding: 0 2.5mm;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Angular geometric cut on right side */
+.id-card-top-banner::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8mm 7mm 0 0;
+    border-color: #dc2626 transparent transparent #ffffff;
+}
+
+.id-card-logo {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    z-index: 2;
+    position: relative;
+}
+
+.id-card-logo-text {
+    font-size: 10pt;
+    font-weight: 900;
+    letter-spacing: 0.8pt;
+    line-height: 1;
+    margin: 0;
+}
+
+.id-card-tagline {
+    font-size: 4.5pt;
+    opacity: 0.95;
+    margin-top: 0.2mm;
+    line-height: 1;
+}
+
+/* Photo Section - Centered */
+.id-card-photo-section {
+    text-align: center;
+    padding: 1mm 0;
+    background: #ffffff;
+}
+
+.id-card-photo {
+    display: inline-block;
+    position: relative;
+}
+
+.id-photo-img {
+    width: 18mm;
+    height: 18mm;
+    border-radius: 50%;
+    border: 2px solid #000000;
+    object-fit: cover;
+    display: block;
+    background: #f5f5f5;
+    margin: 0 auto;
+}
+
+.id-photo-placeholder {
+    width: 18mm;
+    height: 18mm;
+    border-radius: 50%;
+    border: 2px solid #000000;
+    background: #fee2e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.id-photo-placeholder i {
+    font-size: 9pt;
+    color: #dc2626;
+    opacity: 0.6;
+}
+
+/* Member Info Section - Centered */
+.id-card-member-info {
+    padding: 0.5mm 2.5mm 0 2.5mm;
+    background: #ffffff;
+    text-align: center;
+}
+
+.id-member-name {
+    font-size: 9pt;
+    font-weight: 800;
+    color: #dc2626;
+    margin: 0 0 0.3mm 0;
+    text-transform: uppercase;
+    letter-spacing: 0.2pt;
+    line-height: 1.1;
+}
+
+.id-qualification {
+    font-size: 6pt;
+    color: #1f2937;
+    margin: 0 0 1mm 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15pt;
+}
+
+/* Two Column Grid for Details */
+.id-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5mm 1.5mm;
+    margin-top: 0.5mm;
+    text-align: left;
+}
+
+.id-detail-item {
+    font-size: 4.5pt;
+    color: #374151;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.id-detail-item strong {
+    color: #1f2937;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.1mm;
+    font-size: 4pt;
+}
+
+.id-detail-item .detail-value {
+    color: #dc2626;
+    font-weight: 600;
+    display: block;
+    margin-top: 0.1mm;
+    font-size: 4.5pt;
+}
+
+/* Bottom Section with Barcode */
+.id-card-bottom {
+    background: #ffffff;
+    padding: 0.5mm 0 0 0;
+    position: relative;
+    margin-top: 0.5mm;
+}
+
+.id-card-barcode {
+    text-align: center;
+    padding: 0.3mm 0;
+    background: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-size: 6pt;
+    letter-spacing: 1pt;
+    color: #000000;
+    line-height: 1;
+}
+
+/* Bottom Red Banner with Angular Cut */
+.id-card-bottom-banner {
+    background: #dc2626;
+    height: 4mm;
+    margin-top: 0.3mm;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Angular geometric cut on left side */
+.id-card-bottom-banner::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4mm 0 0 7mm;
+    border-color: #dc2626 transparent transparent #ffffff;
+}
+
+/* ========== Back Card Design ========== */
+.id-card-back {
+    background: #ffffff;
+    border: none;
+    padding: 0;
+    display: block;
+}
+
+/* Top Red Banner (same as front) */
+.id-card-back-top-banner {
+    background: #dc2626;
+    height: 8mm;
+    display: flex;
+    align-items: center;
+    padding: 0 2.5mm;
+    position: relative;
+    overflow: hidden;
+}
+
+.id-card-back-top-banner::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8mm 7mm 0 0;
+    border-color: #dc2626 transparent transparent #ffffff;
+}
+
+.id-card-back-logo-top {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    z-index: 2;
+    position: relative;
+}
+
+.id-card-back-logo-text-top {
+    font-size: 10pt;
+    font-weight: 900;
+    letter-spacing: 0.8pt;
+    line-height: 1;
+    margin: 0;
+}
+
+.id-card-back-tagline-top {
+    font-size: 4.5pt;
+    opacity: 0.95;
+    margin-top: 0.2mm;
+    line-height: 1;
+}
+
+/* Back Content */
+.id-card-back-content {
+    padding: 1mm 2.5mm;
+    background: #ffffff;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.id-back-member-name {
+    font-size: 9pt;
+    font-weight: 800;
+    color: #dc2626;
+    margin: 0 0 0.2mm 0;
+    text-transform: uppercase;
+    letter-spacing: 0.2pt;
+    line-height: 1.1;
+}
+
+.id-back-qualification {
+    font-size: 6pt;
+    color: #1f2937;
+    margin: 0 0 0.8mm 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15pt;
+    line-height: 1.1;
+}
+
+.id-back-signature {
+    margin: 0.5mm 0;
+    padding-bottom: 0.3mm;
+    border-bottom: 1px solid #e5e7eb;
+    min-height: 6mm;
+    flex-shrink: 0;
+}
+
+.id-back-signature-line {
+    height: 6mm;
+    border-bottom: 1px solid #d1d5db;
+    margin-bottom: 0.2mm;
+}
+
+.id-back-signature-img {
+    max-height: 6mm;
+    max-width: 35mm;
+    display: block;
+    margin: 0 auto;
+}
+
+.id-back-details {
+    margin: 0.5mm 0;
+    flex-shrink: 0;
+}
+
+.id-back-detail-item {
+    font-size: 4.5pt;
+    color: #374151;
+    margin: 0.2mm 0;
+    line-height: 1.2;
+}
+
+.id-back-detail-item strong {
+    color: #1f2937;
+    font-weight: 700;
+    margin-right: 0.3mm;
+}
+
+.id-back-text {
+    font-size: 3.5pt;
+    color: #6b7280;
+    line-height: 1.3;
+    margin: 0.4mm 0;
+    text-align: justify;
+    padding-left: 1.5mm;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.id-back-text::before {
+    content: '•';
+    color: #dc2626;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.id-back-barcode {
+    text-align: center;
+    padding: 0.3mm 0;
+    background: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-size: 6pt;
+    letter-spacing: 1pt;
+    color: #000000;
+    line-height: 1;
+    margin-top: 0.5mm;
+    flex-shrink: 0;
+}
+
+/* Bottom Red Banner (same as front) */
+.id-card-back-bottom {
+    background: #dc2626;
+    height: 4mm;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0 2.5mm;
+    margin-top: auto;
+}
+
+.id-card-back-bottom::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4mm 0 0 7mm;
+    border-color: #dc2626 transparent transparent #ffffff;
+}
+
+.id-card-back-logo {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    z-index: 2;
+    position: relative;
+}
+
+.id-card-back-logo-text {
+    font-size: 10pt;
+    font-weight: 900;
+    letter-spacing: 0.8pt;
+    line-height: 1;
+    margin: 0;
+}
+
+.id-card-back-tagline {
+    font-size: 4.5pt;
+    opacity: 0.95;
+    margin-top: 0.2mm;
+    line-height: 1;
+}
+
+/* QR Code Container */
+.id-qr-container {
+    text-align: center;
+    margin: 0.5mm 0;
+    flex-shrink: 0;
+}
+
+#qrcode {
+    display: inline-block;
+    width: 12mm;
+    height: 12mm;
+    background: white;
+    padding: 0.5mm;
+    border-radius: 1mm;
+    border: 1px solid #e5e7eb;
+}
+
+#qrcode canvas,
+#qrcode img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* ========== Print Styles ========== */
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    html, body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: auto !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: visible !important;
+    }
+    
+    .print-controls {
+        display: none !important;
+    }
+    
+    .id-card-print-container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 20mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        background: white !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        min-height: 100vh !important;
+        height: 100% !important;
+    }
+    
+    .id-card-wrapper {
+        transform: none !important;
+        transform-origin: initial !important;
+        padding: 2mm !important;
+        border: 0.5mm dashed #ff0000 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        display: inline-block !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    .id-card-wrapper::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        pointer-events: none !important;
+        z-index: 10 !important;
+        background-image: 
+            linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
+            linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm) !important;
+        background-position:
+            top left, top left,
+            top right, top right,
+            bottom left, bottom left,
+            bottom right, bottom right !important;
+        background-size:
+            3mm 0.5mm, 0.5mm 3mm,
+            3mm 0.5mm, 0.5mm 3mm,
+            3mm 0.5mm, 0.5mm 3mm,
+            3mm 0.5mm, 0.5mm 3mm !important;
+        background-repeat: no-repeat !important;
+        opacity: 1 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    .id-card-front,
+    .id-card-back {
+        width: 85.6mm !important;
+        height: 53.98mm !important;
+        max-width: 85.6mm !important;
+        max-height: 53.98mm !important;
+        min-width: 85.6mm !important;
+        min-height: 53.98mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        border: none !important;
+        transform: none !important;
+        transform-origin: initial !important;
+        overflow: hidden !important;
+        border-radius: 4mm !important;
+        flex-shrink: 0 !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        background: #ffffff !important;
+    }
+    
+    .id-card-front *,
+    .id-card-back * {
+        visibility: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* ========== Responsive Styles ========== */
+@media (max-width: 768px) {
+    .id-card-print-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+        padding: 40px 20px;
+    }
+    
+    .id-card-wrapper {
+        transform: scale(2) !important;
+        transform-origin: top center !important;
+    }
+    
+    .id-card-wrapper:hover {
+        transform: scale(2.05) translateY(-2px) !important;
+        transform-origin: top center !important;
+    }
+    
+    .print-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn-print,
+    .btn-close,
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+}

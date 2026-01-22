@@ -1,0 +1,606 @@
+/**
+ * Enhanced Member Dashboard Styles
+ * Optimized for performance, mobile-first, and modern design
+ * Version: 2.0
+ */
+
+/* ========== Dashboard Container ========== */
+.member-dashboard-container {
+    padding: 20px 0;
+    padding-top: 90px; /* Space for fixed header */
+    background: var(--gray-50);
+    min-height: calc(100vh - 80px);
+}
+
+/* ========== Fixed Header ========== */
+.member-header-v1-2.member-header-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.member-header-v1-2.member-header-fixed .member-navbar-v1-2 {
+    background: var(--white);
+}
+
+/* Ensure body has proper spacing for fixed header */
+body {
+    padding-top: 0;
+}
+
+.member-content-wrapper {
+    margin-top: 0;
+}
+
+/* ========== Smart Grid System ========== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dashboard-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.dashboard-grid-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* ========== Welcome Banner ========== */
+.dashboard-welcome-banner {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 15s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.dashboard-welcome-banner .welcome-content {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-welcome-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-welcome-banner .membership-id {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+}
+
+.dashboard-welcome-banner .member-avatar {
+    width: 70px;
+    height: 70px;
+    border: 3px solid rgba(255,255,255,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-welcome-banner .member-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* ========== Dashboard Cards ========== */
+.dashboard-card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+    height: 100%;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.dashboard-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--card-header-color, var(--primary-color));
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-card-header h5 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-card-header i {
+    font-size: 1.1rem;
+}
+
+.dashboard-card-body {
+    padding: 16px;
+}
+
+/* ========== Stats Cards ========== */
+.stat-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.stat-card:hover {
+    background: var(--gray-50);
+    border-color: var(--stat-color, var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--stat-color, var(--primary-color));
+    line-height: 1;
+}
+
+.stat-card .stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ========== Badge Display ========== */
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.badge-item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.badge-item i {
+    font-size: 0.9rem;
+}
+
+/* ========== Activity Feed ========== */
+.activity-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    transition: background 0.2s ease;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item:hover {
+    background: #f8f9fa;
+    margin: 0 -20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-content .activity-text {
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 4px;
+}
+
+.activity-content .activity-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+/* ========== Quick Actions ========== */
+.quick-action-btn {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-300);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    text-decoration: none;
+    background: var(--white);
+}
+
+.quick-action-btn:last-child {
+    margin-bottom: 0;
+}
+
+.quick-action-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.quick-action-btn i {
+    font-size: 1rem;
+}
+
+/* ========== News & Resources ========== */
+.content-item {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background: var(--gray-50);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.content-item:hover {
+    background: var(--gray-100);
+    border-left-color: var(--primary-color);
+    transform: translateX(3px);
+}
+
+.content-item:last-child {
+    margin-bottom: 0;
+}
+
+.content-item-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--dark-color);
+    margin-bottom: 4px;
+}
+
+.content-item-date {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+/* ========== Member Info Display ========== */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.875rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    text-align: right;
+}
+
+/* ========== Status Badges ========== */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* ========== Empty States ========== */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ========== Footer Hide on Mobile ========== */
+@media (max-width: 768px) {
+    footer,
+    .footer,
+    #footer,
+    .site-footer,
+    footer.site-footer {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Adjust container padding when footer is hidden */
+    .member-content-wrapper {
+        padding-bottom: 20px !important;
+    }
+}
+
+/* ========== Mobile Optimizations ========== */
+@media (max-width: 768px) {
+    .member-dashboard-container {
+        padding: 15px 10px;
+        padding-top: 80px; /* Reduced for mobile */
+    }
+    
+    .dashboard-welcome-banner {
+        padding: 16px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+    
+    .dashboard-welcome-banner h2 {
+        font-size: 1.25rem;
+    }
+    
+    .dashboard-welcome-banner .membership-id {
+        font-size: 0.85rem;
+    }
+    
+    .dashboard-welcome-banner .member-avatar {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .dashboard-card {
+        margin-bottom: 12px;
+        border-radius: 8px;
+    }
+    
+    .dashboard-card-header {
+        padding: 10px 12px;
+    }
+    
+    .dashboard-card-header h5 {
+        font-size: 0.875rem;
+    }
+    
+    .dashboard-card-body {
+        padding: 12px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .dashboard-grid-compact {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .dashboard-grid-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .stat-card {
+        padding: 10px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .info-row {
+        padding: 6px 0;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .info-label {
+        font-size: 0.7rem;
+    }
+    
+    .info-value {
+        text-align: left;
+        margin-top: 2px;
+        font-size: 0.85rem;
+    }
+    
+    .badge-container {
+        gap: 6px;
+    }
+    
+    .badge-item {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    .quick-action-btn {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .activity-item {
+        padding: 10px 0;
+    }
+    
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+    
+    .content-item {
+        padding: 10px;
+    }
+    
+    .content-item-title {
+        font-size: 0.85rem;
+    }
+}
+
+/* ========== Tablet Optimizations ========== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .dashboard-welcome-banner {
+        padding: 25px;
+    }
+    
+    .dashboard-card-body {
+        padding: 18px;
+    }
+}
+
+/* ========== Performance Optimizations ========== */
+.dashboard-card,
+.stat-card,
+.badge-item,
+.quick-action-btn {
+    will-change: transform;
+}
+
+/* Lazy load images */
+.dashboard-card img {
+    loading: lazy;
+    object-fit: cover;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========== Professional Color Variables ========== */
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --info-color: #0ea5e9;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-color: #1e293b;
+    --light-color: #f8fafc;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+}
+
+/* ========== Loading States ========== */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+

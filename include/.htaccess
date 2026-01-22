@@ -1,0 +1,17 @@
+# Protect Include Directory
+# Deny direct access to PHP files in include directory
+# Last Updated: December 23, 2025
+
+# Deny all direct access
+Order deny,allow
+Deny from all
+
+# Allow access only from parent directory (via include/require)
+# Note: This prevents direct URL access but allows PHP includes
+
+# Exception: Allow specific files that need direct access (if any)
+<FilesMatch "^(generate-id-card-pdf\.php)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+

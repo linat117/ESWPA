@@ -1,0 +1,67 @@
+## Progress: Version 1.1 (Daglas 6/21/2025)
+- Modified `include/config.php` to support both local and production environments.
+- Created changelog directory structure as per user instructions.
+- Created file change log.
+- Updated `about.php` to make the team members section a 2-column grid on mobile view.
+- Updated `footer.php` to make the footer more compact on mobile view.
+- Implemented email newsletter functionality for new events.
+    - Installed PHPMailer.
+    - Created a reusable email handler.
+    - Added a newsletter checkbox to the event creation form.
+    - Updated the backend to send emails to all registered members.
+- Implemented a bulk email sending page in the admin panel.
+    - Created a new page with a form for sending emails to multiple recipients.
+    - Added functionality for attachments.
+    - Integrated a rich text editor for the email body.
+    - Included a toast notification for send confirmation.
+    - Added a link to the new page in the admin sidebar.
+- Fixed the toast notification on the email page.
+- Implemented logging of sent emails to the database.
+- Created a page to display a list of sent emails with datatables.
+- Added the new sent emails page to the admin sidebar.
+- Enhanced the admin dashboard with new statistics and a new layout.
+    - Added cards for active, and expired subscribers.
+    - Added a card for total sent emails.
+    - Re-organized the dashboard into a 2x3 grid.
+- Added three new charts to the dashboard for data visualization.
+    - A pie chart for member subscription status.
+    - A line chart for new member registrations over the past year.
+    - A bar chart for monthly events created over the past year.
+- Added "Upcoming Events" and "Latest Events" sections to the dashboard.
+    - Each section displays the 5 most recent items.
+    - Included a "See More" button linking to the full list for each section.
+- Created a dynamic and printable reports page.
+    - Added a date range picker for filtering data.
+    - Included key statistics and charts that update based on the selected date range.
+    - Added a print-friendly stylesheet for clean report printing.
+    - Added a link to the new page in the admin sidebar.
+- Added comprehensive datatables to the reports page for detailed analysis.
+    - Included tables for new members, events, and sent emails.
+    - The tables are searchable, sortable, and filterable by date.
+- Enhanced the print layout of the reports page.
+    - Added a print-only title to the report.
+    - Improved print styles for a cleaner, more professional look.
+- Implemented Member CV Modal on the members list page.
+    - Added a "View" button to open a modal with member details.
+    - Styled the modal content to look like a professional CV.
+    - Added a print function with CSS to create a clean, printable version of the CV.
+    - Added dynamic subscription status (Active/Expired) to the modal and printout.
+- Fixed a bug in the Member CV modal to ensure correct data display and improved formatting.
+    - Implemented robust event handling for the datatable.
+    - Formatted membership details for better readability.
+- Added a "Delete" button to the members list.
+    - Implemented a confirmation dialog to prevent accidental deletion.
+    - Created a backend script to delete the member from the database.
+    - Ensured that the member's photo and bank slip files are also deleted from the server.
+- Re-implemented the changelog system as an admin-only feature.
+    - Removed the public-facing `doc.php` page and navigation link.
+    - Created a new `admin/changelog_list.php` page to display all changelogs in a datatable.
+    - Restricted the "Add Changelog" page (`admin/add_changelog.php`) to the superadmin (user_id = 1).
+    - Updated the admin sidebar to link to the new changelog list.
+- Created a comprehensive strategic roadmap for future development.
+    - Added new feature suggestions based on ESWPA's organizational mission.
+    - Created a new `admin/future_enhancement.php` page to display the plan in an organized accordion view.
+    - Added a link to the new page in the admin sidebar.
+- Expanded the strategic roadmap with a detailed focus on revenue generation and sustainability.
+    - Restructured the plan to prioritize features that create diverse income streams (e.g., tiered memberships, paid events, job board fees).
+    - Updated the "Future Plans" page to present the detailed strategies for each revenue-generating feature. 

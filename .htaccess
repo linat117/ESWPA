@@ -1,0 +1,82 @@
+# Ethio Social Works - Security Configuration
+# Last Updated: December 23, 2025
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (adjust as needed)
+    # Header always set Content-Security-Policy "default-src 'self'"
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "^(config\.php|conn\.php|\.env|\.git|\.gitignore|composer\.(json|lock))$">
+    Require all denied
+</FilesMatch>
+
+# Protect include directory files from direct access (allow POST for auth)
+<FilesMatch "^(sync_handler\.php)$">
+    Require all denied
+</FilesMatch>
+
+# Allow POST requests to auth files but block GET
+<FilesMatch "^(auth\.php|member-auth\.php)$">
+    <If "%{REQUEST_METHOD} == 'GET'">
+        Require all denied
+    </If>
+</FilesMatch>
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect against file injection
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+</IfModule>
+
+# Block access to hidden files
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# PHP Security Settings
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log error_log
+</IfModule>
+
+# File Upload Security
+<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)$">
+    <IfModule mod_headers.c>
+        Header set X-Content-Type-Options "nosniff"
+    </IfModule>
+</FilesMatch>
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|backup|old|tmp|log|sql)$">
+    Require all denied
+</FilesMatch>
+
+# Custom Error Pages (optional)
+# ErrorDocument 404 /404.php
+# ErrorDocument 403 /403.php
+# ErrorDocument 500 /500.php
+
