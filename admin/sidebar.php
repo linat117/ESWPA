@@ -203,9 +203,6 @@
                                           <li>
                                               <a href="resources_analytics.php">Analytics</a>
                                           </li>
-                                          <li>
-                                              <a href="resources_reports.php">Reports</a>
-                                          </li>
                                       </ul>
                                   </div>
                               </li>
@@ -228,9 +225,6 @@
                                           </li>
                                           <li>
                                               <a href="add_research.php">Add Research</a>
-                                          </li>
-                                          <li>
-                                              <a href="research_collaborators.php">Collaborators</a>
                                           </li>
                                           <li>
                                               <a href="research_analytics.php">Analytics</a>

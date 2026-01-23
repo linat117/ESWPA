@@ -239,3 +239,37 @@ Stack trace:
 [23-Jan-2026 06:58:46 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
 [23-Jan-2026 06:58:46 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
 [23-Jan-2026 06:58:46 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[23-Jan-2026 08:24:49 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 178
+[23-Jan-2026 08:24:49 UTC] PHP Stack trace:
+[23-Jan-2026 08:24:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[23-Jan-2026 08:24:49 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:178
+[23-Jan-2026 08:35:32 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'mb.assigned_by' in 'on clause' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:113
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(113): mysqli->query('SELECT mb.*, r....')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 113
+[23-Jan-2026 08:35:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'mb.assigned_by' in 'on clause' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:113
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(113): mysqli->query('SELECT mb.*, r....')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 113
+[23-Jan-2026 08:41:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'mb.assigned_by' in 'on clause' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:113
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(113): mysqli->query('SELECT mb.*, r....')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 113
+[23-Jan-2026 08:45:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'mb.assigned_by' in 'on clause' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:151
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(151): mysqli->query('SELECT mb.*, r....')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 151
+[23-Jan-2026 08:51:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'badge_description' in 'member_badges' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:57
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(57): mysqli->query('ALTER TABLE mem...')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 57
+[23-Jan-2026 08:53:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'mb.assigned_at' in 'order clause' in C:\wamp64\www\ethiosocialworks\admin\member_badges.php:231
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(231): mysqli->query('SELECT mb.*, r....')
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 231

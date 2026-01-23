@@ -134,6 +134,36 @@ $stmt->execute();
 $top_sections = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
+// Resources by section (detailed)
+$section_stats_detailed = [];
+$stmt = $conn->prepare("SELECT section, COUNT(*) AS count, SUM(download_count) AS downloads FROM resources WHERE section IS NOT NULL AND section != '' GROUP BY section ORDER BY count DESC LIMIT 15");
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $section_stats_detailed[] = $row;
+}
+$stmt->close();
+
+// Resources by author
+$author_stats = [];
+$stmt = $conn->prepare("SELECT author, COUNT(*) AS count, SUM(download_count) AS downloads FROM resources WHERE author IS NOT NULL AND author != '' GROUP BY author ORDER BY count DESC LIMIT 15");
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $author_stats[] = $row;
+}
+$stmt->close();
+
+// Recent resources
+$recent_resources = [];
+$stmt = $conn->prepare("SELECT id, title, section, author, status, access_level, download_count, created_at FROM resources ORDER BY created_at DESC LIMIT 50");
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $recent_resources[] = $row;
+}
+$stmt->close();
+
 // Calculate growth rate
 $prev_start = date('Y-m-d', strtotime($start_date . " -{$days_diff} days"));
 $prev_end = $start_date;
@@ -169,7 +199,10 @@ if ($prev_resources > 0) {
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <h4 class="page-title">Resources Analytics</h4>
+                                <div>
+                                    <h4 class="page-title">Resources Analytics</h4>
+                                    <p class="page-subtitle mb-0">Comprehensive analytics and insights for your resources</p>
+                                </div>
                                 <div>
                                     <a href="resources_dashboard.php" class="btn btn-secondary me-2">
                                         <i class="ri-dashboard-line"></i> Dashboard
@@ -348,20 +381,22 @@ if ($prev_resources > 0) {
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover mb-0">
+                                        <table class="table table-hover mb-0" id="topDownloadedTable">
                                             <thead>
                                                 <tr>
                                                     <th>Rank</th>
                                                     <th>Title</th>
                                                     <th>Section</th>
                                                     <th>Downloads</th>
+                                                    <th>Access Level</th>
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php if (empty($top_downloaded)): ?>
                                                     <tr>
-                                                        <td colspan="5" class="text-center text-muted">No downloads yet</td>
+                                                        <td colspan="7" class="text-center text-muted">No downloads yet</td>
                                                     </tr>
                                                 <?php else: ?>
                                                     <?php $rank = 1; foreach ($top_downloaded as $resource): ?>
@@ -382,6 +417,14 @@ if ($prev_resources > 0) {
                                                                 <span class="badge bg-primary"><?php echo number_format($resource['download_count']); ?></span>
                                                             </td>
                                                             <td>
+                                                                <span class="badge bg-info"><?php echo isset($resource['access_level']) ? ucfirst($resource['access_level']) : 'N/A'; ?></span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge bg-<?php echo (isset($resource['status']) && $resource['status'] == 'active') ? 'success' : 'warning'; ?>">
+                                                                    <?php echo isset($resource['status']) ? ucfirst($resource['status']) : 'N/A'; ?>
+                                                                </span>
+                                                            </td>
+                                                            <td>
                                                                 <a href="edit_resource.php?id=<?php echo $resource['id']; ?>" class="btn btn-sm btn-light">
                                                                     <i class="ri-eye-line"></i> View
                                                                 </a>
@@ -389,6 +432,156 @@ if ($prev_resources > 0) {
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resources by Section -->
+                    <?php if (!empty($section_stats_detailed)): ?>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Resources by Section</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0" id="sectionsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Section</th>
+                                                    <th>Resource Count</th>
+                                                    <th>Total Downloads</th>
+                                                    <th>Avg Downloads</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($section_stats_detailed as $section): ?>
+                                                    <tr>
+                                                        <td><strong><?php echo htmlspecialchars($section['section']); ?></strong></td>
+                                                        <td>
+                                                            <span class="badge bg-primary"><?php echo number_format($section['count']); ?></span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-success"><?php echo number_format($section['downloads']); ?></span>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo number_format($section['downloads'] / max($section['count'], 1), 1); ?>
+                                                        </td>
+                                                        <td>
+                                                            <a href="resources_list.php?section=<?php echo urlencode($section['section']); ?>" class="btn btn-sm btn-light">
+                                                                <i class="ri-eye-line"></i> View Resources
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Resources by Author -->
+                    <?php if (!empty($author_stats)): ?>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Top Authors</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0" id="authorsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Author</th>
+                                                    <th>Resources</th>
+                                                    <th>Total Downloads</th>
+                                                    <th>Avg Downloads</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($author_stats as $author): ?>
+                                                    <tr>
+                                                        <td><strong><?php echo htmlspecialchars($author['author']); ?></strong></td>
+                                                        <td>
+                                                            <span class="badge bg-primary"><?php echo number_format($author['count']); ?></span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-success"><?php echo number_format($author['downloads']); ?></span>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo number_format($author['downloads'] / max($author['count'], 1), 1); ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Recent Resources -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Recent Resources</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0" id="recentResourcesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Section</th>
+                                                    <th>Author</th>
+                                                    <th>Status</th>
+                                                    <th>Access</th>
+                                                    <th>Downloads</th>
+                                                    <th>Created</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($recent_resources as $resource): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="edit_resource.php?id=<?php echo $resource['id']; ?>" class="text-dark">
+                                                                <?php echo htmlspecialchars(substr($resource['title'], 0, 50)); ?>
+                                                                <?php echo strlen($resource['title']) > 50 ? '...' : ''; ?>
+                                                            </a>
+                                                        </td>
+                                                        <td><?php echo htmlspecialchars($resource['section']); ?></td>
+                                                        <td><?php echo htmlspecialchars($resource['author']); ?></td>
+                                                        <td>
+                                                            <span class="badge bg-<?php echo $resource['status'] == 'active' ? 'success' : 'warning'; ?>">
+                                                                <?php echo ucfirst($resource['status']); ?>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-info"><?php echo ucfirst($resource['access_level']); ?></span>
+                                                        </td>
+                                                        <td><?php echo number_format($resource['download_count']); ?></td>
+                                                        <td><?php echo date('M d, Y', strtotime($resource['created_at'])); ?></td>
+                                                        <td>
+                                                            <a href="edit_resource.php?id=<?php echo $resource['id']; ?>" class="btn btn-sm btn-light">
+                                                                <i class="ri-eye-line"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -415,6 +608,19 @@ if ($prev_resources > 0) {
 
     <script>
         $(document).ready(function() {
+            // Initialize DataTables
+            if ($.fn.DataTable) {
+                $('#topDownloadedTable, #sectionsTable, #authorsTable, #recentResourcesTable').DataTable({
+                    "pageLength": 25,
+                    "order": [[3, "desc"]], // Sort by downloads/count
+                    "language": {
+                        "search": "Search:",
+                        "lengthMenu": "Show _MENU_ entries per page",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ entries"
+                    }
+                });
+            }
+
             // Monthly Trend Line Chart
             var monthlyOptions = {
                 chart: {
