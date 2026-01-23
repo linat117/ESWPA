@@ -234,3 +234,8 @@ Stack trace:
 [22-Jan-2026 07:14:58 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
 [22-Jan-2026 07:14:58 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
 [22-Jan-2026 07:14:58 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[23-Jan-2026 06:58:46 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[23-Jan-2026 06:58:46 UTC] PHP Stack trace:
+[23-Jan-2026 06:58:46 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[23-Jan-2026 06:58:46 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[23-Jan-2026 06:58:46 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2

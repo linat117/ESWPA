@@ -320,12 +320,6 @@
                                       </ul>
                                   </div>
                               </li>
-                              <li class="side-nav-item">
-                                  <a href="analytics_dashboard.php" class="side-nav-link">
-                                      <i class="ri-line-chart-line"></i>
-                                      <span> Analytics Dashboard </span>
-                                  </a>
-                              </li>
                              <!-- <li class="side-nav-item">
                                   <a href="member_analytics.php" class="side-nav-link">
                                       <i class="ri-user-heart-line"></i>

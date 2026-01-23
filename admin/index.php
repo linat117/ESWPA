@@ -217,6 +217,113 @@ if ($latest_result) {
         $latest_events_list[] = $row;
     }
 }
+
+// ========== ANALYTICS DASHBOARD QUERIES ==========
+// Get date range filter
+$date_range = $_GET['range'] ?? '30'; // Default: last 30 days
+$start_date = $_GET['start_date'] ?? date('Y-m-d', strtotime("-{$date_range} days"));
+$end_date = $_GET['end_date'] ?? date('Y-m-d');
+
+// Sanitize dates
+$start_date = date('Y-m-d', strtotime($start_date));
+$end_date = date('Y-m-d', strtotime($end_date));
+
+// Calculate date range in days
+$date1 = new DateTime($start_date);
+$date2 = new DateTime($end_date);
+$days_diff = $date1->diff($date2)->days;
+
+// Enhanced member analytics (with pending status)
+$total_members = $total_registers; // Use existing total
+$active_members = 0;
+$expired_members = 0;
+$pending_members = 0;
+
+$result_all_members_analytics = $conn->query("SELECT created_at, payment_duration, approval_status, status FROM registrations");
+while ($member = $result_all_members_analytics->fetch_assoc()) {
+    if ($member['approval_status'] == 'pending' || $member['status'] == 'pending') {
+        $pending_members++;
+    } else {
+        $start_date_member = new DateTime($member['created_at']);
+        $duration = $member['payment_duration'];
+        $expiry_date = clone $start_date_member;
+        
+        if (strpos($duration, 'Year') !== false) {
+            $years = (int) filter_var($duration, FILTER_SANITIZE_NUMBER_INT);
+            if ($years > 0) {
+                $expiry_date->modify("+$years year");
+            }
+        }
+        
+        $today = new DateTime();
+        if ($expiry_date > $today) {
+            $active_members++;
+        } else {
+            $expired_members++;
+        }
+    }
+}
+
+// New members in date range
+$new_members_count = $conn->query("SELECT COUNT(*) as count FROM registrations WHERE created_at BETWEEN '{$start_date} 00:00:00' AND '{$end_date} 23:59:59'")->fetch_assoc()['count'];
+
+// Member growth chart data (last 12 months) - using existing $member_growth_months and $member_growth_values
+$member_growth_months = $months; // Reuse existing months array
+$member_growth_values = $registration_values; // Reuse existing registration values
+
+// Events created chart data (using created_at instead of event_date)
+$events_created_data = [];
+for ($i = 11; $i >= 0; $i--) {
+    $month = date('Y-m', strtotime("-$i months"));
+    $events_created_data[$month] = 0;
+}
+
+$events_query = "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(id) as count
+                 FROM events 
+                 WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                 GROUP BY month ORDER BY month ASC";
+$events_result = $conn->query($events_query);
+while ($row = $events_result->fetch_assoc()) {
+    if (isset($events_created_data[$row['month']])) {
+        $events_created_data[$row['month']] = (int)$row['count'];
+    }
+}
+$events_created_values = array_values($events_created_data);
+
+// Top downloaded resources
+$top_resources = $conn->query("SELECT id, title, section, download_count FROM resources ORDER BY download_count DESC LIMIT 10")->fetch_all(MYSQLI_ASSOC);
+
+// Resource downloads by section
+$resource_sections = $conn->query("SELECT section, SUM(download_count) as total_downloads FROM resources GROUP BY section ORDER BY total_downloads DESC")->fetch_all(MYSQLI_ASSOC);
+
+// User engagement analytics
+$total_activities = $conn->query("SELECT COUNT(*) as count FROM member_activities")->fetch_assoc()['count'];
+$activities_in_range = $conn->query("SELECT COUNT(*) as count FROM member_activities WHERE created_at BETWEEN '{$start_date} 00:00:00' AND '{$end_date} 23:59:59'")->fetch_assoc()['count'];
+
+// Activity types breakdown
+$activity_types = $conn->query("SELECT activity_type, COUNT(*) as count FROM member_activities GROUP BY activity_type ORDER BY count DESC")->fetch_all(MYSQLI_ASSOC);
+
+// Most active members
+$active_members_list = $conn->query("SELECT r.id, r.fullname, r.email, COUNT(ma.id) as activity_count 
+                                     FROM registrations r 
+                                     LEFT JOIN member_activities ma ON r.id = ma.member_id 
+                                     GROUP BY r.id 
+                                     ORDER BY activity_count DESC 
+                                     LIMIT 10")->fetch_all(MYSQLI_ASSOC);
+
+// Email analytics
+$total_emails = $total_sent_emails; // Use existing value
+$emails_in_range = $conn->query("SELECT COUNT(*) as count FROM sent_emails WHERE sent_at BETWEEN '{$start_date} 00:00:00' AND '{$end_date} 23:59:59'")->fetch_assoc()['count'];
+
+// Growth rate calculations
+$prev_start = date('Y-m-d', strtotime($start_date . " -{$days_diff} days"));
+$prev_end = $start_date;
+
+$prev_new_members = $conn->query("SELECT COUNT(*) as count FROM registrations WHERE created_at BETWEEN '{$prev_start} 00:00:00' AND '{$prev_end} 23:59:59'")->fetch_assoc()['count'];
+$member_growth_rate = $prev_new_members > 0 ? (($new_members_count - $prev_new_members) / $prev_new_members) * 100 : 0;
+
+$prev_activities = $conn->query("SELECT COUNT(*) as count FROM member_activities WHERE created_at BETWEEN '{$prev_start} 00:00:00' AND '{$prev_end} 23:59:59'")->fetch_assoc()['count'];
+$activity_growth_rate = $prev_activities > 0 ? (($activities_in_range - $prev_activities) / $prev_activities) * 100 : 0;
 ?>
 
 
@@ -247,6 +354,20 @@ if ($latest_result) {
                                     <p class="page-subtitle mb-0">Welcome back! Here's what's happening with your organization today.</p>
                                 </div>
                                 <div class="d-flex gap-2">
+                                    <form method="GET" class="d-inline-flex gap-2">
+                                        <select name="range" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            <option value="7" <?php echo $date_range == '7' ? 'selected' : ''; ?>>Last 7 Days</option>
+                                            <option value="30" <?php echo $date_range == '30' ? 'selected' : ''; ?>>Last 30 Days</option>
+                                            <option value="90" <?php echo $date_range == '90' ? 'selected' : ''; ?>>Last 90 Days</option>
+                                            <option value="365" <?php echo $date_range == '365' ? 'selected' : ''; ?>>Last Year</option>
+                                            <option value="custom" <?php echo $date_range == 'custom' ? 'selected' : ''; ?>>Custom Range</option>
+                                        </select>
+                                        <?php if ($date_range == 'custom'): ?>
+                                        <input type="date" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>" class="form-control form-control-sm">
+                                        <input type="date" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>" class="form-control form-control-sm">
+                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+                                        <?php endif; ?>
+                                    </form>
                                     <a href="reports_dashboard.php" class="btn btn-secondary">
                                         <i class="ri-bar-chart-line"></i> Reports
                                     </a>
@@ -518,6 +639,199 @@ if ($latest_result) {
                         </div>
                     </div>
 
+                    <!-- Analytics Charts Row -->
+                    <div class="row">
+                        <!-- Member Growth Chart -->
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Member Growth (Last 12 Months)</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="member-growth-chart" class="apex-charts" data-colors="#3e60d5"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Membership Status -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Membership Status</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="membership-status-chart" class="apex-charts" data-colors="#47ad77,#fa5c7c,#ffbc00"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Events & Resources Row -->
+                    <div class="row">
+                        <!-- Events Chart -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Events Created (Last 12 Months)</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="events-chart" class="apex-charts" data-colors="#ffbc00"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resource Downloads by Section -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Resource Downloads by Section</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="resource-downloads-chart" class="apex-charts" data-colors="#6c757d"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Types & Top Resources -->
+                    <div class="row">
+                        <!-- Activity Types -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Activity Types Breakdown</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="activity-types-chart" class="apex-charts" data-colors="#10b759"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Resources -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Top Downloaded Resources</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Resource</th>
+                                                    <th>Section</th>
+                                                    <th class="text-end">Downloads</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($top_resources as $resource): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($resource['title']); ?></td>
+                                                    <td><span class="badge bg-secondary"><?php echo htmlspecialchars($resource['section']); ?></span></td>
+                                                    <td class="text-end"><strong><?php echo number_format($resource['download_count']); ?></strong></td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                                <?php if (empty($top_resources)): ?>
+                                                <tr>
+                                                    <td colspan="3" class="text-center text-muted">No resources found</td>
+                                                </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Most Active Members & Summary Stats -->
+                    <div class="row">
+                        <!-- Most Active Members -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Most Active Members</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Member</th>
+                                                    <th>Email</th>
+                                                    <th class="text-end">Activities</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($active_members_list as $member): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($member['fullname']); ?></td>
+                                                    <td><?php echo htmlspecialchars($member['email']); ?></td>
+                                                    <td class="text-end"><strong><?php echo number_format($member['activity_count']); ?></strong></td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                                <?php if (empty($active_members_list)): ?>
+                                                <tr>
+                                                    <td colspan="3" class="text-center text-muted">No activity data found</td>
+                                                </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary Stats -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">Summary Statistics</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-primary"><?php echo number_format($total_events); ?></h3>
+                                                <p class="mb-0 text-muted">Total Events</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-info"><?php echo number_format($total_upcoming); ?></h3>
+                                                <p class="mb-0 text-muted">Upcoming Events</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-success"><?php echo number_format($total_emails); ?></h3>
+                                                <p class="mb-0 text-muted">Emails Sent</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-warning"><?php echo number_format($total_subscribers); ?></h3>
+                                                <p class="mb-0 text-muted">Email Subscribers</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-purple"><?php echo number_format($total_news); ?></h3>
+                                                <p class="mb-0 text-muted">News Posts</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-3 border rounded">
+                                                <h3 class="mb-0 text-danger"><?php echo number_format($total_research); ?></h3>
+                                                <p class="mb-0 text-muted">Research Projects</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- container -->
 
@@ -623,6 +937,110 @@ if ($latest_result) {
                 colors: ['#ffbc00']
             };
             new ApexCharts(document.querySelector("#events-per-month-chart"), eventOptions).render();
+
+            // Member Growth Chart
+            var memberGrowthOptions = {
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: { show: true }
+                },
+                series: [{
+                    name: 'New Members',
+                    data: <?php echo json_encode($member_growth_values); ?>
+                }],
+                xaxis: {
+                    categories: <?php echo json_encode($member_growth_months); ?>
+                },
+                colors: ['#3e60d5'],
+                stroke: {
+                    width: 3,
+                    curve: 'smooth'
+                },
+                markers: {
+                    size: 5
+                }
+            };
+            new ApexCharts(document.querySelector("#member-growth-chart"), memberGrowthOptions).render();
+
+            // Membership Status Pie Chart
+            var membershipStatusOptions = {
+                chart: {
+                    type: 'pie',
+                    height: 300
+                },
+                series: [<?php echo $active_members; ?>, <?php echo $expired_members; ?>, <?php echo $pending_members; ?>],
+                labels: ['Active', 'Expired', 'Pending'],
+                colors: ['#47ad77', '#fa5c7c', '#ffbc00'],
+                legend: {
+                    show: true,
+                    position: 'bottom'
+                }
+            };
+            new ApexCharts(document.querySelector("#membership-status-chart"), membershipStatusOptions).render();
+
+            // Events Created Chart
+            var eventsOptions = {
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: { show: true }
+                },
+                series: [{
+                    name: 'Events Created',
+                    data: <?php echo json_encode($events_created_values); ?>
+                }],
+                xaxis: {
+                    categories: <?php echo json_encode($member_growth_months); ?>
+                },
+                colors: ['#ffbc00']
+            };
+            new ApexCharts(document.querySelector("#events-chart"), eventsOptions).render();
+
+            // Resource Downloads Chart
+            var resourceSections = <?php echo json_encode(!empty($resource_sections) ? array_column($resource_sections, 'section') : []); ?>;
+            var resourceDownloads = <?php echo json_encode(!empty($resource_sections) ? array_column($resource_sections, 'total_downloads') : []); ?>;
+            
+            if (resourceSections.length > 0) {
+                var resourceDownloadsOptions = {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: { show: true },
+                        horizontal: true
+                    },
+                    series: [{
+                        name: 'Downloads',
+                        data: resourceDownloads
+                    }],
+                    xaxis: {
+                        categories: resourceSections
+                    },
+                    colors: ['#6c757d']
+                };
+                new ApexCharts(document.querySelector("#resource-downloads-chart"), resourceDownloadsOptions).render();
+            }
+
+            // Activity Types Chart
+            var activityTypes = <?php echo json_encode(!empty($activity_types) ? array_column($activity_types, 'activity_type') : []); ?>;
+            var activityCounts = <?php echo json_encode(!empty($activity_types) ? array_column($activity_types, 'count') : []); ?>;
+            
+            if (activityTypes.length > 0) {
+                var activityTypesOptions = {
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    series: activityCounts,
+                    labels: activityTypes,
+                    colors: ['#10b759', '#3e60d5', '#ffbc00', '#fa5c7c', '#6c757d'],
+                    legend: {
+                        show: true,
+                        position: 'bottom'
+                    }
+                };
+                new ApexCharts(document.querySelector("#activity-types-chart"), activityTypesOptions).render();
+            }
         });
     </script>
 
