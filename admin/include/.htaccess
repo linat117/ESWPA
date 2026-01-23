@@ -13,6 +13,9 @@
     <Files "upload_resource.php">
         Require all granted
     </Files>
+    <Files "research_handler.php">
+        Require all granted
+    </Files>
 </IfModule>
 
 <IfModule !mod_authz_core.c>
@@ -20,6 +23,10 @@
     Order deny,allow
     Deny from all
     <Files "upload_resource.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "research_handler.php">
         Order allow,deny
         Allow from all
     </Files>

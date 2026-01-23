@@ -273,3 +273,43 @@ Stack trace:
 #0 C:\wamp64\www\ethiosocialworks\admin\member_badges.php(231): mysqli->query('SELECT mb.*, r....')
 #1 {main}
   thrown in C:\wamp64\www\ethiosocialworks\admin\member_badges.php on line 231
+[23-Jan-2026 11:55:32 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[23-Jan-2026 11:55:32 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 11:55:32 UTC] PHP Stack trace:
+[23-Jan-2026 11:55:32 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 11:55:32 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[23-Jan-2026 12:12:49 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[23-Jan-2026 12:12:49 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[23-Jan-2026 12:12:49 UTC] PHP Stack trace:
+[23-Jan-2026 12:12:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[23-Jan-2026 12:12:49 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
