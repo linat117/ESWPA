@@ -148,6 +148,9 @@
                                               <a href="members_list.php">All Members</a>
                                           </li>
                                           <li>
+                                              <a href="add_member.php">Add Member</a>
+                                          </li>
+                                          <li>
                                               <a href="member_approval.php">Approval Workflow</a>
                                           </li>
                                           <li>

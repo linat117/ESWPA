@@ -35,6 +35,9 @@ include 'include/conn.php';
                         <div class="page-title-box d-flex justify-content-between align-items-center mb-3">
                             <h4 class="page-title">Members Management</h4>
                             <div>
+                                <a href="add_member.php" class="btn btn-primary me-2">
+                                    <i class="ri-add-circle-line"></i> Add Member
+                                </a>
                                 <a href="members_dashboard.php" class="btn btn-secondary me-2">
                                     <i class="ri-dashboard-line"></i> Dashboard
                                 </a>
@@ -45,6 +48,19 @@ include 'include/conn.php';
                         </div>
                     </div>
                 </div>
+
+                <?php if (!empty($_GET['success'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($_GET['success']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty($_GET['error'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($_GET['error']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Quick Stats -->
                 <div class="row g-2 mb-3">

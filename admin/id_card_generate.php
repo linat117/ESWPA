@@ -89,14 +89,14 @@ if ($member_id > 0) {
     $stmt->close();
 }
 
-// Get all eligible members (approved, not expired, optionally without ID card)
-$eligibleQuery = "SELECT id, fullname, membership_id, email, id_card_generated, expiry_date 
+// Fetch all members who can appear in the list: approved (can generate) or pending (show but disabled)
+// Exclude expired only; pending must be approved first before ID card can be generated
+$eligibleQuery = "SELECT id, fullname, membership_id, email, id_card_generated, expiry_date, approval_status, created_at 
                   FROM registrations 
-                  WHERE approval_status = 'approved' 
-                  AND (expiry_date IS NULL OR expiry_date >= CURDATE())
-                  ORDER BY fullname ASC";
+                  WHERE (expiry_date IS NULL OR expiry_date >= CURDATE())
+                  ORDER BY approval_status = 'approved' DESC, created_at DESC, fullname ASC";
 $eligibleResult = $conn->query($eligibleQuery);
-$eligible_members = $eligibleResult->fetch_all(MYSQLI_ASSOC);
+$eligible_members = $eligibleResult ? $eligibleResult->fetch_all(MYSQLI_ASSOC) : [];
 ?>
 
 <!DOCTYPE html>
@@ -155,16 +155,21 @@ $eligible_members = $eligibleResult->fetch_all(MYSQLI_ASSOC);
                                             <label class="form-label">Search and Select Member</label>
                                             <select class="form-select" id="member_select" required>
                                                 <option value="">-- Select a member --</option>
-                                                <?php foreach ($eligible_members as $m): ?>
-                                                    <option value="<?php echo $m['id']; ?>" 
+                                                <?php foreach ($eligible_members as $m): 
+                                                    $is_pending = (strtolower($m['approval_status'] ?? '') === 'pending');
+                                                ?>
+                                                    <option value="<?php echo $is_pending ? '' : $m['id']; ?>" 
+                                                            <?php if ($is_pending) echo 'disabled'; ?>
                                                             data-name="<?php echo htmlspecialchars($m['fullname']); ?>"
                                                             data-membership="<?php echo htmlspecialchars($m['membership_id']); ?>"
                                                             data-email="<?php echo htmlspecialchars($m['email']); ?>"
                                                             data-generated="<?php echo $m['id_card_generated']; ?>"
-                                                            <?php echo ($member && $member['id'] == $m['id']) ? 'selected' : ''; ?>>
+                                                            <?php echo (!$is_pending && $member && $member['id'] == $m['id']) ? 'selected' : ''; ?>>
                                                         <?php echo htmlspecialchars($m['fullname']); ?> 
                                                         (<?php echo htmlspecialchars($m['membership_id']); ?>)
-                                                        <?php if ($m['id_card_generated'] == 1): ?>
+                                                        <?php if ($is_pending): ?>
+                                                            — Pending approval (approve in Approval Workflow first)
+                                                        <?php elseif ($m['id_card_generated'] == 1): ?>
                                                             - [Already Generated]
                                                         <?php endif; ?>
                                                     </option>
@@ -211,6 +216,12 @@ $eligible_members = $eligibleResult->fetch_all(MYSQLI_ASSOC);
                                 </div>
                                 <div class="card-body">
                                     <div class="d-grid gap-2">
+                                        <a href="add_member.php" class="btn btn-outline-primary">
+                                            <i class="ri-add-circle-line"></i> Add Member
+                                        </a>
+                                        <a href="member_approval.php" class="btn btn-outline-warning">
+                                            <i class="ri-checkbox-circle-line"></i> Approval Workflow
+                                        </a>
                                         <a href="id_cards_list.php?status=pending" class="btn btn-warning">
                                             <i class="ri-time-line"></i> View Pending ID Cards
                                         </a>
@@ -233,7 +244,10 @@ $eligible_members = $eligibleResult->fetch_all(MYSQLI_ASSOC);
                                 </div>
                                 <div class="card-body">
                                     <p class="text-muted small">
-                                        <i class="ri-information-line"></i> ID cards can only be generated for approved members with active memberships.
+                                        <i class="ri-information-line"></i> ID cards can only be generated for <strong>approved</strong> members with active (non‑expired) memberships.
+                                    </p>
+                                    <p class="text-muted small">
+                                        <i class="ri-information-line"></i> New or pending members appear greyed out. Approve them via <a href="member_approval.php">Approval Workflow</a> or from <a href="members_list.php">All Members</a> first.
                                     </p>
                                     <p class="text-muted small">
                                         <i class="ri-information-line"></i> Each ID card includes a unique QR code for verification.

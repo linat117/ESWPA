@@ -80,9 +80,12 @@ if (!$company) {
         'phone' => '+251-XXX-XXX-XXXX',
         'email' => 'info@eswpa.org',
         'website' => 'www.eswpa.org',
+        'terms_conditions' => '',
         'company_signature' => null
     ];
 }
+$company_name = $company['company_name'] ?? 'Ethiopian Social Workers Professional Association';
+$terms_conditions = trim($company['terms_conditions'] ?? '');
 
 $conn->close();
 ob_end_flush();
@@ -92,6 +95,9 @@ ob_end_flush();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Print ID Card - <?php echo htmlspecialchars($member['fullname']); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -305,7 +311,8 @@ ob_end_flush();
         }
         
         .id-card-member-info {
-            padding: 0.4mm 0.8mm !important;
+            padding: 0.4mm 2mm !important;
+            padding-right: 5.5mm !important;
             flex: 1 !important;
             min-height: 0 !important;
             overflow: hidden !important;
@@ -317,7 +324,33 @@ ob_end_flush();
         .id-details-grid {
             gap: 0.25mm 0.6mm !important;
             margin-top: 0.25mm !important;
+            display: flex !important;
+            flex-direction: column !important;
         }
+        /* Team: title next to value on same line */
+        .id-detail-team-row {
+            display: flex !important;
+            align-items: baseline !important;
+            gap: 0.4mm !important;
+            flex-wrap: nowrap !important;
+        }
+        .id-detail-team-row strong { flex-shrink: 0 !important; }
+        /* Emp ID | Date of Issue: side by side */
+        .id-detail-row-pair {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            gap: 0.6mm !important;
+            align-items: flex-start !important;
+            flex-wrap: nowrap !important;
+        }
+        .id-detail-row-pair .id-detail-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.15mm !important;
+        }
+        .id-detail-row-pair .id-detail-item strong { flex-shrink: 0 !important; }
         
         .id-card-back-content {
             padding: 0.5mm !important;
@@ -389,7 +422,8 @@ ob_end_flush();
             order: 2 !important;
         }
     </style>
-    <link rel="stylesheet" href="../assets/css/id-card-print.css">
+    <?php $cssPath = __DIR__ . '/../assets/css/id-card-print.css'; ?>
+    <link rel="stylesheet" href="../assets/css/id-card-print.css?v=<?php echo file_exists($cssPath) ? filemtime($cssPath) : time(); ?>">
     <style>
         /* FINAL OVERRIDE - After external CSS loads, ensure no overlap */
         .id-card-print-container {
@@ -440,7 +474,7 @@ ob_end_flush();
                 <div class="id-card-top-banner">
                     <div class="id-card-logo">
                         <span class="id-card-logo-text">ESWPA</span>
-                        <span class="id-card-tagline">Ethiopian Social Workers Professional Association</span>
+                        <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
                     </div>
                 </div>
                 
@@ -465,22 +499,24 @@ ob_end_flush();
                     <p class="id-qualification"><?php echo htmlspecialchars($member['qualification']); ?></p>
                     
                     <div class="id-details-grid">
-                        <div class="id-detail-item">
+                        <div class="id-detail-item id-detail-team-row">
                             <strong>Team</strong>
-                            <span class="detail-value"><?php echo htmlspecialchars($company['company_name']); ?></span>
+                            <span class="detail-value"><?php echo htmlspecialchars($company_name); ?></span>
                         </div>
-                        <div class="id-detail-item">
-                            <strong>Emp ID</strong>
-                            <span class="detail-value"><?php echo htmlspecialchars($member['membership_id']); ?></span>
+                        <div class="id-detail-row-pair">
+                            <div class="id-detail-item">
+                                <strong>Emp ID</strong>
+                                <span class="detail-value"><?php echo htmlspecialchars($member['membership_id']); ?></span>
+                            </div>
+                            <div class="id-detail-item">
+                                <strong>Date of Issue</strong>
+                                <span class="detail-value"><?php echo date('d/m/Y', strtotime($member['created_at'])); ?></span>
+                            </div>
                         </div>
-                        <div class="id-detail-item">
-                            <strong>Date of Issue</strong>
-                            <span class="detail-value"><?php echo date('d/m/Y', strtotime($member['created_at'])); ?></span>
-                        </div>
-                        <div class="id-detail-item">
+                        <!--<div class="id-detail-item">
                             <strong>Date of Birth</strong>
                             <span class="detail-value"><?php echo !empty($member['date_of_birth']) ? date('d/m/Y', strtotime($member['date_of_birth'])) : 'N/A'; ?></span>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 
@@ -495,7 +531,7 @@ ob_end_flush();
                 <div class="id-card-back-top-banner">
                     <div class="id-card-back-logo-top">
                         <span class="id-card-back-logo-text-top">ESWPA</span>
-                        <span class="id-card-back-tagline-top">Ethiopian Social Workers Professional Association</span>
+                        <span class="id-card-back-tagline-top"><?php echo htmlspecialchars($company_name); ?></span>
                     </div>
                 </div>
                 
@@ -514,9 +550,13 @@ ob_end_flush();
                         <?php endif; ?>
                     </div>
                     
-                    <!-- Information Text -->
-                    <p class="id-back-text">This card is the property of Ethiopian Social Workers Professional Association and must be returned upon termination of membership.</p>
+                    <!-- Information Text (from template: terms_conditions and company name) -->
+                    <p class="id-back-text">This card is the property of <?php echo htmlspecialchars($company_name); ?> and must be returned upon termination of membership.</p>
+                    <?php if ($terms_conditions !== ''): ?>
+                    <p class="id-back-text"><?php echo nl2br(htmlspecialchars($terms_conditions)); ?></p>
+                    <?php else: ?>
                     <p class="id-back-text">For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.</p>
+                    <?php endif; ?>
                     
                     <!-- QR Code -->
                     <?php if (!empty($verificationUrl)): ?>

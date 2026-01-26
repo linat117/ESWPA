@@ -326,3 +326,15 @@ Stack trace:
 [26-Jan-2026 07:34:47 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
 [26-Jan-2026 07:34:47 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
 [26-Jan-2026 07:34:47 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[26-Jan-2026 08:05:00 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 178
+[26-Jan-2026 08:05:00 UTC] PHP Stack trace:
+[26-Jan-2026 08:05:00 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[26-Jan-2026 08:05:00 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:178
+[26-Jan-2026 08:26:56 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 178
+[26-Jan-2026 08:26:56 UTC] PHP Stack trace:
+[26-Jan-2026 08:26:56 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[26-Jan-2026 08:26:56 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:178
+[26-Jan-2026 08:42:20 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[26-Jan-2026 08:42:20 UTC] PHP Stack trace:
+[26-Jan-2026 08:42:20 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[26-Jan-2026 08:42:20 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418

@@ -22,16 +22,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $website = trim($_POST['website'] ?? '');
         $terms_conditions = trim($_POST['terms_conditions'] ?? '');
         
-        // Check if company_info exists
+        // Check if company_info exists and get id
+        $companyId = null;
         $checkStmt = $conn->prepare("SELECT id FROM company_info LIMIT 1");
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
+        if ($checkResult->num_rows > 0) {
+            $companyId = (int) $checkResult->fetch_assoc()['id'];
+        }
         $checkStmt->close();
         
-        if ($checkResult->num_rows > 0) {
-            // Update existing
-            $updateStmt = $conn->prepare("UPDATE company_info SET company_name = ?, address = ?, phone = ?, email = ?, website = ?, terms_conditions = ? WHERE id = (SELECT id FROM (SELECT id FROM company_info LIMIT 1) AS temp)");
-            $updateStmt->bind_param("ssssss", $company_name, $address, $phone, $email, $website, $terms_conditions);
+        if ($companyId !== null) {
+            // Update existing row
+            $updateStmt = $conn->prepare("UPDATE company_info SET company_name = ?, address = ?, phone = ?, email = ?, website = ?, terms_conditions = ? WHERE id = ?");
+            $updateStmt->bind_param("ssssssi", $company_name, $address, $phone, $email, $website, $terms_conditions, $companyId);
             if ($updateStmt->execute()) {
                 $success_message = "Company information updated successfully";
             } else {

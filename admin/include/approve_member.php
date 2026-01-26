@@ -18,6 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $member_id = intval($_POST['member_id'] ?? 0);
 $action = $_POST['action'] ?? '';
 $reason = trim($_POST['reason'] ?? '');
+$redirect_to_profile = isset($_POST['redirect']) && $_POST['redirect'] === 'profile';
+
+function redirect_profile($member_id, $success, $message) {
+    $param = $success ? 'success' : 'error';
+    header('Location: ../member_profile.php?id=' . (int) $member_id . '&' . $param . '=' . urlencode($message));
+    exit;
+}
 
 if ($member_id <= 0 || empty($action)) {
     echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
@@ -25,6 +32,9 @@ if ($member_id <= 0 || empty($action)) {
 }
 
 if (!in_array($action, ['approve', 'reject'])) {
+    if ($redirect_to_profile) {
+        redirect_profile($member_id, false, 'Invalid action');
+    }
     echo json_encode(['success' => false, 'message' => 'Invalid action']);
     exit();
 }
@@ -37,6 +47,9 @@ $memberStmt->execute();
 $memberResult = $memberStmt->get_result();
 
 if ($memberResult->num_rows === 0) {
+    if ($redirect_to_profile) {
+        redirect_profile($member_id, false, 'Member not found');
+    }
     echo json_encode(['success' => false, 'message' => 'Member not found']);
     exit();
 }
@@ -87,20 +100,26 @@ if ($action === 'approve') {
         
         // TODO: Send approval email to member
         // Include membership ID and login instructions
-        
+
+        $updateStmt->close();
+        if ($redirect_to_profile) {
+            redirect_profile($member_id, true, 'Member approved successfully. They can now access the member panel.');
+        }
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'message' => 'Member approved successfully. They can now access the member panel.'
         ]);
-    } else {
-        echo json_encode([
-            'success' => false, 
-            'message' => 'Failed to approve member: ' . $conn->error
-        ]);
+        exit;
     }
-    
     $updateStmt->close();
-    
+    if ($redirect_to_profile) {
+        redirect_profile($member_id, false, 'Failed to approve member: ' . $conn->error);
+    }
+    echo json_encode([
+        'success' => false,
+        'message' => 'Failed to approve member: ' . $conn->error
+    ]);
+    exit;
 } elseif ($action === 'reject') {
     // Update approval status
     $updateQuery = "UPDATE registrations SET 
@@ -114,21 +133,25 @@ if ($action === 'approve') {
     $updateStmt->bind_param("isi", $admin_id, $now, $member_id);
     
     if ($updateStmt->execute()) {
-        // TODO: Send rejection email to member
-        // Include reason if provided
-        
+        $updateStmt->close();
+        if ($redirect_to_profile) {
+            redirect_profile($member_id, true, 'Member rejected successfully.');
+        }
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'message' => 'Member rejected successfully.'
         ]);
-    } else {
-        echo json_encode([
-            'success' => false, 
-            'message' => 'Failed to reject member: ' . $conn->error
-        ]);
+        exit;
     }
-    
     $updateStmt->close();
+    if ($redirect_to_profile) {
+        redirect_profile($member_id, false, 'Failed to reject member: ' . $conn->error);
+    }
+    echo json_encode([
+        'success' => false,
+        'message' => 'Failed to reject member: ' . $conn->error
+    ]);
+    exit;
 }
 
 $memberStmt->close();

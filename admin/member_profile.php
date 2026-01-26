@@ -78,6 +78,19 @@ $is_expired = !empty($member['expiry_date']) && strtotime($member['expiry_date']
                         </div>
                     </div>
 
+                    <?php if (!empty($_GET['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($_GET['success']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($_GET['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($_GET['error']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="row">
                         <!-- Left Column - Member Info -->
                         <div class="col-lg-8">
@@ -239,11 +252,14 @@ $is_expired = !empty($member['expiry_date']) && strtotime($member['expiry_date']
                                 <div class="card-body">
                                     <div class="d-grid gap-2">
                                         <?php if ($member['approval_status'] == 'pending'): ?>
-                                            <a href="include/approve_member.php?id=<?php echo $member_id; ?>" 
-                                               class="btn btn-success"
-                                               onclick="return confirm('Approve this member?')">
-                                                <i class="ri-check-line"></i> Approve Member
-                                            </a>
+                                            <form method="POST" action="include/approve_member.php" class="d-grid" onsubmit="return confirm('Approve this member?');">
+                                                <input type="hidden" name="member_id" value="<?php echo $member_id; ?>">
+                                                <input type="hidden" name="action" value="approve">
+                                                <input type="hidden" name="redirect" value="profile">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="ri-check-line"></i> Approve Member
+                                                </button>
+                                            </form>
                                         <?php endif; ?>
                                         <a href="edit_member.php?id=<?php echo $member_id; ?>" class="btn btn-primary">
                                             <i class="ri-edit-line"></i> Edit Member
