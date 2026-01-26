@@ -230,6 +230,9 @@
                                               <a href="add_research.php">Add Research</a>
                                           </li>
                                           <li>
+                                              <a href="research_categories.php">Categories</a>
+                                          </li>
+                                          <li>
                                               <a href="collaborator.php">Collaborator</a>
                                           </li>
                                           <li>

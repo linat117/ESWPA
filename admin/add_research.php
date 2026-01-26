@@ -16,6 +16,24 @@ $members = [];
 while ($m = mysqli_fetch_assoc($membersResult)) {
     $members[] = $m;
 }
+
+// Ensure research_categories table exists and get categories
+$categories = [];
+$create_cat = "CREATE TABLE IF NOT EXISTS `research_categories` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `display_order` INT(11) NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+@$conn->query($create_cat);
+$catRes = @$conn->query("SELECT id, name FROM research_categories ORDER BY display_order ASC, name ASC");
+if ($catRes && $catRes->num_rows > 0) {
+    while ($r = $catRes->fetch_assoc()) {
+        $categories[] = $r;
+    }
+}
 ?>
 
 <body>
@@ -94,8 +112,15 @@ while ($m = mysqli_fetch_assoc($membersResult)) {
 
                                             <div class="col-md-4 mb-3">
                                                 <label for="category" class="form-label">Category</label>
-                                                <input type="text" class="form-control" id="category" name="category" 
-                                                       placeholder="e.g., Social Work, Psychology, Education">
+                                                <select class="form-control" id="category" name="category">
+                                                    <option value="">Select category</option>
+                                                    <?php foreach ($categories as $cat): ?>
+                                                        <option value="<?php echo htmlspecialchars($cat['name']); ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <small class="text-muted">
+                                                    <a href="research_categories.php" target="_blank">Manage categories</a>
+                                                </small>
                                             </div>
 
                                             <div class="col-md-4 mb-3">

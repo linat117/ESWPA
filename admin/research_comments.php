@@ -25,16 +25,19 @@ if (isset($_GET['delete']) && isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 
-// Check if research tables exist
-$tableCheck = $conn->query("SHOW TABLES LIKE 'research_comments'");
-$tables_exist = $tableCheck->num_rows > 0;
+$comments = [];
+$research_projects = [];
+$error_message = null;
+
+$tableCheck = @$conn->query("SHOW TABLES LIKE 'research_comments'");
+$tables_exist = $tableCheck && $tableCheck->num_rows > 0;
 
 if (!$tables_exist) {
-    $error_message = "Research comments tables have not been created yet.";
+    $error_message = "The research_comments table has not been created yet. Run the migration SQL to create it.";
 } else {
-    // Build query based on filter
+    $stmt = null;
     if ($research_id > 0) {
-        $query = "SELECT rc.*, rp.title as research_title, r.fullname as commenter_name, r.email as commenter_email,
+        $stmt = @$conn->prepare("SELECT rc.*, rp.title as research_title, r.fullname as commenter_name, r.email as commenter_email,
                          parent.fullname as parent_commenter_name
                   FROM research_comments rc
                   LEFT JOIN research_projects rp ON rc.research_id = rp.id
@@ -42,16 +45,16 @@ if (!$tables_exist) {
                   LEFT JOIN research_comments parent_comment ON rc.parent_comment_id = parent_comment.id
                   LEFT JOIN registrations parent ON parent_comment.member_id = parent.id
                   WHERE rc.research_id = ?
-                  ORDER BY rc.created_at DESC";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("i", $research_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $comments = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
+                  ORDER BY rc.created_at DESC");
+        if ($stmt) {
+            $stmt->bind_param("i", $research_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $comments = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+            $stmt->close();
+        }
     } else {
-        // Get all comments
-        $query = "SELECT rc.*, rp.title as research_title, r.fullname as commenter_name, r.email as commenter_email,
+        $result = @$conn->query("SELECT rc.*, rp.title as research_title, r.fullname as commenter_name, r.email as commenter_email,
                          parent.fullname as parent_commenter_name
                   FROM research_comments rc
                   LEFT JOIN research_projects rp ON rc.research_id = rp.id
@@ -59,25 +62,12 @@ if (!$tables_exist) {
                   LEFT JOIN research_comments parent_comment ON rc.parent_comment_id = parent_comment.id
                   LEFT JOIN registrations parent ON parent_comment.member_id = parent.id
                   ORDER BY rc.created_at DESC
-                  LIMIT 100";
-        $result = $conn->query($query);
-        $comments = $result->fetch_all(MYSQLI_ASSOC);
+                  LIMIT 100");
+        $comments = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // Get research projects for filter dropdown
-    $researchQuery = "SELECT id, title FROM research_projects ORDER BY title";
-    $researchResult = $conn->query($researchQuery);
-    $research_projects = $researchResult->fetch_all(MYSQLI_ASSOC);
-
-    // Count comments by research
-    $comment_counts = [];
-    foreach ($comments as $comment) {
-        $rid = $comment['research_id'];
-        if (!isset($comment_counts[$rid])) {
-            $comment_counts[$rid] = 0;
-        }
-        $comment_counts[$rid]++;
-    }
+    $researchResult = @$conn->query("SELECT id, title FROM research_projects ORDER BY title");
+    $research_projects = ($researchResult && $researchResult->num_rows > 0) ? $researchResult->fetch_all(MYSQLI_ASSOC) : [];
 }
 ?>
 
@@ -210,7 +200,9 @@ if (!$tables_exist) {
                                 <div class="card-body">
                                     <?php if (empty($comments)): ?>
                                         <div class="alert alert-info">
-                                            <i class="ri-information-line"></i> No comments found.
+                                            <i class="ri-information-line"></i> <strong>No comments found.</strong>
+                                            <p class="mb-0 mt-2 small">Add comments from a research project page: <strong>Research → All Research</strong> → open a project → <strong>Comments</strong> section → use &quot;Add comment&quot;.
+                                            Or filter by project above if you have comments already.</p>
                                         </div>
                                     <?php else: ?>
                                         <div class="table-responsive">
@@ -305,18 +297,20 @@ if (!$tables_exist) {
 
     <script>
         $(document).ready(function() {
-            // Initialize DataTable
-            $('#commentsTable').DataTable({
-                "order": [[4, "desc"]], // Sort by date descending
-                "pageLength": 25,
-                "language": {
-                    "search": "Search comments:",
-                    "lengthMenu": "Show _MENU_ comments per page",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ comments",
-                    "infoEmpty": "No comments found",
-                    "infoFiltered": "(filtered from _MAX_ total comments)"
-                }
-            });
+            var $tbl = $('#commentsTable');
+            if ($tbl.length && $.fn.DataTable) {
+                $tbl.DataTable({
+                    order: [[4, 'desc']],
+                    pageLength: 25,
+                    language: {
+                        search: 'Search comments:',
+                        lengthMenu: 'Show _MENU_ comments per page',
+                        info: 'Showing _START_ to _END_ of _TOTAL_ comments',
+                        infoEmpty: 'No comments found',
+                        infoFiltered: '(filtered from _MAX_ total comments)'
+                    }
+                });
+            }
         });
     </script>
 

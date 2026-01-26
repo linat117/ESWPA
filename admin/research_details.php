@@ -67,16 +67,63 @@ $versionsStmt->bind_param("i", $research_id);
 $versionsStmt->execute();
 $versionsResult = $versionsStmt->get_result();
 
-// Get comments
-$commentsQuery = "SELECT rc.*, r.fullname as commenter_name
+// Check research_comments table and build "Add comment" authors (created_by + collaborators)
+$comments_table_exists = false;
+$comments = [];
+$comment_authors = [];
+$add_comment_error = '';
+$add_comment_success = '';
+
+$tc = @$conn->query("SHOW TABLES LIKE 'research_comments'");
+if ($tc && $tc->num_rows > 0) {
+    $comments_table_exists = true;
+    $comment_authors[(int)$research['created_by']] = $research['creator_name'] ?? 'Project owner';
+    while ($row = $collabResult->fetch_assoc()) {
+        $comment_authors[(int)$row['member_id']] = $row['fullname'] ?? ('Member #' . $row['member_id']);
+    }
+    $collabResult->data_seek(0);
+
+    // Handle add comment
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
+        $member_id = (int)($_POST['member_id'] ?? 0);
+        $comment_text = trim($_POST['comment'] ?? '');
+        if (empty($comment_text)) {
+            $add_comment_error = 'Comment cannot be empty.';
+        } elseif (!$member_id || !isset($comment_authors[$member_id])) {
+            $add_comment_error = 'Please select a valid author.';
+        } else {
+            $ins = $conn->prepare("INSERT INTO research_comments (research_id, member_id, comment) VALUES (?, ?, ?)");
+            if ($ins) {
+                $ins->bind_param("iis", $research_id, $member_id, $comment_text);
+                if ($ins->execute()) {
+                    $ins->close();
+                    header("Location: research_details.php?id=" . $research_id . "&comment_added=1");
+                    exit;
+                }
+                $ins->close();
+            }
+            $add_comment_error = 'Failed to save comment. Please try again.';
+        }
+    }
+    if (isset($_GET['comment_added'])) {
+        $add_comment_success = 'Comment added successfully.';
+    }
+
+    $commentsStmt = @$conn->prepare("SELECT rc.*, r.fullname as commenter_name
                   FROM research_comments rc
                   LEFT JOIN registrations r ON rc.member_id = r.id
                   WHERE rc.research_id = ? AND rc.parent_comment_id IS NULL
-                  ORDER BY rc.created_at DESC";
-$commentsStmt = $conn->prepare($commentsQuery);
-$commentsStmt->bind_param("i", $research_id);
-$commentsStmt->execute();
-$commentsResult = $commentsStmt->get_result();
+                  ORDER BY rc.created_at DESC");
+    if ($commentsStmt) {
+        $commentsStmt->bind_param("i", $research_id);
+        $commentsStmt->execute();
+        $res = $commentsStmt->get_result();
+        if ($res) {
+            $comments = $res->fetch_all(MYSQLI_ASSOC);
+        }
+        $commentsStmt->close();
+    }
+}
 ?>
 
 <body>
@@ -332,24 +379,66 @@ $commentsResult = $commentsStmt->get_result();
 
                             <!-- Comments -->
                             <div class="card mt-3">
-                                <div class="card-header">
-                                    <h4 class="header-title">Comments</h4>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4 class="header-title mb-0">Comments</h4>
+                                    <a href="research_comments.php?research_id=<?php echo $research_id; ?>" class="btn btn-sm btn-outline-primary">
+                                        <i class="ri-chat-3-line"></i> Manage All Comments
+                                    </a>
                                 </div>
                                 <div class="card-body">
-                                    <?php
-                                    if ($commentsResult->num_rows > 0) {
-                                        while ($comment = $commentsResult->fetch_assoc()) {
-                                            echo '<div class="mb-3 pb-3 border-bottom">';
-                                            echo '<strong>' . htmlspecialchars($comment['commenter_name'] ?? 'Unknown') . '</strong>';
-                                            echo '<br><small class="text-muted">' . date('M d, Y H:i', strtotime($comment['created_at'])) . '</small>';
-                                            echo '<p class="mt-2 mb-0">' . nl2br(htmlspecialchars($comment['comment'])) . '</p>';
-                                            echo '</div>';
-                                        }
-                                    } else {
-                                        echo '<p class="text-muted">No comments yet.</p>';
-                                    }
-                                    $commentsStmt->close();
-                                    ?>
+                                    <?php if (!$comments_table_exists): ?>
+                                        <p class="text-muted mb-0">Comments are not available. The <code>research_comments</code> table has not been created.</p>
+                                    <?php else: ?>
+                                        <?php if ($add_comment_success): ?>
+                                            <div class="alert alert-success alert-dismissible fade show py-2">
+                                                <?php echo htmlspecialchars($add_comment_success); ?>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if ($add_comment_error): ?>
+                                            <div class="alert alert-danger alert-dismissible fade show py-2">
+                                                <?php echo htmlspecialchars($add_comment_error); ?>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <form method="post" class="mb-4">
+                                            <input type="hidden" name="add_comment" value="1">
+                                            <h6 class="text-muted mb-2"><i class="ri-add-line"></i> Add comment</h6>
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <label class="form-label small">Post as</label>
+                                                    <select name="member_id" class="form-select form-select-sm" required>
+                                                        <?php foreach ($comment_authors as $mid => $name): ?>
+                                                            <option value="<?php echo $mid; ?>"><?php echo htmlspecialchars($name); ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label small">Comment</label>
+                                                    <textarea name="comment" class="form-control" rows="3" required placeholder="Write a comment..."></textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="ri-send-plane-line"></i> Add comment
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <hr class="my-3">
+
+                                        <?php if (!empty($comments)): ?>
+                                            <?php foreach ($comments as $c): ?>
+                                                <div class="mb-3 pb-3 border-bottom">
+                                                    <strong><?php echo htmlspecialchars($c['commenter_name'] ?? 'Unknown'); ?></strong>
+                                                    <br><small class="text-muted"><?php echo date('M d, Y H:i', strtotime($c['created_at'])); ?></small>
+                                                    <p class="mt-2 mb-0"><?php echo nl2br(htmlspecialchars($c['comment'])); ?></p>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <p class="text-muted mb-0">No comments yet. Use the form above to add one.</p>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

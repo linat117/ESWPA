@@ -40,50 +40,55 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     $start_datetime = $start_date . ' 00:00:00';
     $end_datetime = $end_date . ' 23:59:59';
     
-    // Member admin notes
     if ($member_notes_exists) {
-        $stmt = $conn->prepare("SELECT 'Admin Note' as type, man.id, r.fullname as member_name, LEFT(man.note, 100) as title, man.is_important, man.created_at
-                               FROM member_admin_notes man
-                               LEFT JOIN registrations r ON man.member_id = r.id
-                               WHERE man.created_at BETWEEN ? AND ?
-                               ORDER BY man.created_at DESC");
-        $stmt->bind_param("ss", $start_datetime, $end_datetime);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            fputcsv($output, [
-                $row['type'],
-                $row['id'],
-                $row['member_name'] ?? 'N/A',
-                $row['title'],
-                $row['is_important'] ? 'Yes' : 'No',
-                $row['created_at']
-            ]);
+        $stmt = @$conn->prepare("SELECT 'Admin Note' as type, man.id, r.fullname as member_name, LEFT(man.note, 100) as title, man.is_important, man.created_at
+                                 FROM member_admin_notes man
+                                 LEFT JOIN registrations r ON man.member_id = r.id
+                                 WHERE man.created_at BETWEEN ? AND ?
+                                 ORDER BY man.created_at DESC");
+        if ($stmt) {
+            $stmt->bind_param("ss", $start_datetime, $end_datetime);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    fputcsv($output, [
+                        $row['type'],
+                        $row['id'],
+                        $row['member_name'] ?? 'N/A',
+                        $row['title'],
+                        !empty($row['is_important']) ? 'Yes' : 'No',
+                        $row['created_at']
+                    ]);
+                }
+            }
+            $stmt->close();
         }
-        $stmt->close();
     }
-    
-    // Research notes
     if ($research_notes_exists) {
-        $stmt = $conn->prepare("SELECT 'Research Note' as type, rn.id, r.fullname as member_name, rn.title, 0 as is_important, rn.created_at
-                               FROM research_notes rn
-                               LEFT JOIN registrations r ON rn.member_id = r.id
-                               WHERE rn.created_at BETWEEN ? AND ?
-                               ORDER BY rn.created_at DESC");
-        $stmt->bind_param("ss", $start_datetime, $end_datetime);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            fputcsv($output, [
-                $row['type'],
-                $row['id'],
-                $row['member_name'] ?? 'N/A',
-                $row['title'],
-                'No',
-                $row['created_at']
-            ]);
+        $stmt = @$conn->prepare("SELECT 'Research Note' as type, rn.id, r.fullname as member_name, rn.title, 0 as is_important, rn.created_at
+                                 FROM research_notes rn
+                                 LEFT JOIN registrations r ON rn.member_id = r.id
+                                 WHERE rn.created_at BETWEEN ? AND ?
+                                 ORDER BY rn.created_at DESC");
+        if ($stmt) {
+            $stmt->bind_param("ss", $start_datetime, $end_datetime);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    fputcsv($output, [
+                        $row['type'],
+                        $row['id'],
+                        $row['member_name'] ?? 'N/A',
+                        $row['title'],
+                        'No',
+                        $row['created_at']
+                    ]);
+                }
+            }
+            $stmt->close();
         }
-        $stmt->close();
     }
     
     fclose($output);
@@ -110,82 +115,104 @@ $end_datetime = $end_date . ' 23:59:59';
 // Statistics
 $stats = [];
 
-// Member admin notes statistics
+// Member admin notes statistics (user table uses 'username', not 'user_name')
+$notes_by_admin = [];
+$stats['member_notes'] = ['total' => 0, 'important' => 0];
 if ($member_notes_exists) {
-    $stmt = $conn->prepare("SELECT COUNT(*) as total, SUM(CASE WHEN is_important = 1 THEN 1 ELSE 0 END) as important 
-                           FROM member_admin_notes 
-                           WHERE created_at BETWEEN ? AND ?");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stats['member_notes'] = $result->fetch_assoc() ?? ['total' => 0, 'important' => 0];
-    $stmt->close();
-    
-    // Notes by admin
-    $notes_by_admin = [];
-    $stmt = $conn->prepare("SELECT u.user_name, COUNT(*) as count 
-                           FROM member_admin_notes man
-                           LEFT JOIN user u ON man.admin_id = u.id
-                           WHERE man.created_at BETWEEN ? AND ?
-                           GROUP BY man.admin_id, u.user_name
-                           ORDER BY count DESC
-                           LIMIT 10");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $notes_by_admin[] = $row;
+    $stmt = @$conn->prepare("SELECT COUNT(*) as total, SUM(CASE WHEN is_important = 1 THEN 1 ELSE 0 END) as important 
+                             FROM member_admin_notes 
+                             WHERE created_at BETWEEN ? AND ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $stats['member_notes'] = ['total' => (int)($row['total'] ?? 0), 'important' => (int)($row['important'] ?? 0)];
+            }
+        }
+        $stmt->close();
     }
-    $stmt->close();
-} else {
-    $stats['member_notes'] = ['total' => 0, 'important' => 0];
-    $notes_by_admin = [];
+
+    $stmt = @$conn->prepare("SELECT u.username as user_name, COUNT(*) as count 
+                             FROM member_admin_notes man
+                             LEFT JOIN user u ON man.admin_id = u.id
+                             WHERE man.created_at BETWEEN ? AND ?
+                             GROUP BY man.admin_id, u.username
+                             ORDER BY count DESC
+                             LIMIT 10");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $notes_by_admin[] = $row;
+            }
+        }
+        $stmt->close();
+    }
 }
 
 // Research notes statistics
+$notes_by_research = [];
+$stats['research_notes'] = ['total' => 0, 'unique_authors' => 0];
 if ($research_notes_exists) {
-    $stmt = $conn->prepare("SELECT COUNT(*) as total, COUNT(DISTINCT member_id) as unique_authors 
-                           FROM research_notes 
-                           WHERE created_at BETWEEN ? AND ?");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stats['research_notes'] = $result->fetch_assoc() ?? ['total' => 0, 'unique_authors' => 0];
-    $stmt->close();
-    
-    // Notes by research
-    $notes_by_research = [];
-    $stmt = $conn->prepare("SELECT rp.title as research_title, COUNT(*) as count 
-                           FROM research_notes rn
-                           LEFT JOIN research_projects rp ON rn.research_id = rp.id
-                           WHERE rn.created_at BETWEEN ? AND ? AND rn.research_id IS NOT NULL
-                           GROUP BY rn.research_id, rp.title
-                           ORDER BY count DESC
-                           LIMIT 10");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $notes_by_research[] = $row;
+    $stmt = @$conn->prepare("SELECT COUNT(*) as total, COUNT(DISTINCT member_id) as unique_authors 
+                             FROM research_notes 
+                             WHERE created_at BETWEEN ? AND ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $stats['research_notes'] = ['total' => (int)($row['total'] ?? 0), 'unique_authors' => (int)($row['unique_authors'] ?? 0)];
+            }
+        }
+        $stmt->close();
     }
-    $stmt->close();
-} else {
-    $stats['research_notes'] = ['total' => 0, 'unique_authors' => 0];
-    $notes_by_research = [];
+
+    $stmt = @$conn->prepare("SELECT rp.title as research_title, COUNT(*) as count 
+                             FROM research_notes rn
+                             LEFT JOIN research_projects rp ON rn.research_id = rp.id
+                             WHERE rn.created_at BETWEEN ? AND ? AND rn.research_id IS NOT NULL
+                             GROUP BY rn.research_id, rp.title
+                             ORDER BY count DESC
+                             LIMIT 10");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $notes_by_research[] = $row;
+            }
+        }
+        $stmt->close();
+    }
 }
 
 // Research comments statistics
+$stats['research_comments'] = ['total' => 0, 'unique_authors' => 0];
 if ($research_comments_exists) {
-    $stmt = $conn->prepare("SELECT COUNT(*) as total, COUNT(DISTINCT member_id) as unique_authors 
-                           FROM research_comments 
-                           WHERE created_at BETWEEN ? AND ?");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stats['research_comments'] = $result->fetch_assoc() ?? ['total' => 0, 'unique_authors' => 0];
-    $stmt->close();
-} else {
-    $stats['research_comments'] = ['total' => 0, 'unique_authors' => 0];
+    $stmt = @$conn->prepare("SELECT COUNT(*) as total, COUNT(DISTINCT member_id) as unique_authors 
+                             FROM research_comments 
+                             WHERE created_at BETWEEN ? AND ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $stats['research_comments'] = ['total' => (int)($row['total'] ?? 0), 'unique_authors' => (int)($row['unique_authors'] ?? 0)];
+            }
+        }
+        $stmt->close();
+    }
 }
 
 // Monthly trend (member admin notes only)
@@ -198,14 +225,15 @@ for ($i = 11; $i >= 0; $i--) {
 }
 
 if ($member_notes_exists) {
-    $monthly_query = "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(id) as count 
-                      FROM member_admin_notes 
-                      WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH) 
-                      GROUP BY month ORDER BY month ASC";
-    $monthly_result = $conn->query($monthly_query);
-    while ($row = $monthly_result->fetch_assoc()) {
-        if (isset($monthly_trend[$row['month']])) {
-            $monthly_trend[$row['month']] = $row['count'];
+    $monthly_result = @$conn->query("SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(id) as count 
+                                     FROM member_admin_notes 
+                                     WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH) 
+                                     GROUP BY month ORDER BY month ASC");
+    if ($monthly_result) {
+        while ($row = $monthly_result->fetch_assoc()) {
+            if (isset($monthly_trend[$row['month']])) {
+                $monthly_trend[$row['month']] = (int)$row['count'];
+            }
         }
     }
 }
@@ -215,37 +243,45 @@ $recent_notes = [];
 
 // Member admin notes
 if ($member_notes_exists) {
-    $stmt = $conn->prepare("SELECT 'Admin Note' as note_type, man.id, r.fullname as member_name, LEFT(man.note, 100) as title, man.is_important, man.created_at, NULL as research_title
-                           FROM member_admin_notes man
-                           LEFT JOIN registrations r ON man.member_id = r.id
-                           WHERE man.created_at BETWEEN ? AND ?
-                           ORDER BY man.created_at DESC
-                           LIMIT 50");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $recent_notes[] = $row;
+    $stmt = @$conn->prepare("SELECT 'Admin Note' as note_type, man.id, r.fullname as member_name, LEFT(man.note, 100) as title, man.is_important, man.created_at, NULL as research_title
+                             FROM member_admin_notes man
+                             LEFT JOIN registrations r ON man.member_id = r.id
+                             WHERE man.created_at BETWEEN ? AND ?
+                             ORDER BY man.created_at DESC
+                             LIMIT 50");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $recent_notes[] = $row;
+            }
+        }
+        $stmt->close();
     }
-    $stmt->close();
 }
 
 // Research notes
 if ($research_notes_exists) {
-    $stmt = $conn->prepare("SELECT 'Research Note' as note_type, rn.id, r.fullname as member_name, rn.title, 0 as is_important, rn.created_at, rp.title as research_title
-                           FROM research_notes rn
-                           LEFT JOIN registrations r ON rn.member_id = r.id
-                           LEFT JOIN research_projects rp ON rn.research_id = rp.id
-                           WHERE rn.created_at BETWEEN ? AND ?
-                           ORDER BY rn.created_at DESC
-                           LIMIT 50");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $recent_notes[] = $row;
+    $stmt = @$conn->prepare("SELECT 'Research Note' as note_type, rn.id, r.fullname as member_name, rn.title, 0 as is_important, rn.created_at, rp.title as research_title
+                             FROM research_notes rn
+                             LEFT JOIN registrations r ON rn.member_id = r.id
+                             LEFT JOIN research_projects rp ON rn.research_id = rp.id
+                             WHERE rn.created_at BETWEEN ? AND ?
+                             ORDER BY rn.created_at DESC
+                             LIMIT 50");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $recent_notes[] = $row;
+            }
+        }
+        $stmt->close();
     }
-    $stmt->close();
 }
 
 // Sort by date
@@ -545,17 +581,21 @@ $recent_notes = array_slice($recent_notes, 0, 100);
     <!-- App js -->
     <script src="assets/js/app.min.js"></script>
 
-    <?php if ($member_notes_exists && !empty($monthly_trend)): ?>
+    <?php
+    $has_notes_content = $member_notes_exists || $research_notes_exists || $research_comments_exists;
+    $has_charts = $member_notes_exists && !empty($monthly_trend);
+    ?>
+    <?php if ($has_notes_content): ?>
     <script>
         $(document).ready(function() {
-            // Initialize DataTable
-            $('.datatable').DataTable({
-                responsive: true,
-                order: [[6, 'desc']],
-                pageLength: 25
-            });
-
-            // Monthly Trend Chart
+            if ($.fn.DataTable && $('.datatable').length) {
+                $('.datatable').DataTable({
+                    responsive: true,
+                    order: [[6, 'desc']],
+                    pageLength: 25
+                });
+            }
+            <?php if ($has_charts): ?>
             var monthlyOptions = {
                 series: [{
                     name: 'Notes',
@@ -582,8 +622,12 @@ $recent_notes = array_slice($recent_notes, 0, 100);
                     y: { formatter: function(val) { return val + ' notes'; } }
                 }
             };
-            var monthlyChart = new ApexCharts(document.querySelector("#monthly-trend-chart"), monthlyOptions);
-            monthlyChart.render();
+            var el = document.querySelector("#monthly-trend-chart");
+            if (el && typeof ApexCharts !== 'undefined') {
+                var monthlyChart = new ApexCharts(el, monthlyOptions);
+                monthlyChart.render();
+            }
+            <?php endif; ?>
         });
     </script>
     <?php endif; ?>

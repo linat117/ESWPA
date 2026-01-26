@@ -159,22 +159,26 @@ if ($audit_table_exists) {
         }
     }
 
-    // Recent activities
+    // Recent activities (user table uses 'username', not 'user_name')
     $recent_activities = [];
     $stmt = $conn->prepare("SELECT al.id, al.user_id, al.user_type, al.action, al.table_name, al.record_id, al.ip_address, al.created_at,
-                           u.user_name as admin_name
+                           u.username as admin_name
                            FROM audit_logs al
                            LEFT JOIN user u ON al.user_id = u.id AND al.user_type = 'admin'
                            WHERE al.created_at BETWEEN ? AND ?
                            ORDER BY al.created_at DESC 
                            LIMIT 100");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $recent_activities[] = $row;
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $recent_activities[] = $row;
+            }
+        }
+        $stmt->close();
     }
-    $stmt->close();
 } else {
     $stats['total_actions'] = 0;
     $action_breakdown = [];
@@ -187,33 +191,40 @@ if ($audit_table_exists) {
 }
 
 // Member login activity (from member_access table)
-$member_login_stats = [];
+$member_login_stats = ['unique_users' => 0, 'total_logins' => 0];
 if ($member_access_exists) {
-    $stmt = $conn->prepare("SELECT COUNT(DISTINCT member_id) as unique_users, COUNT(*) as total_logins 
-                           FROM member_access 
-                           WHERE last_login BETWEEN ? AND ?");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $member_login_stats = $result->fetch_assoc() ?? ['unique_users' => 0, 'total_logins' => 0];
-    $stmt->close();
-} else {
-    $member_login_stats = ['unique_users' => 0, 'total_logins' => 0];
+    $stmt = @$conn->prepare("SELECT COUNT(DISTINCT member_id) as unique_users, COUNT(*) as total_logins 
+                             FROM member_access 
+                             WHERE last_login BETWEEN ? AND ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            $member_login_stats = $result->fetch_assoc() ?: $member_login_stats;
+        }
+        $stmt->close();
+    }
 }
 
 // Access logs statistics
-$access_logs_stats = [];
+$access_logs_stats = ['total' => 0, 'granted' => 0, 'denied' => 0];
 if ($access_logs_exists) {
-    $stmt = $conn->prepare("SELECT COUNT(*) as total, SUM(CASE WHEN access_granted = 1 THEN 1 ELSE 0 END) as granted, SUM(CASE WHEN access_granted = 0 THEN 1 ELSE 0 END) as denied 
-                           FROM access_logs 
-                           WHERE accessed_at BETWEEN ? AND ?");
-    $stmt->bind_param("ss", $start_datetime, $end_datetime);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $access_logs_stats = $result->fetch_assoc() ?? ['total' => 0, 'granted' => 0, 'denied' => 0];
-    $stmt->close();
-} else {
-    $access_logs_stats = ['total' => 0, 'granted' => 0, 'denied' => 0];
+    $stmt = @$conn->prepare("SELECT COUNT(*) as total, SUM(CASE WHEN access_granted = 1 THEN 1 ELSE 0 END) as granted, SUM(CASE WHEN access_granted = 0 THEN 1 ELSE 0 END) as denied 
+                             FROM access_logs 
+                             WHERE accessed_at BETWEEN ? AND ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $start_datetime, $end_datetime);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $access_logs_stats = ['total' => (int)($row['total'] ?? 0), 'granted' => (int)($row['granted'] ?? 0), 'denied' => (int)($row['denied'] ?? 0)];
+            }
+        }
+        $stmt->close();
+    }
 }
 ?>
 
