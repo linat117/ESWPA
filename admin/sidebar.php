@@ -227,6 +227,9 @@
                                               <a href="add_research.php">Add Research</a>
                                           </li>
                                           <li>
+                                              <a href="collaborator.php">Collaborator</a>
+                                          </li>
+                                          <li>
                                               <a href="research_analytics.php">Analytics</a>
                                           </li>
                                           <li>

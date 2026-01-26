@@ -9,9 +9,13 @@ if (!isset($_SESSION['user_id'])) {
 include 'include/conn.php';
 include 'header.php';
 
-// Get members for created_by dropdown
-$membersQuery = "SELECT id, fullname, email FROM registrations ORDER BY fullname";
+// Get members for created_by and collaborators dropdowns
+$membersQuery = "SELECT id, fullname, email FROM registrations WHERE approval_status = 'approved' ORDER BY fullname";
 $membersResult = mysqli_query($conn, $membersQuery);
+$members = [];
+while ($m = mysqli_fetch_assoc($membersResult)) {
+    $members[] = $m;
+}
 ?>
 
 <body>
@@ -68,13 +72,11 @@ $membersResult = mysqli_query($conn, $membersQuery);
                                                 <label for="created_by" class="form-label">Created By (Member) *</label>
                                                 <select class="form-control" id="created_by" name="created_by" required>
                                                     <option value="">Select Member</option>
-                                                    <?php
-                                                    while ($member = mysqli_fetch_assoc($membersResult)) {
-                                                        echo '<option value="' . $member['id'] . '">' . 
-                                                             htmlspecialchars($member['fullname'] . ' (' . $member['email'] . ')') . 
-                                                             '</option>';
-                                                    }
-                                                    ?>
+                                                    <?php foreach ($members as $member): ?>
+                                                        <option value="<?php echo (int) $member['id']; ?>">
+                                                            <?php echo htmlspecialchars($member['fullname'] . ' (' . $member['email'] . ')'); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
 
@@ -149,6 +151,45 @@ $membersResult = mysqli_query($conn, $membersQuery);
                                                 <small class="text-muted">Separate keywords with commas</small>
                                             </div>
 
+                                            <!-- Collaborators -->
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Collaborators</label>
+                                                <p class="text-muted small mb-2">Add members who will collaborate on this research. The &quot;Created By&quot; member is excluded. You can also add or change collaborators later via <a href="collaborator.php">Collaborators</a> or from each project&apos;s manage page.</p>
+                                                <div id="collaborators-container" class="border rounded p-3 bg-light"></div>
+                                                <button type="button" id="add-collaborator-btn" class="btn btn-outline-primary btn-sm mt-2">
+                                                    <i class="ri-user-add-line"></i> Add Collaborator
+                                                </button>
+                                                <template id="collaborator-row-tpl">
+                                                    <div class="row g-2 align-items-end collaborator-row mb-2">
+                                                        <div class="col-md-5">
+                                                            <label class="form-label small">Member</label>
+                                                            <select name="collaborators[][member_id]" class="form-select form-select-sm collab-member" required>
+                                                                <option value="">Select member</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small">Role</label>
+                                                            <select name="collaborators[][role]" class="form-select form-select-sm collab-role">
+                                                                <option value="contributor" selected>Contributor</option>
+                                                                <option value="lead">Lead</option>
+                                                                <option value="co_author">Co-Author</option>
+                                                                <option value="advisor">Advisor</option>
+                                                                <option value="reviewer">Reviewer</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="form-label small">Contribution %</label>
+                                                            <input type="number" name="collaborators[][contribution_percentage]" class="form-control form-control-sm collab-pct" min="0" max="100" step="0.01" placeholder="0–100">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm w-100 collab-remove">
+                                                                <i class="ri-close-line"></i> Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+
                                             <div class="col-12 mb-3">
                                                 <label for="research_files" class="form-label">Research Files</label>
                                                 <input type="file" class="form-control" id="research_files" name="research_files[]" 
@@ -179,6 +220,11 @@ $membersResult = mysqli_query($conn, $membersQuery);
 
     <script src="assets/js/vendor.min.js"></script>
     <script src="assets/js/app.min.js"></script>
+    <script>
+        window.MEMBERS_FOR_COLLAB = <?php echo json_encode(array_map(function($m) {
+            return ['id' => (int)$m['id'], 'label' => $m['fullname'] . ' (' . $m['email'] . ')'];
+        }, $members)); ?>;
+    </script>
 
     <style>
         /* Ensure status field displays correctly (similar to resources page) */
@@ -258,6 +304,48 @@ $membersResult = mysqli_query($conn, $membersQuery);
                 statusLabel.style.visibility = 'visible';
                 statusLabel.style.opacity = '1';
                 statusLabel.style.display = 'block';
+            }
+
+            // Collaborators: add/remove rows, exclude created_by from member dropdowns
+            var container = document.getElementById('collaborators-container');
+            var tpl = document.getElementById('collaborator-row-tpl');
+            var addBtn = document.getElementById('add-collaborator-btn');
+            var createdBy = document.getElementById('created_by');
+            var members = window.MEMBERS_FOR_COLLAB || [];
+
+            function excludeCreator() { return (createdBy && createdBy.value) ? parseInt(createdBy.value, 10) : null; }
+
+            function fillMemberOptions(selectEl) {
+                var cur = selectEl.value;
+                var ex = excludeCreator();
+                selectEl.innerHTML = '<option value="">Select member</option>';
+                members.forEach(function(m) {
+                    if (m.id === ex) return;
+                    var opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = m.label;
+                    if (String(m.id) === String(cur)) opt.selected = true;
+                    selectEl.appendChild(opt);
+                });
+            }
+
+            function addRow() {
+                if (!tpl || !container) return;
+                var frag = tpl.content.cloneNode(true);
+                var rowDiv = frag.querySelector('.collaborator-row');
+                var memberSelect = frag.querySelector('.collab-member');
+                var removeBtn = frag.querySelector('.collab-remove');
+                fillMemberOptions(memberSelect);
+                removeBtn.addEventListener('click', function() { rowDiv.remove(); });
+                container.appendChild(frag);
+            }
+
+            addBtn.addEventListener('click', addRow);
+
+            if (createdBy) {
+                createdBy.addEventListener('change', function() {
+                    container.querySelectorAll('.collab-member').forEach(fillMemberOptions);
+                });
             }
         });
     </script>

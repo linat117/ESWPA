@@ -53,23 +53,32 @@ if ($action === 'add' && $_SERVER["REQUEST_METHOD"] == "POST") {
 } elseif ($action === 'remove' && isset($_GET['collab_id'])) {
     $research_id = intval($_GET['research_id'] ?? 0);
     $collab_id = intval($_GET['collab_id'] ?? 0);
-    
+    $return_hub = isset($_GET['return']) && $_GET['return'] === 'collaborator';
+
+    if ($return_hub) {
+        $base = "../collaborator.php";
+        $sep = "?";
+    } else {
+        $base = "../research_collaborators.php?id=" . $research_id;
+        $sep = "&";
+    }
+
     if ($collab_id <= 0) {
-        header("Location: ../research_collaborators.php?id=" . $research_id . "&error=Invalid collaborator ID");
+        header("Location: " . $base . $sep . "error=" . urlencode("Invalid collaborator ID"));
         exit();
     }
-    
+
     $query = "DELETE FROM research_collaborators WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $collab_id);
-    
+
     if ($stmt->execute()) {
         $stmt->close();
-        header("Location: ../research_collaborators.php?id=" . $research_id . "&success=Collaborator removed successfully");
+        header("Location: " . $base . $sep . "success=" . urlencode("Collaborator removed successfully"));
         exit();
     } else {
         $stmt->close();
-        header("Location: ../research_collaborators.php?id=" . $research_id . "&error=Failed to remove collaborator: " . $conn->error);
+        header("Location: " . $base . $sep . "error=" . urlencode("Failed to remove collaborator: " . $conn->error));
         exit();
     }
 } else {

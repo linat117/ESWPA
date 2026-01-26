@@ -125,6 +125,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $versionStmt->bind_param("issi", $research_id, $title, $description, $created_by);
             $versionStmt->execute();
             $versionStmt->close();
+
+            // Insert collaborators (from Add Research form)
+            $collaborators = isset($_POST['collaborators']) && is_array($_POST['collaborators']) ? $_POST['collaborators'] : [];
+            $validRoles = ['lead', 'co_author', 'contributor', 'advisor', 'reviewer'];
+            $collabStmt = $conn->prepare("INSERT INTO research_collaborators (research_id, member_id, role, contribution_percentage) VALUES (?, ?, ?, ?)");
+            foreach ($collaborators as $c) {
+                $member_id = isset($c['member_id']) ? (int) $c['member_id'] : 0;
+                if ($member_id <= 0 || $member_id === $created_by) continue;
+                $role = isset($c['role']) && in_array($c['role'], $validRoles) ? $c['role'] : 'contributor';
+                $pct = isset($c['contribution_percentage']) && $c['contribution_percentage'] !== '' ? (float) $c['contribution_percentage'] : null;
+                $collabStmt->bind_param("iisd", $research_id, $member_id, $role, $pct);
+                $collabStmt->execute();
+            }
+            $collabStmt->close();
             
             // Email Automation Integration - Send email if published
             if ($status === 'published') {

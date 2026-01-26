@@ -16,6 +16,9 @@
     <Files "research_handler.php">
         Require all granted
     </Files>
+    <Files "collaborator_handler.php">
+        Require all granted
+    </Files>
 </IfModule>
 
 <IfModule !mod_authz_core.c>
@@ -27,6 +30,10 @@
         Allow from all
     </Files>
     <Files "research_handler.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "collaborator_handler.php">
         Order allow,deny
         Allow from all
     </Files>
