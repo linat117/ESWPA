@@ -387,3 +387,109 @@ Stack trace:
 [26-Jan-2026 09:30:49 UTC] PHP Stack trace:
 [26-Jan-2026 09:30:49 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
 [26-Jan-2026 09:30:49 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "count" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 246
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[26-Jan-2026 12:24:09 UTC] PHP Warning:  Undefined array key "payment_amount" in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\ethiosocialworks\admin\reports_finance.php on line 712
+[26-Jan-2026 12:24:09 UTC] PHP Stack trace:
+[26-Jan-2026 12:24:09 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:0
+[26-Jan-2026 12:24:09 UTC] PHP   2. number_format($num = NULL, $decimals = 2) C:\wamp64\www\ethiosocialworks\admin\reports_finance.php:712
+[09-Feb-2026 06:51:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[09-Feb-2026 06:51:54 UTC] PHP Stack trace:
+[09-Feb-2026 06:51:54 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[09-Feb-2026 06:51:54 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[09-Feb-2026 06:51:54 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[09-Feb-2026 06:51:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:52:12 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[09-Feb-2026 06:52:12 UTC] PHP Stack trace:
+[09-Feb-2026 06:52:12 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[09-Feb-2026 06:52:12 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[09-Feb-2026 06:52:12 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[09-Feb-2026 06:52:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:52:25 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[09-Feb-2026 06:52:25 UTC] PHP Stack trace:
+[09-Feb-2026 06:52:25 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[09-Feb-2026 06:52:25 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[09-Feb-2026 06:52:25 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[09-Feb-2026 06:52:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:53:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\include\auth.php on line 2
+[09-Feb-2026 06:53:30 UTC] PHP Stack trace:
+[09-Feb-2026 06:53:30 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:0
+[09-Feb-2026 06:53:30 UTC] PHP   2. require_once() C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php:8
+[09-Feb-2026 06:53:30 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\include\auth.php:2
+[09-Feb-2026 06:53:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(3): include('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(8): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:54:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(5): require_once('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(7): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:54:28 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(5): require_once('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(7): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:54:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(5): require_once('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(7): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27
+[09-Feb-2026 06:54:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\ethiosocialworks\admin\include\conn.php:27
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\conn.php(27): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'ethiosocialwork...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\auth.php(5): require_once('C:\\wamp64\\www\\e...')
+#2 C:\wamp64\www\ethiosocialworks\admin\admin-login-handler.php(7): require_once('C:\\wamp64\\www\\e...')
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\conn.php on line 27

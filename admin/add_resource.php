@@ -8,6 +8,24 @@ if (!isset($_SESSION['user_id'])) {
 
 include 'include/conn.php';
 include 'header.php';
+
+$create_sec = "CREATE TABLE IF NOT EXISTS `resource_sections` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `display_order` INT(11) NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+@$conn->query($create_sec);
+
+$sections = [];
+$secRes = @$conn->query("SELECT id, name FROM resource_sections ORDER BY display_order ASC, name ASC");
+if ($secRes && $secRes->num_rows > 0) {
+    while ($r = $secRes->fetch_assoc()) {
+        $sections[] = $r;
+    }
+}
 ?>
 
 <body>
@@ -51,8 +69,15 @@ include 'header.php';
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <label for="section" class="form-label">Section *</label>
-                                                <input type="text" class="form-control" id="section" name="section" required 
-                                                       placeholder="e.g., Guidelines, Reports, Manuals">
+                                                <select class="form-control" id="section" name="section" required>
+                                                    <option value="">Select section</option>
+                                                    <?php foreach ($sections as $sec): ?>
+                                                        <option value="<?php echo htmlspecialchars($sec['name']); ?>"><?php echo htmlspecialchars($sec['name']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <small class="text-muted">
+                                                    <a href="resource_sections.php" target="_blank">Manage sections</a>
+                                                </small>
                                             </div>
 
                                             <div class="col-md-6 mb-3">

@@ -1,6 +1,8 @@
 <?php
-session_start();
-include 'conn.php'; 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username'] ?? '');
@@ -60,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     exit();
                 }
             } else {
-                echo "<script>alert('User not found. Please sign up.'); window.location='auth-register.php';</script>";
+                echo "<script>alert('User not found.'); window.location='auth-login.php';</script>";
                 exit();
             }
         }
     } else {
-        echo "<script>alert('All fields are required.'); window.location='auth-register.php';</script>";
+        echo "<script>alert('All fields are required.'); window.location='auth-login.php';</script>";
         exit();
     }
 } else {

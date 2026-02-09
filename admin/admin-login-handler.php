@@ -4,7 +4,5 @@
  * Handles admin login requests
  * Created to avoid .htaccess blocking
  */
-session_start();
-require_once 'include/auth.php';
-?>
+require_once __DIR__ . '/include/auth.php';
 

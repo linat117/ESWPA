@@ -195,6 +195,9 @@
                                               <a href="add_resource.php">Add Resource</a>
                                           </li>
                                           <li>
+                                              <a href="resource_sections.php">Sections</a>
+                                          </li>
+                                          <li>
                                               <a href="resource_categories.php">Categories</a>
                                           </li>
                                           <li>
