@@ -100,14 +100,17 @@ $recent_actions = $recentResult->fetch_all(MYSQLI_ASSOC);
                     <!-- Page Title -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <h4 class="page-title">Member Approval Workflow</h4>
-                                <div>
-                                    <a href="members_dashboard.php" class="btn btn-secondary me-2">
+                            <div class="page-title-box mb-3">
+                                <h4 class="page-title mb-2">Member Approval Workflow</h4>
+                                <div class="d-inline-flex flex-row flex-nowrap gap-2">
+                                    <a href="members_list.php" class="btn btn-primary btn-sm">
+                                        <i class="ri-list-check"></i> All Members
+                                    </a>
+                                    <a href="members_dashboard.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-dashboard-line"></i> Dashboard
                                     </a>
-                                    <a href="members_list.php?status=pending" class="btn btn-warning">
-                                        <i class="ri-time-line"></i> View Pending
+                                    <a href="members_list.php?status=pending" class="btn btn-warning btn-sm">
+                                        <i class="ri-time-line"></i> Pending List
                                     </a>
                                 </div>
                             </div>
@@ -240,7 +243,8 @@ $recent_actions = $recentResult->fetch_all(MYSQLI_ASSOC);
                                     <h4 class="header-title">Recent Approval Actions</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
+                                    <!-- Desktop table -->
+                                    <div class="table-responsive d-none d-md-block">
                                         <table class="table table-hover mb-0" id="recentActionsTable">
                                             <thead>
                                                 <tr>
@@ -278,6 +282,67 @@ $recent_actions = $recentResult->fetch_all(MYSQLI_ASSOC);
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
+                                    </div>
+
+                                    <!-- Mobile cards -->
+                                    <div class="d-block d-md-none mt-2">
+                                        <?php if (empty($recent_actions)): ?>
+                                            <p class="text-center text-muted mb-0">No recent actions.</p>
+                                        <?php else: ?>
+                                            <?php $mobileActionIndex = 1; ?>
+                                            <?php foreach ($recent_actions as $action): ?>
+                                                <?php 
+                                                    $date = $action['approved_at'] ?? $action['updated_at'] ?? $action['created_at'];
+                                                    $formattedDate = date('M d, Y H:i', strtotime($date));
+                                                ?>
+                                                <div class="card mb-2 mobile-action-card">
+                                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="badge bg-secondary rounded-pill"><?php echo $mobileActionIndex++; ?></span>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="fw-semibold text-truncate" style="max-width: 160px;">
+                                                                    <?php echo htmlspecialchars($action['fullname']); ?>
+                                                                </span>
+                                                                <small class="text-muted">
+                                                                    ID: <?php echo htmlspecialchars($action['membership_id']); ?>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button"
+                                                            class="btn btn-link text-muted p-0 recent-action-more"
+                                                            aria-label="View approval detail">
+                                                            <i class="ri-more-2-fill" style="font-size: 1.4rem;"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Hidden detail for modal -->
+                                                    <div class="d-none recent-action-detail-content">
+                                                        <h5 class="mb-1"><?php echo htmlspecialchars($action['fullname']); ?></h5>
+                                                        <p class="mb-1">
+                                                            <strong>Membership ID:</strong>
+                                                            <code><?php echo htmlspecialchars($action['membership_id']); ?></code>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Action:</strong>
+                                                            <span class="badge bg-<?php echo $action['approval_status'] == 'approved' ? 'success' : 'danger'; ?>">
+                                                                <?php echo ucfirst($action['approval_status']); ?>
+                                                            </span>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Approved By:</strong>
+                                                            <?php echo htmlspecialchars($action['approved_by_name'] ?? 'System'); ?>
+                                                        </p>
+                                                        <p class="mb-3">
+                                                            <strong>Date:</strong>
+                                                            <?php echo $formattedDate; ?>
+                                                        </p>
+                                                        <a href="member_profile.php?id=<?php echo $action['id']; ?>" class="btn btn-primary btn-sm">
+                                                            <i class="ri-eye-line"></i> View Profile
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -348,6 +413,21 @@ $recent_actions = $recentResult->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
+    <!-- Recent Action Detail Modal (mobile) -->
+    <div class="modal fade" id="recentActionDetailModal" tabindex="-1" aria-labelledby="recentActionDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recentActionDetailModalLabel">Approval Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Vendor js -->
     <script src="assets/js/vendor.min.js"></script>
     
@@ -361,9 +441,25 @@ $recent_actions = $recentResult->fetch_all(MYSQLI_ASSOC);
 
     <script>
         $(document).ready(function() {
+            // Desktop table init
             $('#recentActionsTable').DataTable({
                 "order": [[4, "desc"]],
                 "pageLength": 25
+            });
+
+            // Mobile recent action detail modal
+            $(document).on('click', '.recent-action-more', function () {
+                var card = $(this).closest('.mobile-action-card');
+                var contentHtml = card.find('.recent-action-detail-content').html();
+
+                $('#recentActionDetailModal .modal-body').html(contentHtml);
+
+                if (typeof bootstrap !== "undefined" && bootstrap.Modal) {
+                    var detailModal = new bootstrap.Modal(document.getElementById('recentActionDetailModal'));
+                    detailModal.show();
+                } else {
+                    $('#recentActionDetailModal').modal('show');
+                }
             });
         });
 

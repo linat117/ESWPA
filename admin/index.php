@@ -348,14 +348,14 @@ $activity_growth_rate = $prev_activities > 0 ? (($activities_in_range - $prev_ac
                     <!-- Page Title with Enhanced Design -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <div>
-                                <h4 class="page-title">Dashboard</h4>
+                            <div class="page-title-box d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0">
+                                <div class="text-start">
+                                    <h4 class="page-title mb-1 mb-md-0">Dashboard</h4>
                                     <p class="page-subtitle mb-0">Welcome back! Here's what's happening with your organization today.</p>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <form method="GET" class="d-inline-flex gap-2">
-                                        <select name="range" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end w-100 w-md-auto">
+                                    <form method="GET" class="d-flex flex-wrap gap-2 align-items-center">
+                                        <select name="range" class="form-select form-select-sm" style="height: 32px;" onchange="this.form.submit()">
                                             <option value="7" <?php echo $date_range == '7' ? 'selected' : ''; ?>>Last 7 Days</option>
                                             <option value="30" <?php echo $date_range == '30' ? 'selected' : ''; ?>>Last 30 Days</option>
                                             <option value="90" <?php echo $date_range == '90' ? 'selected' : ''; ?>>Last 90 Days</option>
@@ -363,17 +363,19 @@ $activity_growth_rate = $prev_activities > 0 ? (($activities_in_range - $prev_ac
                                             <option value="custom" <?php echo $date_range == 'custom' ? 'selected' : ''; ?>>Custom Range</option>
                                         </select>
                                         <?php if ($date_range == 'custom'): ?>
-                                        <input type="date" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>" class="form-control form-control-sm">
-                                        <input type="date" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>" class="form-control form-control-sm">
-                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+                                            <input type="date" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>" class="form-control form-control-sm">
+                                            <input type="date" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>" class="form-control form-control-sm">
+                                            <button type="submit" class="btn btn-sm btn-primary">Apply</button>
                                         <?php endif; ?>
                                     </form>
-                                    <a href="reports_dashboard.php" class="btn btn-secondary">
-                                        <i class="ri-bar-chart-line"></i> Reports
-                                    </a>
-                                    <a href="tools.php" class="btn btn-outline-primary">
-                                        <i class="ri-tools-line"></i> Tools
-                                    </a>
+                                    <div class="d-flex flex-row gap-1">
+                                        <a href="reports_dashboard.php" class="btn btn-secondary btn-sm" style="height: 32px;">
+                                            <i class="ri-bar-chart-line"></i> Reports
+                                        </a>
+                                        <a href="tools.php" class="btn btn-outline-primary btn-sm" style="height: 32px;">
+                                            <i class="ri-tools-line"></i> Tools
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

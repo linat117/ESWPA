@@ -343,16 +343,14 @@ $available_badges = [
                     <!-- Page Title -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h4 class="page-title">Member Badges Management</h4>
-                                    <p class="page-subtitle mb-0">Assign and manage badges for members</p>
-                                </div>
-                                <div>
-                                    <a href="members_dashboard.php" class="btn btn-secondary me-2">
+                            <div class="page-title-box mb-3">
+                                <h4 class="page-title mb-1">Member Badges Management</h4>
+                                <p class="page-subtitle mb-2">Assign and manage badges for members</p>
+                                <div class="d-inline-flex flex-row flex-nowrap gap-2">
+                                    <a href="members_dashboard.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-dashboard-line"></i> Dashboard
                                     </a>
-                                    <a href="members_list.php" class="btn btn-secondary">
+                                    <a href="members_list.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-list-check"></i> All Members
                                     </a>
                                 </div>
@@ -539,7 +537,8 @@ $available_badges = [
                                             <i class="ri-information-line"></i> No badges have been assigned yet. Use the form above to assign badges to members.
                                         </div>
                                     <?php else: ?>
-                                        <div class="table-responsive">
+                                        <!-- Desktop table -->
+                                        <div class="table-responsive d-none d-md-block">
                                             <table class="table table-hover mb-0" id="badgesTable">
                                                 <thead>
                                                     <tr>
@@ -582,6 +581,72 @@ $available_badges = [
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <!-- Mobile card list -->
+                                        <div class="d-block d-md-none">
+                                            <?php $badgeIndex = 1; ?>
+                                            <?php foreach ($assigned_badges as $badge): ?>
+                                                <div class="card mb-2 mobile-badge-card">
+                                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="badge bg-primary rounded-pill"><?php echo $badgeIndex++; ?></span>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="fw-semibold text-truncate" style="max-width: 160px;">
+                                                                    <?php echo htmlspecialchars($badge['fullname']); ?>
+                                                                </span>
+                                                                <small class="text-muted">
+                                                                    ID: <?php echo htmlspecialchars($badge['membership_id']); ?>
+                                                                </small>
+                                                                <small>
+                                                                    <span class="badge bg-primary mt-1">
+                                                                        <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name']); ?>
+                                                                    </span>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button"
+                                                            class="btn btn-link text-muted p-0 mobile-badge-more"
+                                                            aria-label="View badge detail">
+                                                            <i class="ri-more-2-fill" style="font-size: 1.4rem;"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Hidden detail for modal -->
+                                                    <div class="d-none mobile-badge-detail-content">
+                                                        <h5 class="mb-1"><?php echo htmlspecialchars($badge['fullname']); ?></h5>
+                                                        <p class="mb-1">
+                                                            <strong>Membership ID:</strong>
+                                                            <code><?php echo htmlspecialchars($badge['membership_id']); ?></code>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Badge:</strong>
+                                                            <span class="badge bg-primary">
+                                                                <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name']); ?>
+                                                            </span>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Description:</strong>
+                                                            <?php echo htmlspecialchars($badge['badge_description'] ?: 'N/A'); ?>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Assigned By:</strong>
+                                                            <?php echo htmlspecialchars($badge['assigned_by_name'] ?: 'System'); ?>
+                                                        </p>
+                                                        <p class="mb-3">
+                                                            <strong>Assigned Date:</strong>
+                                                            <?php echo date('M d, Y', strtotime($badge['assigned_at'])); ?>
+                                                        </p>
+                                                        <form method="POST" onsubmit="return confirm('Are you sure you want to remove this badge?');">
+                                                            <input type="hidden" name="action" value="remove_badge">
+                                                            <input type="hidden" name="badge_id" value="<?php echo $badge['id']; ?>">
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="ri-delete-bin-line"></i> Remove Badge
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -592,6 +657,21 @@ $available_badges = [
             </div>
 
             <?php include 'footer.php'; ?>
+        </div>
+    </div>
+
+    <!-- Mobile badge detail modal -->
+    <div class="modal fade" id="badgeDetailModal" tabindex="-1" aria-labelledby="badgeDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="badgeDetailModalLabel">Badge Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -608,7 +688,7 @@ $available_badges = [
 
     <script>
         $(document).ready(function() {
-            // Initialize DataTable
+            // Initialize DataTable (desktop)
             if ($.fn.DataTable) {
                 $('#badgesTable').DataTable({
                     "pageLength": 25,
@@ -633,6 +713,21 @@ $available_badges = [
                 } else {
                     document.getElementById('custom_badge_group').style.display = 'none';
                     document.querySelector('input[name="custom_badge_name"]').required = false;
+                }
+            });
+
+            // Mobile badge detail modal
+            $(document).on('click', '.mobile-badge-more', function () {
+                var card = $(this).closest('.mobile-badge-card');
+                var contentHtml = card.find('.mobile-badge-detail-content').html();
+
+                $('#badgeDetailModal .modal-body').html(contentHtml);
+
+                if (typeof bootstrap !== "undefined" && bootstrap.Modal) {
+                    var detailModal = new bootstrap.Modal(document.getElementById('badgeDetailModal'));
+                    detailModal.show();
+                } else {
+                    $('#badgeDetailModal').modal('show');
                 }
             });
         });

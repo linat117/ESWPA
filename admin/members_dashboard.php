@@ -122,13 +122,13 @@ $stmt->close();
                     <!-- Page Title -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <h4 class="page-title">Members Dashboard</h4>
-                                <div>
-                                    <a href="members_list.php" class="btn btn-secondary me-2">
+                            <div class="page-title-box">
+                                <h4 class="page-title mb-2">Members Dashboard</h4>
+                                <div class="d-inline-flex flex-row flex-nowrap gap-2">
+                                    <a href="members_list.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-list-check"></i> All Members
                                     </a>
-                                    <a href="members_list.php?status=pending" class="btn btn-warning">
+                                    <a href="members_list.php?status=pending" class="btn btn-warning btn-sm">
                                         <i class="ri-time-line"></i> Pending Approvals
                                     </a>
                                 </div>
@@ -306,7 +306,8 @@ $stmt->close();
                                     <h4 class="header-title">Recent Members</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
+                                    <!-- Desktop table -->
+                                    <div class="table-responsive d-none d-md-block">
                                         <table class="table table-hover mb-0">
                                             <thead>
                                                 <tr>
@@ -341,6 +342,54 @@ $stmt->close();
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Mobile cards -->
+                                    <div class="d-block d-md-none">
+                                        <?php $mobileRecentIndex = 1; ?>
+                                        <?php foreach ($recent_members as $member): ?>
+                                            <div class="card mb-2 mobile-member-card">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="badge bg-primary rounded-pill"><?php echo $mobileRecentIndex++; ?></span>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="fw-semibold text-truncate" style="max-width: 160px;">
+                                                                <?php echo htmlspecialchars($member['fullname']); ?>
+                                                            </span>
+                                                            <small class="text-muted">
+                                                                ID: <?php echo htmlspecialchars($member['membership_id']); ?>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button"
+                                                        class="btn btn-link text-muted p-0 member-more"
+                                                        data-type="recent"
+                                                        aria-label="View member detail">
+                                                        <i class="ri-more-2-fill" style="font-size: 1.4rem;"></i>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Hidden detail for modal -->
+                                                <div class="d-none member-detail-content">
+                                                    <h5 class="mb-1"><?php echo htmlspecialchars($member['fullname']); ?></h5>
+                                                    <p class="mb-1">
+                                                        <strong>Membership ID:</strong>
+                                                        <code><?php echo htmlspecialchars($member['membership_id']); ?></code>
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Status:</strong>
+                                                        <?php echo ucfirst($member['approval_status']); ?>
+                                                    </p>
+                                                    <p class="mb-3">
+                                                        <strong>Registered:</strong>
+                                                        <?php echo date('M d, Y', strtotime($member['created_at'])); ?>
+                                                    </p>
+                                                    <a href="member_profile.php?id=<?php echo $member['id']; ?>" class="btn btn-primary btn-sm">
+                                                        <i class="ri-eye-line"></i> View Profile
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -350,7 +399,8 @@ $stmt->close();
                                     <h4 class="header-title">Pending Approvals</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
+                                    <!-- Desktop table -->
+                                    <div class="table-responsive d-none d-md-block">
                                         <table class="table table-hover mb-0">
                                             <thead>
                                                 <tr>
@@ -382,6 +432,54 @@ $stmt->close();
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Mobile cards -->
+                                    <div class="d-block d-md-none">
+                                        <?php if (empty($pending_list)): ?>
+                                            <p class="text-center text-muted mb-0">No pending approvals</p>
+                                        <?php else: ?>
+                                            <?php $mobilePendingIndex = 1; ?>
+                                            <?php foreach ($pending_list as $member): ?>
+                                                <div class="card mb-2 mobile-member-card">
+                                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="badge bg-warning rounded-pill text-dark"><?php echo $mobilePendingIndex++; ?></span>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="fw-semibold text-truncate" style="max-width: 160px;">
+                                                                    <?php echo htmlspecialchars($member['fullname']); ?>
+                                                                </span>
+                                                                <small class="text-muted">
+                                                                    ID: <?php echo htmlspecialchars($member['membership_id']); ?>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button"
+                                                            class="btn btn-link text-muted p-0 member-more"
+                                                            data-type="pending"
+                                                            aria-label="View member detail">
+                                                            <i class="ri-more-2-fill" style="font-size: 1.4rem;"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Hidden detail for modal -->
+                                                    <div class="d-none member-detail-content">
+                                                        <h5 class="mb-1"><?php echo htmlspecialchars($member['fullname']); ?></h5>
+                                                        <p class="mb-1">
+                                                            <strong>Membership ID:</strong>
+                                                            <code><?php echo htmlspecialchars($member['membership_id']); ?></code>
+                                                        </p>
+                                                        <p class="mb-3">
+                                                            <strong>Registered:</strong>
+                                                            <?php echo date('M d, Y', strtotime($member['created_at'])); ?>
+                                                        </p>
+                                                        <a href="member_profile.php?id=<?php echo $member['id']; ?>" class="btn btn-primary btn-sm">
+                                                            <i class="ri-check-line"></i> Review Member
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -391,6 +489,21 @@ $stmt->close();
             </div>
 
             <?php include 'footer.php'; ?>
+        </div>
+    </div>
+
+    <!-- Member Detail Modal (mobile) -->
+    <div class="modal fade" id="memberDetailModal" tabindex="-1" aria-labelledby="memberDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="memberDetailModalLabel">Member Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -427,6 +540,21 @@ $stmt->close();
             }
         };
         new ApexCharts(document.querySelector("#registration-trend-chart"), registrationTrendOptions).render();
+
+        // Mobile member detail modal
+        $(document).on('click', '.member-more', function () {
+            var card = $(this).closest('.mobile-member-card');
+            var contentHtml = card.find('.member-detail-content').html();
+
+            $('#memberDetailModal .modal-body').html(contentHtml);
+
+            if (typeof bootstrap !== "undefined" && bootstrap.Modal) {
+                var detailModal = new bootstrap.Modal(document.getElementById('memberDetailModal'));
+                detailModal.show();
+            } else {
+                $('#memberDetailModal').modal('show');
+            }
+        });
     </script>
 
 </body>

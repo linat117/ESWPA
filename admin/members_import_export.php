@@ -129,13 +129,13 @@ $stats['pending'] = $conn->query("SELECT COUNT(*) as total FROM registrations WH
                     <!-- Page Title -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex justify-content-between align-items-center">
-                                <h4 class="page-title">Member Import/Export</h4>
-                                <div>
-                                    <a href="members_dashboard.php" class="btn btn-secondary me-2">
+                            <div class="page-title-box mb-3">
+                                <h4 class="page-title mb-2">Member Import/Export</h4>
+                                <div class="d-inline-flex flex-row flex-nowrap gap-2">
+                                    <a href="members_dashboard.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-dashboard-line"></i> Dashboard
                                     </a>
-                                    <a href="members_list.php" class="btn btn-secondary">
+                                    <a href="members_list.php" class="btn btn-secondary btn-sm">
                                         <i class="ri-list-check"></i> All Members
                                     </a>
                                 </div>
@@ -266,7 +266,7 @@ $stats['pending'] = $conn->query("SELECT COUNT(*) as total FROM registrations WH
                                 <div class="card-body">
                                     <p class="text-muted">Use this format for importing members:</p>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-sm">
+                                        <table class="table table-bordered table-sm mb-0">
                                             <thead>
                                                 <tr>
                                                     <th>Full Name</th>
