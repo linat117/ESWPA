@@ -227,12 +227,13 @@ $stats['expired'] = $conn->query("SELECT COUNT(*) as total FROM registrations WH
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <h4 class="header-title">ID Cards List</h4>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4 class="header-title mb-0">ID Cards List</h4>
+                                    <small class="text-muted d-md-none"><i class="ri-arrow-left-right-line"></i> Swipe to scroll</small>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0" id="idCardsTable">
+                                <div class="card-body p-0 p-md-3">
+                                    <div class="table-responsive" style="-webkit-overflow-scrolling: touch; overflow-x: auto;">
+                                        <table class="table table-hover mb-0" id="idCardsTable" style="min-width: 900px;">
                                             <thead>
                                                 <tr>
                                                     <th>Member</th>
@@ -373,6 +374,24 @@ $stats['expired'] = $conn->query("SELECT COUNT(*) as total FROM registrations WH
             <?php include 'footer.php'; ?>
         </div>
     </div>
+
+    <!-- Mobile table scrolling styles -->
+    <style>
+        @media (max-width: 767.98px) {
+            #idCardsTable th,
+            #idCardsTable td {
+                white-space: nowrap;
+            }
+            #idCardsTable td:first-child {
+                min-width: 180px;
+            }
+            .table-responsive {
+                border-radius: 0;
+                margin: 0 -12px;
+                padding: 0 12px;
+            }
+        }
+    </style>
 
     <!-- Vendor js -->
     <script src="assets/js/vendor.min.js"></script>
