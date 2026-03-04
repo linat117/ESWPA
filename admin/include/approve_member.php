@@ -89,8 +89,7 @@ if ($action === 'approve') {
             $insertStmt->bind_param("isss", $member_id, $member['email'], $hashedPassword, $member['membership_id']);
             
             if ($insertStmt->execute()) {
-                // TODO: Send approval email to member with temporary password and set password link
-                // For now, we'll redirect them to set password page on first login
+                // Member can use "Forgot password" to set their password
             }
             
             $insertStmt->close();
@@ -98,8 +97,32 @@ if ($action === 'approve') {
         
         $checkStmt->close();
         
-        // TODO: Send approval email to member
-        // Include membership ID and login instructions
+        // Send approval email to member
+        if (file_exists(__DIR__ . '/email_handler.php')) {
+            require_once __DIR__ . '/email_handler.php';
+            $memberName = $member['fullname'] ?? 'Member';
+            $memberEmail = $member['email'] ?? '';
+            $membershipId = $member['membership_id'] ?? '';
+            if (!empty($memberEmail)) {
+                $subject = 'Your ESWPA membership has been approved';
+                $body = '
+                <html><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background-color: #1273c3; color: white; padding: 20px; text-align: center;">
+                <h2 style="margin: 0;">Membership Approved</h2>
+                </div>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                <p>Dear ' . htmlspecialchars($memberName) . ',</p>
+                <p>Your registration with the <strong>Ethiopian Social Workers Professional Association (ESWPA)</strong> has been approved.</p>
+                <p><strong>Membership ID:</strong> <code style="background: #eee; padding: 4px 8px;">' . htmlspecialchars($membershipId) . '</code></p>
+                <p>To log in, go to the member login page and click <strong>"Forgot password"</strong>. Enter this email address and we will send you a link to set your password. No password is assigned until you use that link.</p>
+                <p>Best regards,<br>ESWPA Team</p>
+                </div>
+                <div style="padding: 15px; text-align: center; font-size: 12px; color: #666;">ESWPA</div>
+                </div></body></html>';
+                @sendBulkEmail($subject, $body, [$memberEmail]);
+            }
+        }
 
         $updateStmt->close();
         if ($redirect_to_profile) {

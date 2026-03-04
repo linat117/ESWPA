@@ -100,474 +100,54 @@ ob_end_flush();
     <meta http-equiv="Expires" content="0">
     <title>Print ID Card - <?php echo htmlspecialchars($member['fullname']); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <?php $cssFile = __DIR__ . '/../assets/css/id-card-print.css'; ?>
+    <link rel="stylesheet" href="../assets/css/id-card-print.css?v=<?php echo file_exists($cssFile) ? filemtime($cssFile) : time(); ?>">
     <style>
-        /* Load our styles FIRST, then external CSS, then override again */
-        /* COMPREHENSIVE FIX - Ensure cards are proportional and professional */
-        
-        /* Container layout - FIXED to prevent overlap */
-        .id-card-print-container {
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: center !important;
-            align-items: flex-start !important;
-            gap: 200px !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-            padding: 40px 20px !important;
-            min-width: 1200px !important;
-            position: relative !important;
-            overflow-x: auto !important;
-        }
-        
-        .id-card-wrapper {
-            position: relative !important;
-            display: block !important;
-            transform: scale(1.5) !important;
-            transform-origin: top center !important;
-            margin: 0 !important;
-            padding: 2mm !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-            width: auto !important;
-            height: auto !important;
-            isolation: isolate !important;
-        }
-        
-        /* Ensure cards don't overlap */
-        .id-card-wrapper:first-child {
-            margin-right: 0 !important;
-        }
-        
-        .id-card-wrapper:last-child {
-            margin-left: 0 !important;
-        }
-        
-        /* STRICT CARD DIMENSIONS - No overflow allowed */
-        .id-card-front,
-        .id-card-back {
-            width: 85.6mm !important;
-            height: 53.98mm !important;
-            max-width: 85.6mm !important;
-            max-height: 53.98mm !important;
-            overflow: hidden !important;
-            display: flex !important;
-            flex-direction: column !important;
-            box-sizing: border-box !important;
-            position: relative !important;
-            z-index: 1 !important;
-            isolation: isolate !important;
-        }
-        
-        /* Prevent any stacking context issues */
-        .id-card-wrapper:first-child .id-card-front,
-        .id-card-wrapper:first-child .id-card-back {
-            z-index: 1 !important;
-        }
-        
-        .id-card-wrapper:last-child .id-card-front,
-        .id-card-wrapper:last-child .id-card-back {
-            z-index: 1 !important;
-        }
-        
-        /* REDUCE ALL FONT SIZES - Smaller to fit well */
-        .id-card-front *,
-        .id-card-back * {
-            font-size: 3pt !important;
-            line-height: 1.15 !important;
-        }
-        
-        /* Front header - much smaller text */
-        .id-card-logo-text {
-            font-size: 2pt !important;
-            font-weight: 900 !important;
-            line-height: 1 !important;
-        }
-        
-        .id-card-tagline {
-            font-size: 0.8pt !important;
-            line-height: 1 !important;
-        }
-        
-        /* Back header - much smaller text */
-        .id-card-back-logo-text-top,
-        .id-card-back-logo-text {
-            font-size: 2pt !important;
-            font-weight: 900 !important;
-            line-height: 1 !important;
-        }
-        
-        .id-card-back-tagline-top,
-        .id-card-back-tagline {
-            font-size: 0.8pt !important;
-            line-height: 1 !important;
-        }
-        
-        .id-member-name {
-            font-size: 5pt !important;
-            font-weight: 700 !important;
-            line-height: 1.2 !important;
-            margin: 0.5mm 0 0.3mm 0 !important;
-            text-align: center !important;
-            color: #1a5276 !important;
-        }
-        
-        .id-qualification {
-            font-size: 3.5pt !important;
-            font-weight: 500 !important;
-            line-height: 1.1 !important;
-            margin: 0 0 0.8mm 0 !important;
-            text-align: center !important;
-            color: #666 !important;
-            font-style: italic !important;
-        }
-        
-        .id-detail-item {
-            font-size: 3pt !important;
-            line-height: 1.1 !important;
-            margin: 0.25mm 0 !important;
-        }
-        
-        .id-detail-item strong {
-            font-size: 3pt !important;
-            font-weight: 600 !important;
-        }
-        
-        .detail-value {
-            font-size: 3pt !important;
-        }
-        
-        /* Back side - ALL elements reduced much more */
-        .id-back-member-name {
-            font-size: 2.8pt !important;
-            font-weight: 700 !important;
-            line-height: 1.1 !important;
-            margin: 0.2mm 0 0.06mm 0 !important;
-        }
-        
-        .id-back-qualification {
-            font-size: 2.2pt !important;
-            font-weight: 500 !important;
-            line-height: 1.1 !important;
-            margin: 0 0 0.25mm 0 !important;
-        }
-        
-        .id-back-detail-item {
-            font-size: 1.8pt !important;
-            line-height: 1.1 !important;
-            margin: 0.12mm 0 !important;
-        }
-        
-        .id-back-detail-item strong {
-            font-size: 1.8pt !important;
-            font-weight: 600 !important;
-        }
-        
-        .id-back-text {
-            font-size: 1.6pt !important;
-            line-height: 1.15 !important;
-            margin: 0.2mm 0 !important;
-            color: #333 !important;
-            text-align: center !important;
-        }
-        
-        /* Reduce all other back side elements */
-        .id-card-back-content * {
-            font-size: 1.8pt !important;
-        }
-        
-        .id-card-back-content .id-back-member-name {
-            font-size: 2.8pt !important;
-        }
-        
-        .id-card-back-content .id-back-qualification {
-            font-size: 2.2pt !important;
-        }
-        
-        .id-card-back-content .id-back-text {
-            font-size: 1.5pt !important;
-        }
-        
-        /* TIGHT SPACING - Everything must fit */
-        /* Front header - more height, smaller text */
-        .id-card-top-banner {
-            height: 9mm !important;
-            flex-shrink: 0 !important;
-            padding: 1.5mm 2mm !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 2mm !important;
-        }
-        
-        /* Back header - more height, smaller text */
-        .id-card-back-top-banner {
-            height: 7mm !important;
-            flex-shrink: 0 !important;
-            padding: 1mm 2mm !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 2mm !important;
-        }
-        
-        /* Logo image container */
-        .id-card-logo-img {
-            width: 6mm !important;
-            height: 6mm !important;
-            flex-shrink: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        
-        .id-logo-image {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain !important;
-            border-radius: 1mm !important;
-        }
-        
-        .id-logo-placeholder {
-            width: 6mm !important;
-            height: 6mm !important;
-            background: rgba(255,255,255,0.2) !important;
-            border-radius: 1mm !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: white !important;
-        }
-        
-        .id-logo-placeholder i {
-            font-size: 3.5pt !important;
-            color: white !important;
-        }
-        
-        .id-card-photo-section {
-            padding: 0.4mm 0 !important;
-            flex-shrink: 0 !important;
-        }
-        
-        .id-photo-img,
-        .id-photo-placeholder {
-            width: 11mm !important;
-            height: 11mm !important;
-        }
-        
-        .id-card-member-info {
-            padding: 0.8mm 2.5mm !important;
-            flex: 1 !important;
-            min-height: 0 !important;
-            overflow: hidden !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            text-align: center !important;
-        }
-        
-        .id-details-grid {
-            gap: 0.5mm !important;
-            margin-top: 0.5mm !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-        }
-        
-        /* Detail item - inline layout */
-        .id-detail-item {
-            display: flex !important;
-            align-items: baseline !important;
-            justify-content: center !important;
-            gap: 1mm !important;
-            flex-wrap: nowrap !important;
-        }
-        
-        .id-detail-item strong {
-            flex-shrink: 0 !important;
-            color: #1a5276 !important;
-            font-weight: 600 !important;
-        }
-        
-        .detail-value {
-            color: #333 !important;
-            font-weight: 500 !important;
-        }
-        
-        /* Issued | Expires: side by side */
-        .id-detail-row-pair {
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: center !important;
-            gap: 3mm !important;
-            align-items: baseline !important;
-            flex-wrap: nowrap !important;
-        }
-        
-        .id-detail-row-pair .id-detail-item {
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: baseline !important;
-            gap: 0.5mm !important;
-        }
-        
-        .id-detail-row-pair .id-detail-item strong { 
-            flex-shrink: 0 !important; 
-        }
-        
-        .id-back-details {
-            margin: 0.1mm 0 !important;
-        }
-        
-        .id-back-signature {
-            height: 3.5mm !important;
-            margin: 0.3mm 0 !important;
-            flex-shrink: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        
-        .id-back-signature-img {
-            max-height: 3.5mm !important;
-            max-width: 12mm !important;
-            object-fit: contain !important;
-        }
-        
-        .id-back-signature-line {
-            width: 12mm !important;
-            height: 0.2mm !important;
-            background: #333 !important;
-            margin-top: 1mm !important;
-        }
-        
-        .id-qr-container {
-            width: 9mm !important;
-            height: 9mm !important;
-            margin: 0.5mm auto !important;
-            flex-shrink: 0 !important;
-        }
-        
-        .id-qr-container img,
-        .id-qr-container canvas {
-            width: 9mm !important;
-            height: 9mm !important;
-        }
-        
-        .id-card-bottom,
-        .id-card-bottom-banner,
-        .id-card-barcode,
-        .id-back-barcode,
-        .id-card-back-bottom {
-            display: none !important; /* Remove all bottom bars and barcodes */
-        }
-        
-        /* Member Badge at Bottom */
-        .id-card-member-badge {
-            background: linear-gradient(135deg, #1a5276 0%, #2874a6 100%) !important;
-            color: white !important;
-            text-align: center !important;
-            padding: 0.8mm 2mm !important;
-            font-size: 1.8pt !important;
-            font-weight: 500 !important;
-            letter-spacing: 0.3px !important;
-            margin-top: auto !important;
-            flex-shrink: 0 !important;
-        }
-        
-        .id-card-member-badge span {
-            font-size: 1.8pt !important;
-            color: white !important;
-            text-transform: uppercase !important;
-        }
-        
-        /* Back card content improvements */
-        .id-card-back-content {
-            padding: 0.5mm 2mm 1mm 2mm !important;
-            flex: 1 !important;
-            min-height: 0 !important;
-            overflow: visible !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            text-align: center !important;
-            gap: 0.5mm !important;
-        }
-        
-        /* Prevent text overflow */
-        * {
-            word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-        }
-        
+        /* Keep layout/print logic in id-card-print.css; only style the page shell here */
         body {
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow-x: hidden !important;
-            min-height: 100vh !important;
-            background: #f5f5f5 !important;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background: #f5f5f5;
         }
-        
-        /* CRITICAL: Override any absolute positioning from external CSS */
-        .id-card-wrapper {
-            position: relative !important;
-        }
-        
-        .id-card-front,
-        .id-card-back {
-            position: relative !important;
-        }
-        
-        /* Ensure no transform causes overlap */
-        .id-card-print-container > * {
-            will-change: transform !important;
-        }
-        
-        /* Force proper spacing - nuclear option */
-        .id-card-print-container .id-card-wrapper:first-child {
-            order: 1 !important;
-        }
-        
-        .id-card-print-container .id-card-wrapper:last-child {
-            order: 2 !important;
-        }
-        
+
         /* Print Controls - Base Styles */
         .print-controls {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
         
         .print-controls-content {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
-            color: white;
+            color: #333;
         }
         
         .print-controls-content h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.5rem;
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
-        
-        .print-controls-content p {
-            margin: 0 0 15px 0;
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
+                
         .print-actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         
         .print-actions button,
         .print-actions a {
-            padding: 10px 20px;
+            padding: 6px 12px;
             border: none;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
@@ -596,151 +176,24 @@ ob_end_flush();
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        
-        /* ============================================
-           MOBILE RESPONSIVE STYLES
-           ============================================ */
-        @media screen and (max-width: 992px) {
-            .id-card-print-container {
-                flex-direction: column !important;
-                gap: 40px !important;
-                min-width: unset !important;
-                width: 100% !important;
-                padding: 20px 10px !important;
-                align-items: center !important;
-            }
-            
-            .id-card-wrapper {
-                transform: scale(1.2) !important;
-                margin-bottom: 30px !important;
-            }
-        }
-        
-        @media screen and (max-width: 768px) {
-            .id-card-print-container {
-                gap: 60px !important;
-                padding: 15px 5px !important;
-            }
-            
-            .id-card-wrapper {
-                transform: scale(1) !important;
-                margin-bottom: 40px !important;
-            }
-            
-            .print-controls {
-                padding: 15px 10px;
-            }
-            
-            .print-controls-content h2 {
-                font-size: 1.2rem;
-            }
-            
-            .print-controls-content p {
-                font-size: 0.8rem;
-            }
-            
+
+        /* Mobile: stack buttons full-width */
+        @media screen and (max-width: 600px) {
             .print-actions {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .print-actions button,
             .print-actions a {
                 justify-content: center;
-                padding: 12px 15px;
             }
         }
-        
-        @media screen and (max-width: 480px) {
-            .id-card-print-container {
-                gap: 50px !important;
-                padding: 10px 0 !important;
-            }
-            
-            .id-card-wrapper {
-                transform: scale(0.85) !important;
-                margin-bottom: 20px !important;
-            }
-            
-            .print-controls-content h2 {
-                font-size: 1rem;
-            }
-            
-            .print-controls-content p {
-                font-size: 0.75rem;
-                padding: 0 10px;
-            }
-        }
-        
-        @media screen and (max-width: 360px) {
-            .id-card-wrapper {
-                transform: scale(0.75) !important;
-            }
-        }
-        
-        /* Hide print controls when printing */
+
+        /* Hide controls when printing */
         @media print {
             .print-controls {
                 display: none !important;
-            }
-            
-            .id-card-print-container {
-                gap: 20mm !important;
-                min-width: unset !important;
-            }
-            
-            .id-card-wrapper {
-                transform: scale(1) !important;
-                page-break-inside: avoid !important;
-            }
-        }
-    </style>
-    <?php $cssPath = __DIR__ . '/../assets/css/id-card-print.css'; ?>
-    <link rel="stylesheet" href="../assets/css/id-card-print.css?v=<?php echo file_exists($cssPath) ? filemtime($cssPath) : time(); ?>">
-    <style>
-        /* FINAL OVERRIDE - After external CSS loads, ensure no overlap */
-        .id-card-print-container {
-            display: flex !important;
-            flex-direction: row !important;
-            gap: 200px !important;
-        }
-        
-        .id-card-wrapper {
-            position: relative !important;
-            transform: scale(1.5) !important;
-            margin: 0 !important;
-        }
-        
-        .id-card-front,
-        .id-card-back {
-            position: relative !important;
-            transform: none !important;
-        }
-        
-        /* Mobile override after external CSS */
-        @media screen and (max-width: 992px) {
-            .id-card-print-container {
-                flex-direction: column !important;
-                gap: 40px !important;
-                min-width: unset !important;
-            }
-            .id-card-wrapper {
-                transform: scale(1.2) !important;
-            }
-        }
-        @media screen and (max-width: 768px) {
-            .id-card-wrapper {
-                transform: scale(1) !important;
-            }
-        }
-        @media screen and (max-width: 480px) {
-            .id-card-wrapper {
-                transform: scale(0.85) !important;
-            }
-        }
-        @media screen and (max-width: 360px) {
-            .id-card-wrapper {
-                transform: scale(0.75) !important;
             }
         }
     </style>
@@ -750,7 +203,6 @@ ob_end_flush();
     <div class="print-controls">
         <div class="print-controls-content">
             <h2><i class="fas fa-print"></i> Print Preview</h2>
-            <p>Review the ID card below. Ensure "Print backgrounds" is enabled in your print settings for best results. Click the print button when ready.</p>
             <div class="print-actions">
                 <button onclick="window.print()" class="btn-print">
                     <i class="fas fa-print"></i> Print ID Card
@@ -767,69 +219,88 @@ ob_end_flush();
 
     <!-- ID Card Container -->
     <div class="id-card-print-container">
-        <!-- Front of ID Card -->
+        <!-- Front of ID Card - identity card style (blue header, white body, blue footer) -->
         <div class="id-card-wrapper">
             <div class="id-card-front">
-                <!-- Top Banner with Logo -->
-                <div class="id-card-top-banner">
-                    <div class="id-card-logo-img">
-                        <?php if (!empty($company['company_logo'])): ?>
-                            <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="Logo" class="id-logo-image">
-                        <?php else: ?>
-                            <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="id-card-logo">
-                        <span class="id-card-logo-text">ESWPA</span>
-                        <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
-                    </div>
-                </div>
-                
-                <!-- Photo Section - Circular -->
-                <div class="id-card-photo-section">
-                    <div class="id-card-photo">
-                        <?php if (!empty($member['photo'])): ?>
-                            <img src="../<?php echo htmlspecialchars($member['photo']); ?>" 
-                                 alt="Member Photo" 
-                                 class="id-photo-img">
-                        <?php else: ?>
-                            <div class="id-photo-placeholder">
-                                <i class="fas fa-user"></i>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                
-                <!-- Member Info Section -->
-                <div class="id-card-member-info">
-                    <h4 class="id-member-name"><?php echo htmlspecialchars($member['fullname']); ?></h4>
-                    <p class="id-qualification"><?php echo htmlspecialchars($member['qualification']); ?></p>
-                    
-                    <div class="id-details-grid">
-                        <div class="id-detail-item">
-                            <strong>Member ID:</strong>
-                            <span class="detail-value"><?php echo htmlspecialchars($member['membership_id']); ?></span>
+                <!-- Top blue header: logo left, title + contact right -->
+                <div class="id-card-front-header">
+                    <div class="id-card-header-left">
+                        <div class="id-card-logo-img">
+                            <?php if (!empty($company['company_logo'])): ?>
+                                <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="" role="presentation" class="id-logo-image" onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
+                                <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
+                            <?php else: ?>
+                                <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
+                            <?php endif; ?>
                         </div>
-                        <div class="id-detail-row-pair">
-                            <div class="id-detail-item">
-                                <strong>Issued:</strong>
-                                <span class="detail-value"><?php echo date('d/m/Y', strtotime($member['created_at'])); ?></span>
-                            </div>
-                            <div class="id-detail-item">
-                                <strong>Expires:</strong>
-                                <?php 
-                                $issueDate = strtotime($member['created_at']);
-                                $expiryDate = strtotime('+1 year', $issueDate);
-                                ?>
-                                <span class="detail-value"><?php echo date('d/m/Y', $expiryDate); ?></span>
-                            </div>
+                        <div class="id-card-logo">
+                            <span class="id-card-logo-text"></span>
+                            <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
+                        </div>
+                    </div>
+                    <div class="id-card-header-right">
+                        <div class="id-card-title"></div>
+                        <div class="id-card-contact">
+                            <?php
+                            $addr = trim($company['address'] ?? '');
+                            $phone = trim($company['phone'] ?? '');
+                            $email = trim($company['email'] ?? '');
+                            $parts = array_filter([
+                                $addr,
+                                $phone ? 'Ph: ' . $phone : '',
+                                $email ? 'Email: ' . $email : ''
+                            ]);
+                            echo implode('  ', array_map('htmlspecialchars', $parts)) ?: '—';
+                            ?>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Bottom Member Badge -->
-                <div class="id-card-member-badge">
-                    <span>This ID holder is member of ESWPA</span>
+                <!-- White body: photo left (centered), data right - name first -->
+                <div class="id-card-front-body">
+                    <div class="id-card-front-left">
+                        <div class="id-card-photo id-card-photo-square">
+                            <?php $photo_placeholder_id = 'ph-' . (int)$member['id']; ?>
+                            <?php if (!empty($member['photo'])): ?>
+                                <img src="../<?php echo htmlspecialchars($member['photo']); ?>" alt="Photo" class="id-photo-img" onerror="this.style.display='none'; var p=document.getElementById('<?php echo $photo_placeholder_id; ?>'); if(p) p.style.display='flex';">
+                                <div id="<?php echo $photo_placeholder_id; ?>" class="id-photo-placeholder" style="display:none"><span>Photo</span></div>
+                            <?php else: ?>
+                                <div class="id-photo-placeholder"><span>Photo</span></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="id-card-front-right">
+                        <div class="id-card-field id-card-field-name">
+                            <span class="id-card-label">NAME</span>
+                            <span class="id-card-val"><?php echo htmlspecialchars(strtoupper($member['fullname'])); ?></span>
+                        </div>
+                        <div class="id-card-field">
+                            <span class="id-card-label">MEMBER ID</span>
+                            <span class="id-card-val"><?php echo htmlspecialchars($member['membership_id']); ?></span>
+                        </div>
+                        <div class="id-card-field">
+                            <span class="id-card-label">DATE ISSUED</span>
+                            <span class="id-card-val"><?php echo date('d M Y', strtotime($member['created_at'])); ?></span>
+                        </div>
+                        <div class="id-card-field">
+                            <span class="id-card-label">QUALIFICATION</span>
+                            <span class="id-card-val"><?php echo htmlspecialchars($member['qualification']); ?></span>
+                        </div>
+                        <div class="id-card-field">
+                            <span class="id-card-label">EXPIRES</span>
+                            <?php $expiryDate = strtotime('+1 year', strtotime($member['created_at'])); ?>
+                            <span class="id-card-val"><?php echo date('d M Y', $expiryDate); ?></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom blue footer with signature -->
+                <div class="id-card-front-footer">
+                    <?php if (!empty($company['company_signature'])): ?>
+                        <img src="../<?php echo htmlspecialchars($company['company_signature']); ?>" alt="Signature" class="id-card-footer-signature-img">
+                    <?php else: ?>
+                        <span class="id-card-footer-text">This ID holder is a member of ESWPA</span>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -841,7 +312,8 @@ ob_end_flush();
                 <div class="id-card-back-top-banner">
                     <div class="id-card-logo-img">
                         <?php if (!empty($company['company_logo'])): ?>
-                            <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="Logo" class="id-logo-image">
+                            <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="" role="presentation" class="id-logo-image" onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
+                            <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
                         <?php else: ?>
                             <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
                         <?php endif; ?>

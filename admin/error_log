@@ -497,3 +497,59 @@ Stack trace:
 [10-Feb-2026 13:54:05 UTC] PHP Stack trace:
 [10-Feb-2026 13:54:05 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
 [10-Feb-2026 13:54:05 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[23-Feb-2026 08:41:42 UTC] PHP Parse error:  syntax error, unexpected token "print", expecting "," or ";" in C:\wamp64\www\ethiosocialworks\admin\member-id-card-print.php on line 464
+[23-Feb-2026 08:41:46 UTC] PHP Parse error:  syntax error, unexpected token "print", expecting "," or ";" in C:\wamp64\www\ethiosocialworks\admin\member-id-card-print.php on line 464
+[23-Feb-2026 08:41:50 UTC] PHP Parse error:  syntax error, unexpected token "print", expecting "," or ";" in C:\wamp64\www\ethiosocialworks\admin\member-id-card-print.php on line 464
+[23-Feb-2026 08:42:03 UTC] PHP Parse error:  syntax error, unexpected token "print", expecting "," or ";" in C:\wamp64\www\ethiosocialworks\admin\member-id-card-print.php on line 464
+[24-Feb-2026 07:46:01 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 07:46:01 UTC] PHP Stack trace:
+[24-Feb-2026 07:46:01 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 07:46:01 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:34:02 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 09:34:02 UTC] PHP Stack trace:
+[24-Feb-2026 09:34:02 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 09:34:02 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:34:02 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 09:34:02 UTC] PHP Stack trace:
+[24-Feb-2026 09:34:02 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 09:34:02 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:35:34 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 09:35:34 UTC] PHP Stack trace:
+[24-Feb-2026 09:35:34 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 09:35:34 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:35:34 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 09:35:34 UTC] PHP Stack trace:
+[24-Feb-2026 09:35:34 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 09:35:34 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:36:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(16, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(121, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Feb-2026 09:36:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(16, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(121, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Feb-2026 09:36:27 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(16, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(121, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[24-Feb-2026 09:39:43 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\members_list.php on line 418
+[24-Feb-2026 09:39:43 UTC] PHP Stack trace:
+[24-Feb-2026 09:39:43 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\members_list.php:0
+[24-Feb-2026 09:39:43 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\members_list.php:418
+[24-Feb-2026 09:41:23 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(16, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(120, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299

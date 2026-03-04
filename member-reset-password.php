@@ -4,11 +4,36 @@
 include 'head.php';
 include 'include/config.php';
 
+// Build absolute URL for redirects (avoids ERR_TOO_MANY_REDIRECTS with proxies/load balancers)
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+$host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+$forgotPasswordUrl = ($isHttps ? 'https' : 'http') . '://' . $host . ($basePath ? $basePath . '/' : '/') . 'member-forgot-password.php';
+
 // Get token from URL
 $token = $_GET['token'] ?? '';
 
+// If no token is provided, show a simple message on this page
+// instead of redirecting back to forgot-password with an error flag.
 if (empty($token)) {
-    header("Location: member-forgot-password.php?error=Invalid reset link");
+    ?>
+    <body>
+        <?php include 'header-v1.2.php'; ?>
+        <div class="registration-area half-bg default-padding" style="background-color: white;">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="registration-form shadow p-4 bg-white text-center">
+                        <h4 class="mb-3">Invalid reset link</h4>
+                        <p class="mb-4">The password reset link is missing or invalid. Please request a new password reset from the Forgot Password page.</p>
+                        <a href="member-forgot-password.php" class="btn btn-primary">Go to Forgot Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    <?php
     exit();
 }
 
@@ -24,7 +49,7 @@ $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
     $stmt->close();
-    header("Location: member-forgot-password.php?error=Invalid or expired reset link. Please request a new one.");
+    header('Location: ' . $forgotPasswordUrl . '?error=expired_reset_link');
     exit();
 }
 
@@ -89,7 +114,7 @@ $stmt->close();
                     ?>
 
                     <!-- Reset Password Form -->
-                    <form action="include/member-reset-password.php" method="post" class="row g-3" id="resetPasswordForm">
+                    <form action="member-reset-password-handler.php" method="post" class="row g-3" id="resetPasswordForm">
                         <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
                         
                         <div class="col-12 mb-3">

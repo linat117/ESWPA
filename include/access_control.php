@@ -47,6 +47,13 @@ function canAccessResource($member_id, $resource_id) {
         return ['granted' => true, 'reason' => 'Public resource'];
     }
     
+    // Member-level resources are visible to any logged-in member,
+    // regardless of package or badge configuration
+    if ($access_level === 'member' && $member_id) {
+        logAccess($member_id, $resource_id, null, 'view', true);
+        return ['granted' => true, 'reason' => 'Member-level resource'];
+    }
+    
     // If not logged in, deny access (except public)
     if (!$member_id) {
         logAccess(null, $resource_id, null, 'view', false, 'Member not logged in');

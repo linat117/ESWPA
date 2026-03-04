@@ -4,6 +4,15 @@
 <?php
 include 'head.php';
 include 'include/config.php';
+
+// Helper to remove a single outer <p>...</p> wrapper while keeping inner content
+function strip_outer_p($html) {
+    $html = trim($html);
+    if (preg_match('/^<p[^>]*>(.*)<\/p>$/is', $html, $matches)) {
+        return $matches[1];
+    }
+    return $html;
+}
 ?>
 
 <body>
@@ -81,7 +90,7 @@ if (mysqli_num_rows($result) > 0) :
                             <h4>
                                 <a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a>
                             </h4>
-                            <p><?php echo htmlspecialchars($row['event_description']); ?></p>
+                            <p><?php echo strip_outer_p($row['event_description']); ?></p>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -150,7 +159,7 @@ if (mysqli_num_rows($result) > 0) :
                                         <h3>
                                             <a href="#"> <?php echo htmlspecialchars($row['event_header']); ?> </a>
                                         </h3>
-                                        <p> <?php echo htmlspecialchars($row['event_description']); ?> </p>
+                                        <p> <?php echo strip_outer_p($row['event_description']); ?> </p>
                                         <div class="top-entry">
                                             <div class="date">
                                                 <i class="fas fa-clock"></i> <?php echo date("M d, Y", strtotime($row['event_date'])); ?>

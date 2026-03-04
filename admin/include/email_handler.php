@@ -2,7 +2,18 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../vendor/autoload.php';
+// Find vendor/autoload.php (works when doc root is project root or a subfolder e.g. public/)
+$autoload = null;
+foreach ([__DIR__ . '/../../vendor/autoload.php', __DIR__ . '/../../../vendor/autoload.php'] as $path) {
+    if (is_file($path)) {
+        $autoload = $path;
+        break;
+    }
+}
+if (!$autoload) {
+    trigger_error('vendor/autoload.php not found. Tried: ' . __DIR__ . '/../../vendor/autoload.php and ' . __DIR__ . '/../../../vendor/autoload.php', E_USER_ERROR);
+}
+require_once $autoload;
 
 function sendNewsletter($subject, $body, $recipients) {
     $mail = new PHPMailer(true);

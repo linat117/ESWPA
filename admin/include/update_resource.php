@@ -111,9 +111,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Update database - check if new columns exist
-    $checkStatus = $conn->query("SHOW COLUMNS FROM resources LIKE 'status'");
-    $hasNewFields = $checkStatus && $checkStatus->num_rows > 0;
+    // Update database - check if all new columns exist (status, access_level, tags, featured)
+    $checkColumns = $conn->query("SHOW COLUMNS FROM resources WHERE Field IN ('status','access_level','tags','featured')");
+    $hasNewFields = $checkColumns && $checkColumns->num_rows === 4;
     
     if ($hasNewFields) {
         $query = "UPDATE resources SET section = ?, title = ?, publication_date = ?, author = ?, description = ?, pdf_file = ?, status = ?, access_level = ?, tags = ?, featured = ? WHERE id = ?";

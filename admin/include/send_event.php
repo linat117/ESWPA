@@ -6,6 +6,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $event_date = $_POST['event_date'];
     $event_header = $_POST['event_header'];
     $event_description = $_POST['event_description'];
+
+    // Remove a single outer <p>...</p> wrapper added by the editor
+    $event_description = trim($event_description);
+    if (preg_match('/^<p[^>]*>(.*)<\/p>$/is', $event_description, $matches)) {
+        $event_description = $matches[1];
+    }
     $event_type = $_POST['event_type']; 
     $upload_dir = "../../uploads/";
     $allowed_types = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];

@@ -87,7 +87,7 @@ $conn->close();
     <div class="print-controls">
         <div class="print-controls-content">
             <h2><i class="fas fa-print"></i> Print Preview</h2>
-            <p>Review your ID card below. Ensure "Print backgrounds" is enabled in your print settings for best results. Click the print button when ready.</p>
+            <p>Review your ID card below. For <strong>standard ID/ATM size</strong> (85.6 × 54 mm), set scale to <strong>100%</strong> or &quot;Actual size&quot; in the print dialog. Enable &quot;Print backgrounds&quot; for best results.</p>
             <div class="print-actions">
                 <button onclick="window.print()" class="btn-print">
                     <i class="fas fa-print"></i> Print ID Card

@@ -12,6 +12,15 @@ include 'header.php';
 <!-- Quill css -->
 <link href="assets/vendor/quill/quill.core.css" rel="stylesheet" type="text/css" />
 <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet" type="text/css" />
+<style>
+    /* Ensure Status dropdown stays next to its label (theme uses #status for loader) */
+    #post_status.form-select {
+        display: block !important;
+        width: 100% !important;
+        min-width: 120px !important;
+        min-height: 38px !important;
+    }
+</style>
 
 <body>
     <div class="wrapper">
@@ -52,18 +61,18 @@ include 'header.php';
 
                                     <form action="include/manage_news.php" method="post" enctype="multipart/form-data">
                                         <div class="row">
-                                            <div class="col-md-6 mb-3">
+                                            <div class="col-12 col-sm-6 mb-3">
                                                 <label for="type" class="form-label">Type *</label>
-                                                <select class="form-control" id="type" name="type" required>
+                                                <select class="form-select w-100" id="type" name="type" required>
                                                     <option value="news">News</option>
                                                     <option value="blog">Blog</option>
                                                     <option value="report">Report</option>
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-6 mb-3">
-                                                <label for="status" class="form-label">Status *</label>
-                                                <select class="form-control" id="status" name="status" required>
+                                            <div class="col-12 col-sm-6 mb-3" style="min-width: 0;">
+                                                <label for="post_status" class="form-label">Status *</label>
+                                                <select class="form-select w-100" id="post_status" name="status" required style="min-height: 38px; display: block !important; width: 100% !important;">
                                                     <option value="draft">Draft</option>
                                                     <option value="published" selected>Published</option>
                                                     <option value="archived">Archived</option>

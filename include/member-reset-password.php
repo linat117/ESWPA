@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($result->num_rows === 0) {
         $stmt->close();
-        header("Location: ../member-forgot-password.php?error=Invalid or expired reset link. Please request a new one.");
+        header("Location: ../member-forgot-password.php?error=expired_reset_link");
         exit();
     }
     

@@ -143,7 +143,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$stmt) {
                 $error = 'Database error. Please try again.';
             } elseif ($stmt->execute()) {
+                $new_id = $conn->insert_id;
                 $stmt->close();
+                // If approved, create member_access so they can use "Forgot password" to set one
+                if ($approval_status === 'approved' && $new_id) {
+                    $tempPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
+                    $ins = $conn->prepare("INSERT INTO member_access (member_id, email, password, membership_id, status) VALUES (?, ?, ?, ?, 'active')");
+                    if ($ins) {
+                        $ins->bind_param("isss", $new_id, $email, $tempPassword, $membership_id);
+                        $ins->execute();
+                        $ins->close();
+                    }
+                }
+                // Send email to the member
+                if (file_exists(__DIR__ . '/include/email_handler.php')) {
+                    require_once __DIR__ . '/include/email_handler.php';
+                    $isApproved = ($approval_status === 'approved');
+                    $subject = $isApproved
+                        ? 'Welcome to ESWPA , Your membership has been approved'
+                        : 'ESWPA membership registered – Pending approval';
+                    $statusLine = $isApproved
+                        ? '<p>Your membership has been <strong>approved</strong>. To log in, go to the member login page and click <strong>"Forgot password"</strong>—enter this email address and we will send you a link to set your password. No password has been assigned yet; you must use the reset link first.</p>'
+                        : '<p>Your registration is <strong>pending approval</strong>. You will receive another email once an administrator has approved your membership.</p>';
+                    $body = '
+                    <html><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background-color: #1273c3; color: white; padding: 20px; text-align: center;">
+                    <h2 style="margin: 0;">Ethiopian Social Workers Professional Association</h2>
+                    </div>
+                    <div style="padding: 20px; background-color: #f9f9f9;">
+                    <p>Dear ' . htmlspecialchars($fullname) . ',</p>
+                    <p>You have been registered as a member of ESWPA.</p>
+                    <p><strong>Membership ID:</strong> <code style="background: #eee; padding: 4px 8px;">' . htmlspecialchars($membership_id) . '</code></p>
+                    ' . $statusLine . '
+                    <p>Best regards,<br>ESWPA Team</p>
+                    </div>
+                    <div style="padding: 15px; text-align: center; font-size: 12px; color: #666;">ESWPA</div>
+                    </div></body></html>';
+                    @sendBulkEmail($subject, $body, [$email]);
+                }
                 header("Location: members_list.php?success=Member added successfully. Membership ID: " . urlencode($membership_id));
                 exit();
             } else {

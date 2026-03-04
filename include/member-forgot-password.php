@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Check if member exists - check both registrations and member_access tables
-    $query = "SELECT r.id, r.fullname, r.approval_status, r.status, r.email as reg_email, 
+    $query = "SELECT r.id, r.fullname, r.approval_status, r.status, r.email as reg_email, r.membership_id,
                      ma.id as access_id, ma.email as access_email
               FROM registrations r
               LEFT JOIN member_access ma ON r.id = ma.member_id
@@ -46,14 +46,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    // Check if member_access exists
+    // If approved but no member_access row (e.g. added via Add Member as approved), create it so they can set password
     if (empty($member['access_id'])) {
-        header("Location: ../member-forgot-password.php?error=Account not activated. Please contact support.");
-        exit();
+        $placeholderPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
+        $ins = $conn->prepare("INSERT INTO member_access (member_id, email, password, membership_id, status) VALUES (?, ?, ?, ?, 'active')");
+        if ($ins) {
+            $mid = (int) $member['id'];
+            $regEmail = $member['reg_email'];
+            $memId = isset($member['membership_id']) ? $member['membership_id'] : '';
+            $ins->bind_param("isss", $mid, $regEmail, $placeholderPassword, $memId);
+            $ins->execute();
+            $ins->close();
+        }
     }
     
     // Use the email from member_access if available, otherwise use registrations email
     $memberEmail = !empty($member['access_email']) ? $member['access_email'] : $member['reg_email'];
+    $memberId = (int) $member['id'];
     
     // Generate reset token
     $token = bin2hex(random_bytes(32)); // 64 character token
@@ -62,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Delete any existing unused tokens for this member
     $deleteQuery = "DELETE FROM password_reset_tokens WHERE member_id = ? AND used = 0";
     $deleteStmt = $conn->prepare($deleteQuery);
-    $deleteStmt->bind_param("i", $member['id']);
+    $deleteStmt->bind_param("i", $memberId);
     $deleteStmt->execute();
     $deleteStmt->close();
     
@@ -70,14 +79,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insertQuery = "INSERT INTO password_reset_tokens (member_id, email, token, expires_at) 
                     VALUES (?, ?, ?, ?)";
     $insertStmt = $conn->prepare($insertQuery);
-    $insertStmt->bind_param("isss", $member['id'], $memberEmail, $token, $expires_at);
+    $insertStmt->bind_param("isss", $memberId, $memberEmail, $token, $expires_at);
     
     if ($insertStmt->execute()) {
-        // Send reset email
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        $host = $_SERVER['HTTP_HOST'];
-        $scriptPath = dirname(dirname($_SERVER['PHP_SELF']));
-        $resetLink = $protocol . "://" . $host . $scriptPath . "/member-reset-password.php?token=" . $token;
+        // Build reset link to the public reset page at site root
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $resetBase = ($isHttps ? 'https' : 'http') . '://' . $host . '/';
+        $resetLink = $resetBase . 'member-reset-password.php?token=' . urlencode($token);
         
         // Send email using PHPMailer
         $mail = new PHPMailer(true);

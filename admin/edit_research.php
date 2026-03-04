@@ -163,8 +163,8 @@ $include_current = $current_cat !== '' && !in_array($current_cat, $cat_names);
                                             </div>
 
                                             <div class="col-md-4 mb-3">
-                                                <label for="status" class="form-label">Status *</label>
-                                                <select class="form-control" id="status" name="status" required>
+                                                <label for="research_status" class="form-label">Status *</label>
+                                                <select class="form-control" id="research_status" name="status" required>
                                                     <option value="draft" <?php echo ($research['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>Draft</option>
                                                     <option value="in_progress" <?php echo ($research['status'] ?? '') === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
                                                     <option value="completed" <?php echo ($research['status'] ?? '') === 'completed' ? 'selected' : ''; ?>>Completed</option>

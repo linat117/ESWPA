@@ -334,7 +334,7 @@
                               </li>-->
 
                               <!-- Communications -->
-                              <li class="side-nav-title">Communications</li>
+                         <!--     <li class="side-nav-title">Communications</li>
                               <li class="side-nav-item">
                                   <a data-bs-toggle="collapse" href="#communicationsSubmenu" aria-expanded="false" aria-controls="communicationsSubmenu" class="side-nav-link">
                                       <i class="ri-mail-line"></i>
@@ -375,7 +375,7 @@
                                           </li>
                                       </ul>
                                   </div>
-                              </li>
+                              </li>-->
 
                               <!-- Content Management -->
                               <li class="side-nav-title">Content Management</li>
@@ -407,25 +407,25 @@
                               </li>
 
                               <!-- System -->
-                              <li class="side-nav-title">System</li>
+                             <!-- <li class="side-nav-title">System</li>
                               <li class="side-nav-item">
                                   <a href="settings.php" class="side-nav-link">
                                       <i class="ri-settings-3-line"></i>
                                       <span> System Settings </span>
                                   </a>
-                              </li>
+                              </li>-->
                               <li class="side-nav-item">
                                   <a href="settings_users.php" class="side-nav-link">
                                       <i class="ri-user-settings-line"></i>
                                       <span> User Management </span>
                                   </a>
                               </li>
-                              <li class="side-nav-item">
+                            <!--  <li class="side-nav-item">
                                   <a href="tools.php" class="side-nav-link">
                                       <i class="ri-tools-line"></i>
                                       <span> Tools & Plugins </span>
                                   </a>
-                              </li>
+                              </li>-->
                           </ul>
                           <div class="clearfix"></div>
                       </div>

@@ -22,6 +22,24 @@
     <Files "approve_member.php">
         Require all granted
     </Files>
+    <Files "delete_member.php">
+        Require all granted
+    </Files>
+    <Files "manage_news.php">
+        Require all granted
+    </Files>
+    <Files "delete_news.php">
+        Require all granted
+    </Files>
+    <Files "delete_user.php">
+        Require all granted
+    </Files>
+    <Files "send_event.php">
+        Require all granted
+    </Files>
+    <Files "delete_event.php">
+        Require all granted
+    </Files>
 </IfModule>
 
 <IfModule !mod_authz_core.c>
@@ -41,6 +59,30 @@
         Allow from all
     </Files>
     <Files "approve_member.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "delete_member.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "manage_news.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "delete_news.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "delete_user.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "send_event.php">
+        Order allow,deny
+        Allow from all
+    </Files>
+    <Files "delete_event.php">
         Order allow,deny
         Allow from all
     </Files>

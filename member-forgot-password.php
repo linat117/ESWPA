@@ -47,6 +47,8 @@ include 'head.php';
                             echo 'Your membership is not approved yet. Please contact support.';
                         } elseif ($error == 'email_failed') {
                             echo 'Failed to send email. Please try again later or contact support.';
+                        } elseif ($error == 'expired_reset_link') {
+                            echo 'Invalid or expired reset link. Please request a new one.';
                         } else {
                             echo htmlspecialchars($error);
                         }
@@ -63,7 +65,7 @@ include 'head.php';
                     ?>
 
                     <!-- Forgot Password Form -->
-                    <form action="include/member-forgot-password.php" method="post" class="row g-3" id="forgotPasswordForm">
+                    <form action="member-forgot-password-handler.php" method="post" class="row g-3" id="forgotPasswordForm">
                         <div class="col-12 mb-3">
                             <label for="email" class="form-label">Email Address *</label>
                             <input type="email" class="form-control" id="email" name="email" required 

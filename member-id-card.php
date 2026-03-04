@@ -28,49 +28,334 @@ if ($result->num_rows === 0) {
 $member = $result->fetch_assoc();
 $stmt->close();
 
-// Check if ID card has been generated
-if ($member['id_card_generated'] == 0) {
-    header("Location: member-generate-id-card.php");
-    exit();
-}
+// Has admin generated the ID card?
+$idCardGenerated = (int)($member['id_card_generated'] ?? 0);
 
-// Get verification code
-$verificationQuery = "SELECT verification_code FROM id_card_verification WHERE membership_id = ? LIMIT 1";
-$verificationStmt = $conn->prepare($verificationQuery);
-$verificationStmt->bind_param("s", $member['membership_id']);
-$verificationStmt->execute();
-$verificationResult = $verificationStmt->get_result();
+// Get verification code only if card is generated
 $verificationCode = '';
-if ($verificationResult->num_rows > 0) {
-    $verificationData = $verificationResult->fetch_assoc();
-    $verificationCode = $verificationData['verification_code'];
-}
-$verificationStmt->close();
+$verificationUrl  = '';
+if ($idCardGenerated === 1 && !empty($member['membership_id'])) {
+    $verificationQuery = "SELECT verification_code FROM id_card_verification WHERE membership_id = ? LIMIT 1";
+    $verificationStmt  = $conn->prepare($verificationQuery);
+    $verificationStmt->bind_param("s", $member['membership_id']);
+    $verificationStmt->execute();
+    $verificationResult = $verificationStmt->get_result();
+    if ($verificationResult->num_rows > 0) {
+        $verificationData  = $verificationResult->fetch_assoc();
+        $verificationCode  = $verificationData['verification_code'];
+    }
+    $verificationStmt->close();
 
-// Get company info
-$companyQuery = "SELECT * FROM company_info LIMIT 1";
+    if ($verificationCode !== '') {
+        $protocol   = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+        $host       = $_SERVER['HTTP_HOST'];
+        $scriptPath = dirname($_SERVER['PHP_SELF']);
+        $verificationUrl = $protocol . "://" . $host . $scriptPath . "/verify_id.php?code=" . $verificationCode;
+    }
+}
+
+// Get company info (same as admin)
+$companyQuery  = "SELECT * FROM company_info LIMIT 1";
 $companyResult = $conn->query($companyQuery);
-$company = $companyResult->fetch_assoc();
+$company       = $companyResult ? $companyResult->fetch_assoc() : null;
 if (!$company) {
     $company = [
         'company_name' => 'Ethiopian Social Workers Professional Association',
-        'address' => 'Addis Ababa, Ethiopia',
-        'phone' => '+251-XXX-XXX-XXXX',
-        'email' => 'info@eswpa.org',
-        'website' => 'www.eswpa.org'
+        'address'      => 'Addis Ababa, Ethiopia',
+        'phone'        => '+251-XXX-XXX-XXXX',
+        'email'        => 'info@eswpa.org',
+        'website'      => 'www.eswpa.org',
+        'terms_conditions'  => '',
+        'company_signature' => null,
+        'company_logo'      => null,
     ];
 }
-
-// Generate verification URL
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-$host = $_SERVER['HTTP_HOST'];
-$scriptPath = dirname($_SERVER['PHP_SELF']);
-$verificationUrl = $protocol . "://" . $host . $scriptPath . "/verify_id.php?code=" . $verificationCode;
+$company_name    = $company['company_name'] ?? 'Ethiopian Social Workers Professional Association';
+$terms_conditions = trim($company['terms_conditions'] ?? '');
 
 $conn->close();
-
-// Redirect to generate page (which will show the card)
-header("Location: member-generate-id-card.php");
-exit();
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<?php include 'head.php'; ?>
 
+<body class="member-id-card-page">
+    <!-- Header -->
+    <?php include 'member-header-v1.2.php'; ?>
+    <!-- End Header -->
+
+    <link href="assets/css/member-panel.css" rel="stylesheet">
+
+    <?php
+    // Reuse the admin print CSS for identical design
+    $cssFile = __DIR__ . '/assets/css/id-card-print.css';
+    ?>
+    <link rel="stylesheet" href="assets/css/id-card-print.css?v=<?php echo file_exists($cssFile) ? filemtime($cssFile) : time(); ?>">
+
+    <!-- Member-side layout tweaks so the card is clean and responsive on mobile -->
+    <style>
+        /* Container: centers cards and allows horizontal scroll on very small screens */
+        .member-id-card-page .id-card-print-container {
+            justify-content: center;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 24px 16px 40px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto;
+        }
+
+        /* Slightly scale up cards for desktop only */
+        .member-id-card-page .id-card-wrapper {
+            transform: scale(1.1);
+            transform-origin: top center;
+            margin: 0;
+        }
+
+        @media (max-width: 992px) {
+            .member-id-card-page .id-card-print-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .member-id-card-page .id-card-wrapper {
+                transform: scale(1);
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .member-id-card-page .id-card-wrapper {
+                transform: scale(0.95);
+            }
+        }
+    </style>
+
+    <div class="mp-content-wrapper">
+        <div class="mp-container">
+            <div class="mp-content">
+                <div class="mp-flex-between mp-mb-md">
+                    <div>
+                        <h2 class="mp-page-title"><i class="fas fa-id-card"></i> My ID Card</h2>
+                        <p style="color: var(--mp-gray-600); margin: var(--mp-space-xs) 0 0 0; font-size: 0.875rem;">
+                            This is your official ESWPA member ID card, as generated by the association.
+                        </p>
+                    </div>
+                </div>
+
+                <?php if (isset($_GET['error']) && $idCardGenerated !== 1): ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($_GET['error']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($idCardGenerated !== 1): ?>
+                    <div class="alert alert-info" role="alert">
+                        Your ID card has not been generated yet. Please contact the association/admin to generate your ID card.
+                    </div>
+                <?php else: ?>
+                    <!-- Same card design as admin/member-id-card-print.php (front + back) -->
+                    <div class="id-card-print-container" style="margin-top: 20px;">
+                        <!-- Front of ID Card -->
+                        <div class="id-card-wrapper">
+                            <div class="id-card-front">
+                                <!-- Top blue header -->
+                                <div class="id-card-front-header">
+                                    <div class="id-card-header-left">
+                                        <div class="id-card-logo-img">
+                                            <?php if (!empty($company['company_logo'])): ?>
+                                                <img src="<?php echo htmlspecialchars($company['company_logo']); ?>"
+                                                     alt=""
+                                                     role="presentation"
+                                                     class="id-logo-image"
+                                                     onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
+                                                <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
+                                            <?php else: ?>
+                                                <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="id-card-logo">
+                                            <span class="id-card-logo-text"></span>
+                                            <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="id-card-header-right">
+                                        <div class="id-card-title"></div>
+                                        <div class="id-card-contact">
+                                            <?php
+                                            $addr  = trim($company['address'] ?? '');
+                                            $phone = trim($company['phone'] ?? '');
+                                            $email = trim($company['email'] ?? '');
+                                            $parts = array_filter([
+                                                $addr,
+                                                $phone ? 'Ph: ' . $phone : '',
+                                                $email ? 'Email: ' . $email : ''
+                                            ]);
+                                            echo implode('  ', array_map('htmlspecialchars', $parts)) ?: '—';
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- White body: photo + data -->
+                                <div class="id-card-front-body">
+                                    <div class="id-card-front-left">
+                                        <div class="id-card-photo id-card-photo-square">
+                                            <?php $photo_placeholder_id = 'ph-' . (int)$member['id']; ?>
+                                            <?php if (!empty($member['photo'])): ?>
+                                                <img src="<?php echo htmlspecialchars($member['photo']); ?>"
+                                                     alt="Photo"
+                                                     class="id-photo-img"
+                                                     onerror="this.style.display='none'; var p=document.getElementById('<?php echo $photo_placeholder_id; ?>'); if(p) p.style.display='flex';">
+                                                <div id="<?php echo $photo_placeholder_id; ?>"
+                                                     class="id-photo-placeholder"
+                                                     style="display:none"><span>Photo</span></div>
+                                            <?php else: ?>
+                                                <div class="id-photo-placeholder"><span>Photo</span></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="id-card-front-right">
+                                        <div class="id-card-field id-card-field-name">
+                                            <span class="id-card-label">NAME</span>
+                                            <span class="id-card-val"><?php echo htmlspecialchars(strtoupper($member['fullname'])); ?></span>
+                                        </div>
+                                        <div class="id-card-field">
+                                            <span class="id-card-label">MEMBER ID</span>
+                                            <span class="id-card-val"><?php echo htmlspecialchars($member['membership_id']); ?></span>
+                                        </div>
+                                        <div class="id-card-field">
+                                            <span class="id-card-label">DATE ISSUED</span>
+                                            <span class="id-card-val"><?php echo date('d M Y', strtotime($member['created_at'])); ?></span>
+                                        </div>
+                                        <div class="id-card-field">
+                                            <span class="id-card-label">QUALIFICATION</span>
+                                            <span class="id-card-val"><?php echo htmlspecialchars($member['qualification']); ?></span>
+                                        </div>
+                                        <div class="id-card-field">
+                                            <span class="id-card-label">EXPIRES</span>
+                                            <?php
+                                            // Use expiry_date if set; otherwise 1 year from created_at (same logic as admin)
+                                            if (!empty($member['expiry_date'])) {
+                                                $exp = strtotime($member['expiry_date']);
+                                            } else {
+                                                $exp = strtotime('+1 year', strtotime($member['created_at']));
+                                            }
+                                            ?>
+                                            <span class="id-card-val"><?php echo date('d M Y', $exp); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom blue footer with signature -->
+                                <div class="id-card-front-footer">
+                                    <?php if (!empty($company['company_signature'])): ?>
+                                        <img src="<?php echo htmlspecialchars($company['company_signature']); ?>"
+                                             alt="Signature"
+                                             class="id-card-footer-signature-img">
+                                    <?php else: ?>
+                                        <span class="id-card-footer-text">This ID holder is a member of ESWPA</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Back of ID Card -->
+                        <div class="id-card-wrapper">
+                            <div class="id-card-back">
+                                <!-- Top banner -->
+                                <div class="id-card-back-top-banner">
+                                    <div class="id-card-logo-img">
+                                        <?php if (!empty($company['company_logo'])): ?>
+                                            <img src="<?php echo htmlspecialchars($company['company_logo']); ?>"
+                                                 alt=""
+                                                 role="presentation"
+                                                 class="id-logo-image"
+                                                 onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
+                                            <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
+                                        <?php else: ?>
+                                            <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="id-card-back-logo-top">
+                                        <span class="id-card-back-logo-text-top">ESWPA</span>
+                                        <span class="id-card-back-tagline-top"><?php echo htmlspecialchars($company_name); ?></span>
+                                    </div>
+                                </div>
+
+                                <!-- Back content -->
+                                <div class="id-card-back-content">
+                                    <!-- Signature -->
+                                    <div class="id-back-signature">
+                                        <?php if (!empty($company['company_signature'])): ?>
+                                            <img src="<?php echo htmlspecialchars($company['company_signature']); ?>"
+                                                 alt="Signature"
+                                                 class="id-back-signature-img">
+                                        <?php else: ?>
+                                            <div class="id-back-signature-line"></div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <!-- Info text -->
+                                    <p class="id-back-text">
+                                        This card is the property of
+                                        <?php echo htmlspecialchars($company_name); ?>
+                                        and must be returned upon termination of membership.
+                                    </p>
+                                    <?php if ($terms_conditions !== ''): ?>
+                                        <p class="id-back-text">
+                                            <?php echo nl2br(htmlspecialchars($terms_conditions)); ?>
+                                        </p>
+                                    <?php else: ?>
+                                        <p class="id-back-text">
+                                            For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <!-- QR Code -->
+                                    <?php if ($verificationUrl !== ''): ?>
+                                        <div class="id-qr-container">
+                                            <div id="qrcode"></div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="id-qr-container">
+                                            <p class="text-muted small">Verification code not available</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back to Dashboard -->
+                    <div style="margin-top: 1.5rem;">
+                        <a href="member-dashboard.php" class="mp-btn mp-btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <?php if ($idCardGenerated === 1 && $verificationUrl !== ''): ?>
+        <!-- QR Code Library -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+        <script>
+            window.addEventListener('load', function () {
+                if (typeof QRCode !== 'undefined' && document.getElementById('qrcode')) {
+                    new QRCode(document.getElementById('qrcode'), {
+                        text: "<?php echo htmlspecialchars($verificationUrl, ENT_QUOTES); ?>",
+                        width: 50,
+                        height: 50,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
+            });
+        </script>
+    <?php endif; ?>
+</body>
+</html>

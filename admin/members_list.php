@@ -323,7 +323,7 @@ include 'include/conn.php';
                                                 // Membership ID
                                                 echo "<td>";
                                                 if (!empty($row['membership_id'])) {
-                                                    echo "<strong>" . htmlspecialchars($row['membership_id']) . "</strong>";
+                                                    echo "<strong>" . htmlspecialchars($row['membership_id'] ?? '') . "</strong>";
                                                 } else {
                                                     echo "<span class='text-muted'>Pending</span>";
                                                 }
@@ -331,10 +331,10 @@ include 'include/conn.php';
 
                                                 // Personal Info
                                                 echo "<td>";
-                                                echo "<strong>Name:</strong> " . htmlspecialchars($row['fullname']) . "<br>";
-                                                echo "<strong>Sex:</strong> " . htmlspecialchars($row['sex']) . "<br>";
-                                                echo "<strong>Phone:</strong> " . htmlspecialchars($row['phone']) . "<br>";
-                                                echo "<strong>Email:</strong> " . htmlspecialchars($row['email']);
+                                                echo "<strong>Name:</strong> " . htmlspecialchars($row['fullname'] ?? '') . "<br>";
+                                                echo "<strong>Sex:</strong> " . htmlspecialchars($row['sex'] ?? '') . "<br>";
+                                                echo "<strong>Phone:</strong> " . htmlspecialchars($row['phone'] ?? '') . "<br>";
+                                                echo "<strong>Email:</strong> " . htmlspecialchars($row['email'] ?? '');
                                                 echo "</td>";
 
                                                 echo "<td>";
@@ -349,16 +349,16 @@ echo "</td>";
 
 
                                                 // Address
-                                                echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['address'] ?? '') . "</td>";
 
                                                 echo "<td style='white-space: normal; word-wrap: break-word; max-width: 300px;'>"
-                                                    . nl2br(htmlspecialchars($row['qualification'])) . "</td>";
+                                                    . nl2br(htmlspecialchars($row['qualification'] ?? '')) . "</td>";
 
 
                                                 // Payment Info
                                                 echo "<td>";
-                                                echo "<strong>Duration:</strong> " . htmlspecialchars($row['payment_duration']) . "<br>";
-                                                echo "<strong>Option:</strong> " . htmlspecialchars($row['payment_option']) . "<br>";
+                                                echo "<strong>Duration:</strong> " . htmlspecialchars($row['payment_duration'] ?? '') . "<br>";
+                                                echo "<strong>Option:</strong> " . htmlspecialchars($row['payment_option'] ?? '') . "<br>";
                                                 echo "<strong>ID Card:</strong> " . (!empty($row['id_card']) ? 'Yes' : 'No');
                                                 echo "</td>";
 
@@ -397,9 +397,9 @@ echo "</td>";
                                                 }
                                                 echo "</td>";
 
-                                                // Action Button
-                                                echo "<td>";
-                                                echo "<div class='btn-group' role='group'>";
+                                                // Action Button (responsive: wrap + min touch target)
+                                                echo "<td class='text-nowrap'>";
+                                                echo "<div class='d-flex flex-wrap gap-1 align-items-center action-buttons'>";
                                                 
                                                 echo "<a href='edit_member.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-info btn-sm' title='Edit Member'>";
                                                 echo "<i class='ri-edit-line'></i> Edit";
@@ -408,32 +408,32 @@ echo "</td>";
                                                 echo "<i class='ri-file-list-line'></i> Notes";
                                                 echo "</a>";
                                                 
-                                                echo "<button class='btn btn-primary btn-sm view-member' 
+                                                echo "<button type='button' class='btn btn-primary btn-sm view-member' 
                                                         data-bs-toggle='modal' 
                                                         data-bs-target='#member-modal'
-                                                        data-fullname='" . htmlspecialchars($row['fullname']) . "'
-                                                        data-sex='" . htmlspecialchars($row['sex']) . "'
-                                                        data-phone='" . htmlspecialchars($row['phone']) . "'
-                                                        data-email='" . htmlspecialchars($row['email']) . "'
-                                                        data-photo='" . htmlspecialchars($row['photo']) . "'
-                                                        data-address='" . htmlspecialchars($row['address']) . "'
-                                                        data-qualification=\"" . htmlspecialchars($row['qualification']) . "\"
-                                                        data-payment_duration='" . htmlspecialchars($row['payment_duration']) . "'
-                                                        data-payment_option='" . htmlspecialchars($row['payment_option']) . "'
+                                                        data-fullname='" . htmlspecialchars($row['fullname'] ?? '') . "'
+                                                        data-sex='" . htmlspecialchars($row['sex'] ?? '') . "'
+                                                        data-phone='" . htmlspecialchars($row['phone'] ?? '') . "'
+                                                        data-email='" . htmlspecialchars($row['email'] ?? '') . "'
+                                                        data-photo='" . htmlspecialchars($row['photo'] ?? '') . "'
+                                                        data-address='" . htmlspecialchars($row['address'] ?? '') . "'
+                                                        data-qualification=\"" . htmlspecialchars($row['qualification'] ?? '') . "\"
+                                                        data-payment_duration='" . htmlspecialchars($row['payment_duration'] ?? '') . "'
+                                                        data-payment_option='" . htmlspecialchars($row['payment_option'] ?? '') . "'
                                                         data-id_card='" . (!empty($row['id_card']) ? 'Yes' : 'No') . "'
-                                                        data-created_at='" . htmlspecialchars($row['created_at']) . "'
+                                                        data-created_at='" . htmlspecialchars($row['created_at'] ?? '') . "'
                                                         data-membership_id='" . htmlspecialchars($row['membership_id'] ?? '') . "'
-                                                        data-approval_status='" . htmlspecialchars($approvalStatus) . "'
+                                                        data-approval_status='" . htmlspecialchars($approvalStatus ?? '') . "'
                                                         title='View Details'>";
                                                 echo "<i class='ri-eye-line'></i> View";
                                                 echo "</button>";
                                                 
                                                 // Approve/Reject buttons (only show for pending)
                                                 if ($approvalStatus == 'pending') {
-                                                    echo "<button class='btn btn-success btn-sm approve-member' data-id='" . htmlspecialchars($row['id']) . "' title='Approve Member'>";
+                                                    echo "<button type='button' class='btn btn-success btn-sm approve-member' data-id='" . htmlspecialchars($row['id']) . "' title='Approve Member'>";
                                                     echo "<i class='ri-check-line'></i> Approve";
                                                     echo "</button>";
-                                                    echo "<button class='btn btn-warning btn-sm reject-member' data-id='" . htmlspecialchars($row['id']) . "' title='Reject Member'>";
+                                                    echo "<button type='button' class='btn btn-warning btn-sm reject-member' data-id='" . htmlspecialchars($row['id']) . "' title='Reject Member'>";
                                                     echo "<i class='ri-close-line'></i> Reject";
                                                     echo "</button>";
                                                 }
@@ -445,7 +445,7 @@ echo "</td>";
                                                     echo "</a>";
                                                 }
                                                 
-                                                echo "<button class='btn btn-danger btn-sm delete-member' data-id='" . htmlspecialchars($row['id']) . "' title='Delete Member'>";
+                                                echo "<button type='button' class='btn btn-danger btn-sm delete-member' data-id='" . htmlspecialchars($row['id']) . "' title='Delete Member'>";
                                                 echo "<i class='ri-delete-bin-line'></i> Delete";
                                                 echo "</button>";
                                                 
@@ -616,22 +616,33 @@ echo "</td>";
                 $('#member-cv').html(cvHtml);
             });
 
-            $('#scroll-horizontal-datatable').on('click', '.delete-member', function() {
+            // Use document delegation so delete works after DataTable redraws and on touch devices
+            $(document).on('click', '.delete-member', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 var button = $(this);
-                var memberId = button.data('id');
+                var memberId = button.attr('data-id') || button.data('id');
                 var row = button.closest('tr');
+                if (!memberId) return;
 
                 if (confirm('Are you sure you want to delete this member? This action cannot be undone.')) {
                     $.ajax({
                         url: 'include/delete_member.php',
                         type: 'POST',
-                        data: {
-                            id: memberId
-                        },
+                        data: { id: memberId },
                         dataType: 'json',
                         success: function(response) {
-                            if (response.success) {
-                                $('#scroll-horizontal-datatable').DataTable().row(row).remove().draw(false);
+                            if (response && response.success) {
+                                try {
+                                    var dt = $('#scroll-horizontal-datatable').DataTable();
+                                    if (dt && dt.row && row.length) {
+                                        dt.row(row).remove().draw(false);
+                                    } else {
+                                        row.remove();
+                                    }
+                                } catch (err) {
+                                    row.remove();
+                                }
                                 $.toast({
                                     heading: 'Success',
                                     text: 'Member deleted successfully.',
@@ -644,7 +655,7 @@ echo "</td>";
                             } else {
                                 $.toast({
                                     heading: 'Error',
-                                    text: response.message || 'Could not delete member.',
+                                    text: (response && response.message) ? response.message : 'Could not delete member.',
                                     icon: 'error',
                                     loader: true,
                                     loaderBg: '#f96a6a',
@@ -653,10 +664,22 @@ echo "</td>";
                                 });
                             }
                         },
-                        error: function() {
+                        error: function(xhr) {
+                            var msg = 'An error occurred. Please try again.';
+                            if (xhr.responseText) {
+                                try {
+                                    var r = JSON.parse(xhr.responseText);
+                                    if (r && r.message) { msg = r.message; }
+                                } catch (e) {
+                                    if (xhr.responseText.length < 300) msg = xhr.responseText;
+                                    else if (xhr.status) msg = 'Server error (HTTP ' + xhr.status + '). Check if you are logged in.';
+                                }
+                            } else if (xhr.status) {
+                                msg = 'Request failed (HTTP ' + xhr.status + ').';
+                            }
                             $.toast({
                                 heading: 'Error',
-                                text: 'An error occurred. Please try again.',
+                                text: msg,
                                 icon: 'error',
                                 loader: true,
                                 loaderBg: '#f96a6a',
@@ -784,6 +807,20 @@ echo "</td>";
         }
     </script>
     <style>
+        /* Action column: responsive and touch-friendly */
+        .action-buttons .btn {
+            min-height: 38px;
+            min-width: 36px;
+        }
+        @media (max-width: 768px) {
+            .action-buttons .btn {
+                min-height: 44px;
+                padding: 0.4rem 0.5rem;
+            }
+        }
+        .action-buttons .delete-member {
+            cursor: pointer;
+        }
         @media print {
             body * {
                 visibility: hidden;

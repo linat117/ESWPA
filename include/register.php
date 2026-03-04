@@ -9,22 +9,14 @@ if (file_exists($configPath)) {
     include 'config.php';
 }
 
-// Get base URL for redirects
+// Get base URL for redirects (proxy/HTTPS aware)
 $baseUrl = '';
-if (isset($_SERVER['HTTP_HOST'])) {
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'];
-    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-    if ($scriptPath !== '/') {
-        $baseUrl .= $scriptPath;
-    }
-    // Remove register-handler.php or include/register.php from path
-    if (strpos($baseUrl, '/include') !== false) {
-        $baseUrl = dirname($baseUrl);
-    }
-    if (strpos($baseUrl, 'register-handler.php') !== false) {
-        $baseUrl = dirname($baseUrl);
-    }
+if (isset($_SERVER['HTTP_HOST']) || isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $scriptPath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    $baseUrl = ($isHttps ? 'https' : 'http') . '://' . $host . ($scriptPath ? $scriptPath : '');
 }
 $signUpUrl = $baseUrl ? $baseUrl . '/sign-up.php' : 'sign-up.php';
 
@@ -270,9 +262,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
     
     if ($stmt->execute()) {
-        // Send confirmation email (to be implemented)
-        // TODO: Send no-reply email with membership ID
-        
+        // Send confirmation email to the registered member
+        if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+            require_once __DIR__ . '/../vendor/autoload.php';
+
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'mail.ethiosocialworker.org';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'noreplay@ethiosocialworker.org';
+                $mail->Password   = 'o%-4Y*-Zmpm*P9?x';
+                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port       = 465;
+                $mail->CharSet    = 'UTF-8';
+                $mail->setFrom('noreplay@ethiosocialworker.org', 'Ethiopian Social Workers Professional Association');
+                $mail->addAddress($email, $fullname);
+                $mail->isHTML(true);
+                $mail->Subject = 'Registration Received - ESWPA';
+
+                $mail->Body = '
+                <html><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background-color: #1273c3; color: white; padding: 20px; text-align: center;">
+                <h2 style="margin: 0;">Registration Received</h2>
+                </div>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                <p>Dear ' . htmlspecialchars($fullname) . ',</p>
+                <p>Thank you for registering with the <strong>Ethiopian Social Workers Professional Association (ESWPA)</strong>.</p>
+                <p><strong>Your Membership ID:</strong> <code style="background: #eee; padding: 4px 8px;">' . htmlspecialchars($membership_id) . '</code></p>
+                <p>Your registration is <strong>pending admin approval</strong>. You will receive another email once your application has been reviewed and approved.</p>
+                <p>If you have any questions, please contact us.</p>
+                <p>Best regards,<br>ESWPA Team</p>
+                </div>
+                <div style="padding: 15px; text-align: center; font-size: 12px; color: #666;">
+                Ethiopian Social Workers Professional Association
+                </div>
+                </div></body></html>';
+                $mail->AltBody = "Dear {$fullname}, Thank you for registering with ESWPA. Your Membership ID: {$membership_id}. Your registration is pending admin approval. You will receive an email once approved.";
+                $mail->send();
+            } catch (\PHPMailer\PHPMailer\Exception $e) {
+                error_log("Registration confirmation email failed to {$email}: " . $mail->ErrorInfo);
+            }
+        }
+
         echo "<script>
                 alert('Registration Successful! Your Membership ID is: {$membership_id}\\n\\nYour registration is pending admin approval. You will receive an email once approved.');
                 window.location.href = '" . htmlspecialchars($signUpUrl) . "';
