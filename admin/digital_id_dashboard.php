@@ -214,7 +214,7 @@ $stmt->close();
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                            <div class="card widget-flat text-bg-purple">
+                            <div class="card widget-flat text-bg-info">
                                 <div class="card-body">
                                     <div class="float-end">
                                         <i class="ri-calendar-line widget-icon"></i>

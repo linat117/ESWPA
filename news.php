@@ -135,7 +135,7 @@ include 'include/config.php';
                                         echo '</div>';
                                         echo '</div>';
                                     } else {
-                                        echo '<div class="col-md-6 col-lg-4 mb-4">';
+                                        echo '<div class="col-md-6 col-lg-4 mb-4 wow fadeInUp" data-wow-delay="0.1s">';
                                         echo '<div class="card shadow-sm h-100">';
                                         if ($firstImage) {
                                             echo '<img src="' . htmlspecialchars($firstImage) . '" class="card-img-top" alt="' . htmlspecialchars($row['title']) . '" style="height: 200px; object-fit: cover;">';
@@ -274,15 +274,15 @@ include 'include/config.php';
     
     .news-tabs-horizontal .nav-link:hover {
         background: #e9ecef;
-        color: #667eea;
-        border-color: #667eea;
+        color: #2563eb;
+        border-color: #2563eb;
     }
     
     .news-tabs-horizontal .nav-link.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
         color: white !important;
-        border-color: #667eea;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        border-color: #0ea5e9;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
     
     .news-tabs-horizontal .nav-link.active i {
@@ -291,7 +291,7 @@ include 'include/config.php';
     
     .news-tabs-horizontal .nav-link:focus {
         outline: none;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
     
     /* Tab Content */

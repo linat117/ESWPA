@@ -79,11 +79,11 @@ $result = mysqli_query($conn, $query);
     </div>
     <!-- End Banner -->
 
-    <!-- Start Target Area 
+    <!-- Start Target Area (keep hero, modernize below)
     ============================================= -->
-    <div class="about-area default-padding">
+    <div class="about-area default-padding home-about">
         <div class="container">
-            <div class="row align-center">
+            <div class="row align-center wow fadeInUp" data-wow-delay="0.1s">
                 <div class="col-lg-6">
                     <div class="thumb">
                         <img src="assets/img/ethio social work.jpg" alt="Thumb">
@@ -111,26 +111,19 @@ $result = mysqli_query($conn, $query);
                         The association works in partnership with diverse sectors to respond to crises, develop social work standards,
                         and enhance service delivery in various settings, including universities, hospitals, courts, and correctional services.
                     </p>
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <a href="about.php" class="btn circle btn-theme border btn-sm">Mission</a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="about.php" class="btn circle btn-theme border btn-sm">Vision</a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="about.php" class="btn circle btn-theme border btn-sm">Values</a>
-                        </div>
-
+                    <div class="home-about-actions">
+                        <a href="about.php" class="btn circle btn-theme border btn-sm">Mission</a>
+                        <a href="about.php" class="btn circle btn-theme border btn-sm">Vision</a>
+                        <a href="about.php" class="btn circle btn-theme border btn-sm">Values</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- End Target Area -->
-    <!-- Start Volunteer 
+    <!-- Start Volunteer / CTA
     ============================================= -->
-    <div class="volunteer-area text-center ">
+    <div class="volunteer-area text-center home-cta wow fadeInUp" data-wow-delay="0.15s">
         <!-- Fixed Shape -->
         <div class="shape-bottom">
             <img src="assets/img/shape/7.png" alt="Shape">
@@ -152,14 +145,14 @@ $result = mysqli_query($conn, $query);
         </div>
     </div>
     <!-- End Volunteer -->
-    <!-- Start Stay With Us Area 
+    <!-- Start Stay With Us Area / Membership types
     ============================================= -->
-    <div class="stay-us-area bottom-less ">
+    <div class="stay-us-area bottom-less home-memberships">
         <div class="container">
-            <div class="box-items text-center">
+            <div class="box-items text-center wow fadeInUp" data-wow-delay="0.2s">
                 <div class="row">
                     <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6">
+                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.25s">
                         <div class="item">
                             <i class="fas fa-user-plus"></i>
                             <h4><a href="membership.php">Individual Membership</a></h4>
@@ -171,7 +164,7 @@ $result = mysqli_query($conn, $query);
                     </div>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6">
+                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.35s">
                         <div class="item">
                             <i class="flaticon-charity"></i>
                             <h4><a href="membership.php">Become a Member</a></h4>
@@ -183,7 +176,7 @@ $result = mysqli_query($conn, $query);
                     </div>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6">
+                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.45s">
                         <div class="item">
                             <i class="fas fa-handshake"></i>
                             <h4><a href="membership.php">Organizational Membership</a></h4>
@@ -202,7 +195,7 @@ $result = mysqli_query($conn, $query);
 
     <!-- Star Recent events Area
     ============================================= -->
-    <div class="recent-causes-area carousel-shadow causes-area default-padding">
+    <div class="recent-causes-area carousel-shadow causes-area default-padding home-events wow fadeInUp" data-wow-delay="0.2s">
         <div class="container">
             <div class="heading-left">
                 <div class="row">
@@ -276,7 +269,7 @@ $result = mysqli_query($conn, $query);
 
             <!-- Start Clients Area 
     ============================================= -->
-            <div class="clients-area default-padding-bottom">
+            <div class="clients-area default-padding-bottom home-partners">
                 <div class="container">
                     <div class="row align-center">
                         <div class="col-lg-5 info">
@@ -288,7 +281,7 @@ $result = mysqli_query($conn, $query);
                                 create positive impact in Ethiopian communities.
                             </p>
                         </div>
-                        <div class="col-lg-7 item-box">
+                        <div class="col-lg-7 item-box wow fadeInUp" data-wow-delay="0.25s">
                             <div class="client-items client-carousel owl-carousel owl-theme">
                                 <div class="item">
                                     <img src="assets/img/partner2.png" alt="Thumb" />

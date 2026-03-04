@@ -32,14 +32,14 @@ include 'head.php';
 
   <!-- Star About Area
     ============================================= -->
-  <div class="about-area default-padding">
+  <div class="about-area default-padding about-page-hero">
     <div class="container">
-      <div class="row align-center">
+      <div class="row align-center wow fadeInUp" data-wow-delay="0.1s">
         <div class="col-lg-6">
           <div class="thumb">
             <img src="assets/img/content/homemission.jpg" alt="Thumb">
             <div class="overlay">
-              <h4>Established in 2016 & accredited in 2017</h4>
+              <h4>Established in 2016 &amp; accredited in 2017</h4>
             </div>
           </div>
         </div>
@@ -48,25 +48,28 @@ include 'head.php';
           <h5>About Us</h5>
           <h2 class="text-blur">About</h2>
           <h3 class="area-title">
-            We are non-governmental,<br />
-            non-profit organization
+            We are a non-governmental,<br />
+            non-profit professional association
           </h3>
           <p>
-            The idea of establishing an association was first raised When the 2008 students of Addis Ababa University School of Social Work attended Zewditu Hospital for field placement. this idea was further  developed and formalized into licenced professional association through great effort done by Guled Abdi who was also the first president of the association and other devoted social workers.
+            The idea of establishing an association was first raised when the 2008 students of Addis Ababa University
+            School of Social Work attended Zewditu Hospital for field placement. This idea was further developed and
+            formalized into a licensed professional association through the great effort of Guled Abdi &mdash; the
+            association&apos;s first president &mdash; together with other devoted social workers.
           </p>
-          <a class="btn circle btn-theme border btn-md" href="sign-up.php">become a Member</a>
+          <a class="btn circle btn-theme border btn-md" href="sign-up.php">Become a Member</a>
         </div>
       </div>
     </div>
   </div>
   <!-- End About Area -->
 
-  <!-- Start What We Do 
+  <!-- Start What We Do / Core Values
     ============================================= -->
-  <div class="we-do-area half-bg defaultA-padding bg-gray">
+  <div class="we-do-area half-bg defaultA-padding bg-gray about-core-values">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+        <div class="col-lg-8 offset-lg-2 wow fadeInUp" data-wow-delay="0.1s">
           <div class="site-heading text-center">
             <h5>Core Values</h5>
             <h2>
@@ -82,7 +85,7 @@ include 'head.php';
       <div class="wedo-items text-center">
         <div class="row">
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6">
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.15s">
             <div class="item">
               <i class="flaticon-charity"></i>
               <h4>Service Community</h4>
@@ -93,7 +96,7 @@ include 'head.php';
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6">
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
             <div class="item">
               <i class="fas fa-user-shield"></i>
               <h4>Respect for Dignity</h4>
@@ -104,7 +107,7 @@ include 'head.php';
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6">
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.25s">
             <div class="item">
               <i class="fas fa-users"></i>
               <h4>Dedication</h4>
@@ -114,7 +117,7 @@ include 'head.php';
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6">
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
             <div class="item">
               <i class="fas fa-award"></i>
               <h4>Competency</h4>
@@ -132,13 +135,13 @@ include 'head.php';
 
   <!-- Start Our Mission 
     ============================================= -->
-  <div class="mission-area half-bg bg-gray " style="padding-top: 100px;">
+  <div class="mission-area half-bg bg-gray about-mission">
     <div class="container">
-      <div class="row">
+      <div class="row align-center wow fadeInUp" data-wow-delay="0.15s">
         <div class="col-lg-6 thumb-box">
           <div class="thumb">
             <div class="thumb-1">
-              <img src="assets/img/mission.png" style=" width: 100%; height: 200px; object-fit:cover;" alt="Thumb">
+              <img src="assets/img/mission.png" alt="Thumb">
             </div>
           </div>
         </div>
@@ -155,9 +158,9 @@ include 'head.php';
   </div>
   <!-- End Our Mission -->
 
-  <div class="mission-area half-bg bg-gray" >
+  <div class="mission-area half-bg bg-gray about-vision">
     <div class="container">
-      <div class="row">
+      <div class="row align-center wow fadeInUp" data-wow-delay="0.2s">
         <div class="col-lg-6 info">
           <h5>Our vision</h5>
           <h2 class="text-blur">Vison</h2>
@@ -173,7 +176,7 @@ include 'head.php';
         <div class="col-lg-6 thumb-box">
           <div class="thumb">
             <div class="thumb-1">
-              <img src="assets/img/vison.jpg" style=" width: 100%; height: 200px; object-fit:contain;"alt="Thumb">
+              <img src="assets/img/vison.jpg" alt="Thumb">
             </div>
           </div>
         </div>
@@ -181,9 +184,9 @@ include 'head.php';
     </div>
   </div>
 
-  <!-- Start Volunteer Area 
+  <!-- Start Volunteer Area / Team
     ============================================= -->
-  <div class="volunteer-area default-padding bottom-less" style="background-color: #F3F7FD;">
+  <div class="volunteer-area default-padding bottom-less about-team">
     <div class="container">
       <div class="site-heading text-center">
         <h2>Our Team Members</h2>
@@ -192,7 +195,7 @@ include 'head.php';
       <div class="volunteer-items text-center">
         <div class="row">
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.1s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Dr wasse Kebede-BOA chair.jpg" alt="Thumb">
@@ -205,7 +208,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.15s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Guled Abdi - BOA vice chair person.jpg" alt="Thumb">
@@ -218,7 +221,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.2s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Woinshet Habte- Excutive director.jpg" alt="Thumb">
@@ -231,7 +234,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.25s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Afomia Tesfaye.jpg" alt="Thumb">
@@ -244,7 +247,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.3s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Eyerusalem Belay.jpg" alt="Thumb">
@@ -257,7 +260,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.35s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Tadiose Kebede.jpg" alt="Thumb">
@@ -270,7 +273,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.4s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Dr serkalem Bekele BOA member.jpg" alt="Thumb">
@@ -283,7 +286,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.45s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Demissie Dadi.jpg" alt="Thumb">
@@ -296,7 +299,7 @@ include 'head.php';
           </div>
           <!-- End Single Item -->
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
+          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.5s">
             <div class="item">
               <div class="thumb">
                 <img src="assets/img/members/Eyob Dejene.jpg" alt="Thumb">

@@ -153,7 +153,7 @@ $stmt->close();
                             </div>
                         </div>
                          <div class="col-lg-4 col-sm-6">
-                            <div class="card widget-flat text-bg-purple">
+                            <div class="card widget-flat text-bg-info">
                                 <div class="card-body">
                                     <h6 class="text-uppercase mt-0" title="Customers">Events in Period</h6>
                                     <h2 class="my-2"><?php echo $total_events; ?></h2>

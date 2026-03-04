@@ -448,7 +448,7 @@ $activity_growth_rate = $prev_activities > 0 ? (($activities_in_range - $prev_ac
                         <!-- Row 2: Content & Resources -->
                         <!-- Total Events -->
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                            <div class="card widget-flat text-bg-purple">
+                            <div class="card widget-flat text-bg-info">
                                 <div class="card-body">
                                     <div class="float-end">
                                         <i class="ri-calendar-check-line widget-icon"></i>
@@ -476,7 +476,7 @@ $activity_growth_rate = $prev_activities > 0 ? (($activities_in_range - $prev_ac
 
                         <!-- Total Research Projects -->
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                            <div class="card widget-flat" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="card widget-flat" style="background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);">
                                 <div class="card-body">
                                     <div class="float-end">
                                         <i class="ri-search-line widget-icon"></i>

@@ -219,7 +219,7 @@ $stmt->close();
 
                         <!-- Public Resources -->
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                            <div class="card widget-flat" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="card widget-flat" style="background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);">
                                 <div class="card-body">
                                     <div class="float-end">
                                         <i class="ri-global-line widget-icon"></i>

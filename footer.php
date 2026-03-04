@@ -4,7 +4,7 @@
     }
 </style>
 
-<footer class="bg-dark text-light">
+<footer class="bg-dark text-light site-footer">
     <!-- Fixed Shape -->
     <div class="fixed-shape">
         <img src="assets/img/footer-bg.png" alt="Shape">

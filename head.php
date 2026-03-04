@@ -25,6 +25,7 @@
     <link href="assets/css/bootsnav.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet">
     <link href="assets/css/responsive.css" rel="stylesheet" />
+    <link href="assets/css/home.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     

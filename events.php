@@ -48,7 +48,7 @@ $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) > 0) : 
 ?>
-    <div class="recent-causes-area carousel-shadow causes-area default-padding">
+    <div class="recent-causes-area carousel-shadow causes-area default-padding home-events events-page-upcoming wow fadeInUp" data-wow-delay="0.1s">
         <div class="site-heading text-center">
             <h2>Upcoming Events</h2>
             <div class="heading-divider"></div>
@@ -65,7 +65,7 @@ if (mysqli_num_rows($result) > 0) :
 
                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                     <?php $event_images = json_decode($row['event_images'], true); ?>
-                    <div class="item">
+                    <div class="item event-card-upcoming wow fadeInUp" data-wow-delay="0.15s">
                         <div class="thumb">
                             <a href="#">
                                 <?php if (!empty($event_images)) : ?>
@@ -125,7 +125,7 @@ if (mysqli_num_rows($result) > 0) :
     $total_pages = ceil($total_row['total'] / $limit);
     ?>
 
-    <div class="causes-area bg-gray default-padding-bottom" style="padding-top: 50px;">
+    <div class="causes-area bg-gray default-padding-bottom events-page-latest">
         <div class="site-heading text-center">
             <h2>Latest Events</h2>
             <div class="heading-divider"></div>
@@ -138,7 +138,7 @@ if (mysqli_num_rows($result) > 0) :
                             $event_images = json_decode($row['event_images'], true);
                         ?>
                             <!-- Single Item -->
-                            <div class="grid-item">
+                            <div class="grid-item wow fadeInUp" data-wow-delay="0.15s">
                                 <div class="row">
                                     <div class="thumb col-lg-5">
     <?php if (!empty($event_images)) : ?>

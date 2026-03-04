@@ -29,13 +29,13 @@ include 'head.php';
     </div>
     <!-- End Breadcrumb -->
 
-    <!-- Start Blog
+    <!-- Membership Content
     ============================================= -->
-    <div class="blog-area single full-blog full-blog ">
+    <div class="blog-area single full-blog full-blog membership-page">
         <div class="container">
             <div class="blog-items">
                 <div class="row">
-                    <div class="blog-content wow fadeInUp col-lg-10 offset-lg-1 col-md-12">
+                    <div class="blog-content wow fadeInUp col-lg-10 offset-lg-1 col-md-12" data-wow-delay="0.1s">
                         <div class="item">
                             <div class="blog-item-box">
                                 <div class="info">
@@ -48,14 +48,14 @@ include 'head.php';
                                         </p>
                                     </div>
 
-                                    <div class="account-info mb-4 text-center">
+                                    <div class="account-info mb-4 text-center wow fadeInUp" data-wow-delay="0.15s">
                                         <div class="card bg-light p-4">
                                             <h4 class="text-primary mb-3">Payment Account Details</h4>
                                             <h5 class="font-weight-bold">Account Number: 1000272480323</h5>
                                         </div>
                                     </div>
 
-                                    <div class="fee-structure mb-5">
+                                    <div class="fee-structure mb-5 wow fadeInUp" data-wow-delay="0.2s">
                                         <h4 class="text-center mb-4">Membership Fee Structure</h4>
                                         <div class="table-responsive">
                                             <table class="table table-bordered">
@@ -91,7 +91,7 @@ include 'head.php';
                                         </div>
                                     </div>
 
-                                    <div class="payment-schedule mb-5">
+                                    <div class="payment-schedule mb-5 wow fadeInUp" data-wow-delay="0.25s">
                                         <h4 class="text-center mb-4">Flexible Payment Schedules</h4>
                                         <div class="row justify-content-center">
                                             <div class="col-md-4">
@@ -115,7 +115,7 @@ include 'head.php';
                                         </div>
                                     </div>
 
-                                    <div class="registration-note text-center">
+                                    <div class="registration-note text-center wow fadeInUp" data-wow-delay="0.3s">
                                         <div class="alert alert-info p-4">
                                             <h5 class="mb-3">Ready to Join?</h5>
                                             <p>For membership registration and payment, please use the provided account number above.
@@ -131,8 +131,8 @@ include 'head.php';
             </div>
         </div>
     </div>
-    <!-- End Blog -->
-    <div class="clients-area default-padding">
+    <!-- End Membership Content -->
+    <div class="clients-area default-padding home-partners">
     <div class="container">
       <div class="row align-center">
         <div class="col-lg-5 info">
@@ -185,55 +185,6 @@ include 'head.php';
     <script src="assets/js/bootsnav.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <style>
-        .blog-item-box {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            border-radius: 8px;
-        }
-
-        .card {
-            border: none;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .table {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .table thead th {
-            background-color: #1273c3;
-            color: white;
-            font-weight: 500;
-        }
-
-        .alert-info {
-            background-color: #f8f9fa;
-            border: none;
-            border-left: 4px solid #1273c3;
-        }
-
-        .btn-primary {
-            background-color: #1273c3;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 30px;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5a9e;
-        }
-
-        .lead {
-            color: #666;
-            line-height: 1.8;
-        }
-    </style>
 </body>
 
 </html>
