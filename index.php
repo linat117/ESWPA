@@ -4,12 +4,14 @@
 <?php
 include 'head.php';
 include 'include/config.php';
+include 'include/partners_functions.php';
 
 $query = "SELECT * FROM upcoming ORDER BY event_date ASC";
 $result = mysqli_query($conn, $query);
 ?>
 
 <body class="hibiscus">
+    <link href="assets/css/home-v2.css" rel="stylesheet" />
 
     <!-- Header 
     ============================================= -->
@@ -18,292 +20,234 @@ $result = mysqli_query($conn, $query);
     ?>
     <!-- End Header -->
 
-    <!-- Start Banner 
+    <!-- Start Hero - New modern layout
     ============================================= -->
-    <div class="banner-area top-pad-80 text-center content-less text-large">
-        <div id="bootcarousel" class="carousel text-light slide carousel-fade animate_text" data-ride="carousel" data-interval="4000">
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner carousel-zoom">
-                <div class="carousel-item active">
-                    <div class="slider-thumb bg-cover" style="background-image: url(assets/img/content/bg.jpg);"></div>
-                    <div class="box-table">
-                        <div class="box-cell shadow dark">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-8 offset-lg-2">
-                                        <div class="content">
-                                            <h3 class="less">Ethiopia</h3>
-                                            <h2 data-animation="animated slideInRight">Empowering Change<strong>Inspiring Progress</strong></h2>
-                                            <a data-animation="animated fadeInUp" class="btn circle btn-light border btn-md" href="about.php">Discover More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <section class="home-v2-hero" aria-label="ESWPA hero">
+        <div class="home-v2-hero__bg"></div>
+        <div class="home-v2-container home-v2-hero__inner">
+            <div class="home-v2-hero__grid">
+                <div class="home-v2-hero__content home-v2-anim-in-left">
+                    <span class="home-v2-label">Ethiopian Social Work Professionals</span>
+                    <h1 class="home-v2-hero__title">
+                        Empowering social work<br />
+                        across Ethiopia.
+                    </h1>
+                    <p class="home-v2-hero__text">
+                        ESWPA connects and supports social work professionals, strengthens education and practice,
+                        and advances social justice for individuals, families, and communities.
+                    </p>
+                    <div class="home-v2-hero__actions">
+                        <a href="membership.php" class="home-v2-btn home-v2-btn--primary home-v2-btn--arrow">
+                            Become a member <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="about.php" class="home-v2-btn home-v2-btn--outline">
+                            Learn more
+                        </a>
+                    </div>
+                    <div class="home-v2-hero__meta">
+                        <span>Since 2016</span>
+                        <span>National association</span>
+                        <span>Profession-led</span>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <div class="slider-thumb bg-cover" style="background-image: url(assets/img/content/donationBG.jpg);"></div>
-                    <div class="box-table">
-                        <div class="box-cell shadow dark">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-8 offset-lg-2">
-                                        <div class="content">
-                                            <h3>Ethiopia</h3>
-                                            <h2 data-animation="animated slideInRight">Shaping a stronger<strong>More inclusive tomorrow</strong></h2>
-                                            <a data-animation="animated fadeInUp" class="btn circle btn-light border btn-md" href="about.php">Discover More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="home-v2-hero__visual home-v2-anim-in-right">
+                    <div class="home-v2-hero__card">
+                        <h2>Upcoming focus</h2>
+                        <p>Strengthening social work standards, ethics, and education in every region.</p>
+                        <a href="events.php" class="home-v2-hero__link">
+                            Explore events <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="home-v2-hero__stat">
+                        <strong>ESWPA</strong>
+                        <span>Professional association</span>
                     </div>
                 </div>
             </div>
-            <!-- End Wrapper for slides -->
-
-            <!-- Left and right controls -->
-            <a class="left carousel-control light" href="#bootcarousel" data-slide="prev">
-                <i class="fa fa-angle-left"></i>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control light" href="#bootcarousel" data-slide="next">
-                <i class="fa fa-angle-right"></i>
-                <span class="sr-only">Next</span>
-            </a>
-
-
         </div>
-    </div>
-    <!-- End Banner -->
+    </section>
+    <!-- End Hero -->
 
-    <!-- Start Target Area (keep hero, modernize below)
-    ============================================= -->
-    <div class="about-area default-padding home-about">
-        <div class="container">
-            <div class="row align-center wow fadeInUp" data-wow-delay="0.1s">
-                <div class="col-lg-6">
-                    <div class="thumb">
-                        <img src="assets/img/ethio social work.jpg" alt="Thumb">
-                        <!-- <div class="overlay">
-                <h4>Established in 2016 & accredited in 2017</h4>
-              </div> -->
+    <!-- ========== NEW HOME SECTIONS (below hero) ========== -->
+
+    <!-- About / Who we are - Editorial split -->
+    <section class="home-v2-about" aria-label="About ESWPA">
+        <div class="home-v2-about__bg-pattern" aria-hidden="true"></div>
+        <div class="home-v2-container">
+            <div class="home-v2-about__grid">
+                <div class="home-v2-about__media home-v2-anim-in-left">
+                    <div class="home-v2-about__img-wrap">
+                        <img src="assets/img/ethio social work.jpg" alt="Ethiopian Social Work">
+                        <span class="home-v2-about__badge">Since 2016</span>
                     </div>
+                    <div class="home-v2-about__accent"></div>
                 </div>
-
-                <div class="col-lg-6 info">
-                    <h2 class="area-title">
-                        Non-governmental,<br />
-                        Non-profit organization
-                    </h2>
-                    <p>
+                <div class="home-v2-about__content home-v2-anim-in-right">
+                    <span class="home-v2-label">Who we are</span>
+                    <h2 class="home-v2-about__title">Non-governmental,<br>Non-profit organization</h2>
+                    <div class="home-v2-about__pills">
+                        <span>Est. 2016</span>
+                        <span>Accredited 2017</span>
+                        <span>National reach</span>
+                    </div>
+                    <p class="home-v2-about__lead">
                         The Ethiopian Social Work Professional Association (ESWPA) is a
                         non-governmental, non-profit organization established in 2016,
                         accredited in 2017, and re-registered under the Charities and
                         Societies Proclamation No. 1133/2009. With a national reach, ESWPA
                         is based in Addis Ababa and is committed to improving the
-                        wellbeing and professional excellence of social workers in
-                        Ethiopia.
-                        <br> <br>
+                        wellbeing and professional excellence of social workers in Ethiopia.
+                    </p>
+                    <p>
                         ESWPA plays a crucial role in professionalizing social work education and practice.
                         The association works in partnership with diverse sectors to respond to crises, develop social work standards,
                         and enhance service delivery in various settings, including universities, hospitals, courts, and correctional services.
                     </p>
-                    <div class="home-about-actions">
-                        <a href="about.php" class="btn circle btn-theme border btn-sm">Mission</a>
-                        <a href="about.php" class="btn circle btn-theme border btn-sm">Vision</a>
-                        <a href="about.php" class="btn circle btn-theme border btn-sm">Values</a>
+                    <div class="home-v2-about__actions">
+                        <a href="about.php" class="home-v2-btn home-v2-btn--outline">Mission</a>
+                        <a href="about.php" class="home-v2-btn home-v2-btn--outline">Vision</a>
+                        <a href="about.php" class="home-v2-btn home-v2-btn--outline">Values</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- End Target Area -->
-    <!-- Start Volunteer / CTA
-    ============================================= -->
-    <div class="volunteer-area text-center home-cta wow fadeInUp" data-wow-delay="0.15s">
-        <!-- Fixed Shape -->
-        <div class="shape-bottom">
-            <img src="assets/img/shape/7.png" alt="Shape">
-        </div>
-        <!-- Fixed Shape -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <h5>Become a Member</h5>
-                    <h2 class="text-blur">Member</h2>
-                    <h2 class="area-title"> Let's unite and strengthen social work professionals in Ethiopia.</h2>
-                    <p>
-                        We aim to establish and uphold national standards for social work practice, education, and licensing, fostering positive social change at individual, family, and community levels.
-                    </p>
+    </section>
 
-
-                </div>
+    <!-- CTA - Bold strip -->
+    <section class="home-v2-cta" aria-label="Become a member">
+        <div class="home-v2-cta__bg"></div>
+        <div class="home-v2-cta__glow" aria-hidden="true"></div>
+        <div class="home-v2-container home-v2-cta__inner">
+            <div class="home-v2-cta__glass home-v2-cta__content home-v2-anim-scale">
+                <span class="home-v2-cta__label">Become a Member</span>
+                <h2 class="home-v2-cta__title">Let's unite and strengthen social work professionals in Ethiopia.</h2>
+                <p class="home-v2-cta__text">
+                    We aim to establish and uphold national standards for social work practice, education, and licensing, fostering positive social change at individual, family, and community levels.
+                </p>
+                <a href="membership.php" class="home-v2-btn home-v2-btn--primary home-v2-cta__btn">Join ESWPA</a>
             </div>
         </div>
-    </div>
-    <!-- End Volunteer -->
-    <!-- Start Stay With Us Area / Membership types
-    ============================================= -->
-    <div class="stay-us-area bottom-less home-memberships">
-        <div class="container">
-            <div class="box-items text-center wow fadeInUp" data-wow-delay="0.2s">
-                <div class="row">
-                    <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.25s">
-                        <div class="item">
-                            <i class="fas fa-user-plus"></i>
-                            <h4><a href="membership.php">Individual Membership</a></h4>
-                            <p>
-                                Join as an individual and contribute to a thriving professional community.
-                            </p>
-                            <a href="membership.php"><i class="fas fa-angle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.35s">
-                        <div class="item">
-                            <i class="flaticon-charity"></i>
-                            <h4><a href="membership.php">Become a Member</a></h4>
-                            <p>
-                                Join us in our mission to empower and uplift communities in need.
-                            </p>
-                            <a href="membership.php"><i class="fas fa-angle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.45s">
-                        <div class="item">
-                            <i class="fas fa-handshake"></i>
-                            <h4><a href="membership.php">Organizational Membership</a></h4>
-                            <p>
-                                Collaborate as to support initiatives, networking, and industry development.
-                            </p>
-                            <a href="membership.php"><i class="fas fa-angle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
+    </section>
+
+    <!-- Membership types - Bento cards -->
+    <section class="home-v2-memberships" aria-label="Membership options">
+        <div class="home-v2-container">
+            <div class="home-v2-memberships__head home-v2-anim-in-up">
+                <span class="home-v2-label">Ways to join</span>
+                <h2 class="home-v2-memberships__title">Choose your path</h2>
+            </div>
+            <div class="home-v2-memberships__grid">
+                <a href="membership.php" class="home-v2-card home-v2-card--featured home-v2-anim-in-up" style="--delay: 0">
+                    <span class="home-v2-card__num">01</span>
+                    <span class="home-v2-card__icon"><i class="fas fa-user-plus"></i></span>
+                    <h3 class="home-v2-card__title">Individual Membership</h3>
+                    <p class="home-v2-card__desc">Join as an individual and contribute to a thriving professional community.</p>
+                    <span class="home-v2-card__link">Learn more <i class="fas fa-arrow-right"></i></span>
+                </a>
+                <a href="membership.php" class="home-v2-card home-v2-anim-in-up" style="--delay: 1">
+                    <span class="home-v2-card__num">02</span>
+                    <span class="home-v2-card__icon"><i class="flaticon-charity"></i></span>
+                    <h3 class="home-v2-card__title">Become a Member</h3>
+                    <p class="home-v2-card__desc">Join us in our mission to empower and uplift communities in need.</p>
+                    <span class="home-v2-card__link">Learn more <i class="fas fa-arrow-right"></i></span>
+                </a>
+                <a href="membership.php" class="home-v2-card home-v2-anim-in-up" style="--delay: 2">
+                    <span class="home-v2-card__num">03</span>
+                    <span class="home-v2-card__icon"><i class="fas fa-handshake"></i></span>
+                    <h3 class="home-v2-card__title">Organizational Membership</h3>
+                    <p class="home-v2-card__desc">Collaborate to support initiatives, networking, and industry development.</p>
+                    <span class="home-v2-card__link">Learn more <i class="fas fa-arrow-right"></i></span>
+                </a>
             </div>
         </div>
-    </div>
-    <!-- End Stay With Us Area -->
+    </section>
 
-    <!-- Star Recent events Area
-    ============================================= -->
-    <div class="recent-causes-area carousel-shadow causes-area default-padding home-events wow fadeInUp" data-wow-delay="0.2s">
-        <div class="container">
-            <div class="heading-left">
-                <div class="row">
-                    <div class="col-lg-6 left-info">
-                        <h5>Upcoming Events</h5>
-                        <h2>Stay updated with our upcoming events.</h2>
-                    </div>
-                    <div class="col-lg-6 right-info">
-                        <p>Join us in our upcoming events to support our cause and make a difference in the community.</p>
-                        <a class="btn circle btn-md btn-gradient wow fadeInUp" href="events.php">View All <i class="fas fa-angle-right"></i></a>
-                    </div>
+    <!-- Upcoming events -->
+    <section class="home-v2-events" aria-label="Upcoming events">
+        <div class="home-v2-container">
+            <div class="home-v2-events__head">
+                <div class="home-v2-events__head-left home-v2-anim-in-up">
+                    <span class="home-v2-label">Upcoming Events</span>
+                    <h2 class="home-v2-events__title">Stay updated with our upcoming events.</h2>
+                </div>
+                <div class="home-v2-events__head-right home-v2-anim-in-up">
+                    <p>Join us in our upcoming events to support our cause and make a difference in the community.</p>
+                    <a href="events.php" class="home-v2-btn home-v2-btn--primary home-v2-btn--arrow">View All <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
         <?php
-
-        if (mysqli_num_rows($result) > 0) :
+        $has_events = ($result && mysqli_num_rows($result) > 0);
+        if ($has_events) :
         ?>
-            <div class="container-full">
-                <div class="row">
-                    <div class="col-lg-12 causes-items">
-                        <?php if (mysqli_num_rows($result) > 1) : ?>
-                            <div class="recent-causes-carousel owl-carousel owl-theme">
-                            <?php else : ?>
-                                <div class="recent-causes-single">
-                                <?php endif; ?>
-
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <?php $event_images = json_decode($row['event_images'], true); ?>
-                                    <div class="item">
-                                        <div class="thumb">
-                                            <a href="#">
-                                                <?php if (!empty($event_images)) : ?>
-                                                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                                                        <?php foreach ($event_images as $image) : ?>
-                                                            <?php $image_path = "uploads/" . basename($image); ?>
-                                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image" width="400" height="400"
-                                                                style="object-fit: cover; border-radius: 5px;">
-                                                        <?php endforeach; ?>
-                                                    </div>
-                                                <?php else : ?>
-                                                    <img src="assets/img/default-event.jpg" alt="No Image Available" width="400" height="400"
-                                                        style="object-fit: cover; border-radius: 5px;">
-                                                <?php endif; ?>
-
-                                                <span class="overlay">
-                                                    <?php echo date("M j, Y", strtotime($row['event_date'])); ?>
-                                                </span>
-                                            </a>
-                                        </div>
-                                        <div class="info">
-                                            <h4>
-                                                <a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a>
-                                            </h4>
-                                            <p><?php echo htmlspecialchars($row['event_description']); ?></p>
-                                        </div>
-                                    </div>
-                                <?php endwhile; ?>
-
-                                </div> <!-- Close either carousel or single container -->
-                            </div>
-                    </div>
-                </div>
-            <?php endif; ?> <!-- Completely hide section if no events -->
-
-
-            </div>
-
-
-            <!-- End Recent Causes Area -->
-
-            <!-- Start Clients Area 
-    ============================================= -->
-            <div class="clients-area default-padding-bottom home-partners">
-                <div class="container">
-                    <div class="row align-center">
-                        <div class="col-lg-5 info">
-                            <h2 style="color: #6B87B5; font-size: 30px;">
-                                Our Partner Companies<br />
-                            </h2>
-                            <p>
-                                We collaborate with various organizations and institutions to enhance social work practice and
-                                create positive impact in Ethiopian communities.
-                            </p>
-                        </div>
-                        <div class="col-lg-7 item-box wow fadeInUp" data-wow-delay="0.25s">
-                            <div class="client-items client-carousel owl-carousel owl-theme">
-                                <div class="item">
-                                    <img src="assets/img/partner2.png" alt="Thumb" />
+            <div class="home-v2-events__list-wrap">
+                <div class="home-v2-container">
+                    <?php if (mysqli_num_rows($result) > 1) : ?>
+                        <div class="home-v2-events__carousel recent-causes-carousel owl-carousel owl-theme">
+                    <?php else : ?>
+                        <div class="home-v2-events__single recent-causes-single">
+                    <?php endif; ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                            <?php
+                            $event_images = [];
+                            if (!empty($row['event_images'])) {
+                                $decoded = json_decode($row['event_images'], true);
+                                if (is_array($decoded)) {
+                                    $event_images = $decoded;
+                                }
+                            }
+                            ?>
+                            <div class="home-v2-event-card item">
+                                <div class="home-v2-event-card__thumb thumb">
+                                    <a href="events.php">
+                                        <?php if (!empty($event_images)) : ?>
+                                            <div class="home-v2-event-card__imgs">
+                                                <?php foreach (array_slice($event_images, 0, 1) as $image) : ?>
+                                                    <?php $image_path = "uploads/" . basename($image); ?>
+                                                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event" />
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php else : ?>
+                                            <img src="assets/img/default-event.jpg" alt="Event" />
+                                        <?php endif; ?>
+                                        <span class="home-v2-event-card__date overlay">
+                                            <?php echo date("M j, Y", strtotime($row['event_date'])); ?>
+                                        </span>
+                                    </a>
                                 </div>
-                                <div class="item">
-                                    <img src="assets/img/partner1.png" alt="Thumb" />
-                                </div>
-                                <div class="item"style="padding-top:30px;">
-                                    <img src="assets/img/ehrc.png" alt="Thumb" />
-                                </div>
-                                <div class="item"style="padding-top:10px;">
-                                    <img src="assets/img/aau.jpeg" alt="Thumb" style="height: 100px;">
-                                </div>
-                                <div class="item"style="padding-top:30px;">
-                                    <img src="assets/img/ephi.png" alt="Thumb" />
+                                <div class="home-v2-event-card__info info">
+                                    <h4><a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a></h4>
+                                    <p><?php echo htmlspecialchars($row['event_description']); ?></p>
                                 </div>
                             </div>
-                        </div>
+                        <?php endwhile; ?>
                     </div>
                 </div>
             </div>
-            <!-- End Clients Area -->
+        <?php endif; ?>
+    </section>
+
+    <!-- Partners -->
+    <section class="home-v2-partners" aria-label="Our partners">
+        <div class="home-v2-partners__bg" aria-hidden="true"></div>
+        <div class="home-v2-container">
+            <div class="home-v2-partners__grid">
+                <div class="home-v2-partners__intro home-v2-anim-in-left">
+                    <span class="home-v2-label">Collaboration</span>
+                    <h2 class="home-v2-partners__title">Our Partner Companies</h2>
+                    <p>We collaborate with various organizations and institutions to enhance social work practice and create positive impact in Ethiopian communities.</p>
+                </div>
+                <div class="home-v2-partners__logos item-box home-v2-anim-in-right">
+                    <div class="home-v2-partners-grid">
+                        <?php
+                        $partners = getPartners($conn);
+                        displayHomeV2Partners($partners);
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
             <?php

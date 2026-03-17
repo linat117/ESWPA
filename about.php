@@ -2,33 +2,59 @@
 <html lang="en">
 <?php
 include 'head.php';
+include 'include/config.php';
+include 'include/partners_functions.php';
+
+// Load dynamic team members for "Our Team Members" section
+$teamMembers = [];
+$teamQuery = "SELECT name, role, bio, photo FROM about_team_members WHERE status = 'active' ORDER BY sort_order ASC, id ASC";
+if (isset($conn) && $conn && ($result = mysqli_query($conn, $teamQuery))) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $teamMembers[] = $row;
+  }
+  mysqli_free_result($result);
+}
 ?>
 
 <body>
-  <?php
-  include 'header-v1.2.php';
-  ?>
+  <?php include 'header-v1.2.php'; ?>
 
   <!-- End Header -->
 
-  <!-- Start Breadcrumb 
-    ============================================= -->
-  <div class="breadcrumb-area text-center shadow dark bg-fixed padding-xl text-light" style="background-image: url(assets/img/content/about_two.jpg);">
-    <div class="container">
-      <div class="breadcrumb-items">
-        <div class="row">
-          <div class="col-lg-12">
-            <h2>About Us</h2>
+  <!-- About page intro / breadcrumb -->
+  <section class="about-hero-intro" aria-label="About ESWPA">
+    <div class="about-hero-intro__bg"></div>
+    <div class="container about-hero-intro__inner">
+      <div class="row align-center">
+        <div class="col-lg-7">
+          <div class="about-hero-intro__content">
+            <span class="about-hero-intro__eyebrow">About ESWPA</span>
+            <h1>Professional home for social workers in Ethiopia.</h1>
+            <p>
+              The Ethiopian Social Work Professional Association (ESWPA) brings together practitioners,
+              educators, and students to strengthen social work education, ethics, and practice nationwide.
+            </p>
+            <ul class="about-hero-intro__highlights">
+              <li>Established in 2016 &amp; accredited in 2017</li>
+              <li>Registered national professional association</li>
+              <li>Working across universities, hospitals, courts &amp; communities</li>
+            </ul>
+            <div class="about-hero-intro__breadcrumbs">
+              <a href="index.php"><i class="fas fa-home"></i> Home</a>
+              <span>/</span>
+              <span>About</span>
+            </div>
           </div>
         </div>
-        <ul class="breadcrumb">
-          <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-          <li class="active">About</li>
-        </ul>
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="about-hero-intro__badge">
+            <span>ESWPA</span>
+            <p>Uniting and elevating social work professionals across Ethiopia.</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- End Breadcrumb -->
+  </section>
 
   <!-- Star About Area
     ============================================= -->
@@ -37,26 +63,33 @@ include 'head.php';
       <div class="row align-center wow fadeInUp" data-wow-delay="0.1s">
         <div class="col-lg-6">
           <div class="thumb">
-            <img src="assets/img/content/homemission.jpg" alt="Thumb">
+            <img src="assets/img/content/homemission.jpg" alt="ESWPA work in the community">
             <div class="overlay">
-              <h4>Established in 2016 &amp; accredited in 2017</h4>
+              <h4>Established 2016 · Accredited 2017</h4>
             </div>
           </div>
         </div>
 
         <div class="col-lg-6 info">
-          <h5>About Us</h5>
-          <h2 class="text-blur">About</h2>
+          <h5>Who we are</h5>
+          <h2 class="text-blur">About ESWPA</h2>
           <h3 class="area-title">
-            We are a non-governmental,<br />
-            non-profit professional association
+            A professional home for social workers across Ethiopia.
           </h3>
           <p>
-            The idea of establishing an association was first raised when the 2008 students of Addis Ababa University
-            School of Social Work attended Zewditu Hospital for field placement. This idea was further developed and
-            formalized into a licensed professional association through the great effort of Guled Abdi &mdash; the
-            association&apos;s first president &mdash; together with other devoted social workers.
+            The Ethiopian Social Work Professional Association (ESWPA) was born from the vision of Addis Ababa University
+            social work students and pioneers such as Guled Abdi, the association&apos;s first president, together with
+            other devoted social workers.
           </p>
+          <p>
+            Today ESWPA unites professionals, educators, and students to strengthen ethical, evidence-informed practice,
+            and to give social workers a strong, independent voice in policy and public life.
+          </p>
+          <div class="about-page-hero-badges">
+            <span>National association</span>
+            <span>Multi-sector collaboration</span>
+            <span>Profession-led</span>
+          </div>
           <a class="btn circle btn-theme border btn-md" href="sign-up.php">Become a Member</a>
         </div>
       </div>
@@ -73,8 +106,7 @@ include 'head.php';
           <div class="site-heading text-center">
             <h5>Core Values</h5>
             <h2>
-              Upholding the highest
-              ethical & professional standards.
+              What guides social work practice at ESWPA.
             </h2>
             <div class="heading-divider"></div>
           </div>
@@ -85,45 +117,50 @@ include 'head.php';
       <div class="wedo-items text-center">
         <div class="row">
           <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.15s">
-            <div class="item">
-              <i class="flaticon-charity"></i>
-              <h4>Service Community</h4>
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="item about-core-card">
+              <div class="about-core-card__icon">
+                <i class="flaticon-charity"></i>
+              </div>
+              <h4>Service to Community</h4>
               <p>
-                Committed to serving the Ethiopian community, especially those
-                who are marginalized or vulnerable.
+                We stand with individuals and communities, especially those who are marginalized or vulnerable.
               </p>
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-            <div class="item">
-              <i class="fas fa-user-shield"></i>
-              <h4>Respect for Dignity</h4>
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.16s">
+            <div class="item about-core-card">
+              <div class="about-core-card__icon">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <h4>Respect &amp; Dignity</h4>
               <p>
-                All individual has inherent dignity, and social
-                workers are dedicated to treating all people with respect.
+                Every person has inherent worth, and social workers commit to treating all with respect and care.
               </p>
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.25s">
-            <div class="item">
-              <i class="fas fa-users"></i>
-              <h4>Dedication</h4>
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.22s">
+            <div class="item about-core-card">
+              <div class="about-core-card__icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <h4>Professional Dedication</h4>
               <p>
-                encourages a commitment to the profession, and an active engagement with all communities
+                ESWPA encourages active engagement, continuous learning, and strong ethical commitment to the profession.
               </p>
             </div>
           </div>
 
-          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="item">
-              <i class="fas fa-award"></i>
-              <h4>Competency</h4>
+          <div class="single-item col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.28s">
+            <div class="item about-core-card">
+              <div class="about-core-card__icon">
+                <i class="fas fa-award"></i>
+              </div>
+              <h4>Competence &amp; Quality</h4>
               <p>
-                Competence is critical in social work to ensure that
-                individuals receive the highest quality support.
+                Competent practice is essential to ensure individuals, families, and communities receive high-quality support.
               </p>
             </div>
           </div>
@@ -194,149 +231,28 @@ include 'head.php';
       </div>
       <div class="volunteer-items text-center">
         <div class="row">
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Dr wasse Kebede-BOA chair.jpg" alt="Thumb">
+          <?php if (!empty($teamMembers)): ?>
+            <?php foreach ($teamMembers as $index => $member): 
+              $delay = 0.1 + ($index * 0.05);
+              $photo = !empty($member['photo']) ? $member['photo'] : 'assets/img/members/default.jpg';
+            ?>
+              <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 2); ?>s">
+                <div class="item">
+                  <div class="thumb">
+                    <img src="<?php echo htmlspecialchars($photo); ?>" alt="Team member">
+                  </div>
+                  <div class="info">
+                    <h4><?php echo htmlspecialchars($member['name']); ?></h4>
+                    <?php if (!empty($member['role'])): ?>
+                      <span><?php echo htmlspecialchars($member['role']); ?></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
               </div>
-              <div class="info">
-                <h4>Dr Wasse Kebede</h4>
-                <span>BOA Chair</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.15s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Guled Abdi - BOA vice chair person.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Guled Abdi</h4>
-                <span>BOA vice chair person</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.2s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Woinshet Habte- Excutive director.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Woinshet Habte</h4>
-                <span>Executive director</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.25s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Afomia Tesfaye.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Afomia Tesfaye</h4>
-                <span>Membership and resource team head</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Eyerusalem Belay.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Eyerusalem Belay</h4>
-                <span>Capacity building team head</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.35s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Tadiose Kebede.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Tadiose Kebede</h4>
-                <span>BOA Member</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.4s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Dr serkalem Bekele BOA member.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Dr Serkalem Bekele</h4>
-                <span>BOA Member</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.45s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Demissie Dadi.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Demissie Dadi</h4>
-                <span>BOA Member</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Eyob Dejene.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Eyob Dejene</h4>
-                <span>Research team head</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Nega wodajo -BOA member.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Nega Wodajo</h4>
-                <span>BOA Member</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
-          <!-- Single Item -->
-          <div class="single-item col-lg-3 col-md-6 col-6">
-            <div class="item">
-              <div class="thumb">
-                <img src="assets/img/members/Asadirew GMichael.jpg" alt="Thumb">
-              </div>
-              <div class="info">
-                <h4>Asadirew G/Michael</h4>
-                <span>Communication and partnership team head</span>
-              </div>
-            </div>
-          </div>
-          <!-- End Single Item -->
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p class="text-muted">Team members will be updated soon.</p>
+          <?php endif; ?>
         </div>
       </div>
     </div>
@@ -344,12 +260,12 @@ include 'head.php';
   <!-- End Volunteer Area -->
   <!-- Start Clients Area 
     ============================================= -->
-  <div class="clients-area default-padding">
+  <div class="clients-area default-padding about-partners">
     <div class="container">
       <div class="row align-center">
         <div class="col-lg-5 info">
-          <h2 style="color: #6B87B5; font-size: 30px;">
-            Our Partner Companies<br />
+          <h2 class="about-partners__title">
+            Our Partner Companies
           </h2>
           <p>
             We collaborate with various organizations and institutions to enhance social work practice and
@@ -357,28 +273,16 @@ include 'head.php';
           </p>
         </div>
         <div class="col-lg-7 item-box">
-                            <div class="client-items client-carousel owl-carousel owl-theme">
-                                <div class="item">
-                                    <img src="assets/img/partner2.png" alt="Thumb" />
-                                </div>
-                                <div class="item">
-                                    <img src="assets/img/partner1.png" alt="Thumb" />
-                                </div>
-                                <div class="item"style="padding-top:30px;">
-                                    <img src="assets/img/ehrc.png" alt="Thumb" />
-                                </div>
-                                <div class="item"style="padding-top:30px;">
-                                    <img src="assets/img/ephi.png" alt="Thumb" />
-                                </div>
-                                <div class="item"style="padding-top:30px;">
-                                    <img src="assets/img/aau.jpeg" alt="Thumb" />
-                                </div>
-                            </div>
-                        </div>
+          <div class="partners-grid">
+            <?php
+            $partners = getPartners($conn);
+            displayPartnersGrid($partners);
+            ?>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <!-- End Clients Area -->
   <!-- End Clients Area -->
 
   <!-- Start Footer 

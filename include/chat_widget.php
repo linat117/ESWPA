@@ -82,12 +82,12 @@
     right: 20px;
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     border: none;
     border-radius: 50%;
     color: white;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
     z-index: 9998;
     display: flex;
     align-items: center;
@@ -105,7 +105,7 @@
 
 .telegram-chat-button:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
 }
 
 .telegram-chat-button svg {
@@ -118,7 +118,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: rgba(102, 126, 234, 0.4);
+    background: rgba(14, 165, 233, 0.4);
     animation: pulse-ring 2s infinite;
 }
 
@@ -296,7 +296,7 @@
 
 .chat-send-btn {
     padding: 10px 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     color: white;
     border: none;
     border-radius: 6px;
@@ -316,7 +316,7 @@
 
 .chat-send-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(14, 165, 233, 0.45);
 }
 
 .chat-send-btn:disabled {

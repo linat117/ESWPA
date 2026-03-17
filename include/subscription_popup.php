@@ -9,7 +9,7 @@
 ?>
 
 <!-- Email Subscription Popup Modal -->
-<div id="subscriptionPopup" class="subscription-popup-overlay" style="display: none;">
+<div id="subscriptionPopup" class="subscription-popup-overlay" style="display: none; pointer-events: none;">
     <div class="subscription-popup-container">
         <button class="subscription-popup-close" id="closeSubscriptionPopup" aria-label="Close">
             <i class="fas fa-times"></i>
@@ -72,7 +72,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     z-index: 9999;
-    display: flex;
+    display: none; /* default hidden; JS will control showing if enabled */
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease;

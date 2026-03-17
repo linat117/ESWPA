@@ -28,7 +28,55 @@
     <link href="assets/css/home.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    
+    <!-- Temporary override: kill any accidental global blur/overlay -->
+    <style>
+        /* Kill overlays on public site */
+        #preloader,
+        #status,
+        #ds-loading-overlay,
+        .ds-loading-overlay,
+        .ds-loading-overlay-dark,
+        .modal-backdrop,
+        .ui-widget-overlay,
+        .subscription-popup-overlay {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Remove any accidental global blur/dimming */
+        html, body, body * {
+            filter: none !important;
+            backdrop-filter: none !important;
+        }
+    </style>
+
+    <!-- Safety JS: remove any unexpected full-screen overlays with huge z-index -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var elements = document.querySelectorAll('body *');
+                elements.forEach(function (el) {
+                    try {
+                        var style = window.getComputedStyle(el);
+                        var z = parseInt(style.zIndex || '0', 10);
+                        if ((style.position === 'fixed' || style.position === 'absolute') &&
+                            z >= 9999 &&
+                            (style.width === '100%' || style.height === '100%')) {
+                            el.style.display = 'none';
+                            el.style.visibility = 'hidden';
+                            el.style.pointerEvents = 'none';
+                            el.style.opacity = 0;
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                });
+            }, 500);
+        });
+    </script>
+
     <!-- ========== End Stylesheet ========== -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

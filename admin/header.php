@@ -6,7 +6,7 @@
     <meta content="Techzaa" name="author" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <!-- <link rel="shortcut icon" href="assets/images/favicon.ico"> -->
 
     <!-- Datatables css -->
     <link href="assets/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -35,4 +35,51 @@
     
     <!-- Icon System Consistency CSS -->
     <link href="assets/css/icons-consistency.css" rel="stylesheet" type="text/css" />
+
+    <!-- Temporary override: disable any global overlay/blur/preloader issues -->
+    <style>
+        /* Kill all known overlays that can dim/blur the UI EXCEPT modal backdrop */
+        #preloader,
+        #status,
+        #ds-loading-overlay,
+        .ds-loading-overlay,
+        .ds-loading-overlay-dark,
+        .ui-widget-overlay {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Remove any accidental global blur/dimming */
+        html, body, body * {
+            filter: none !important;
+            backdrop-filter: none !important;
+        }
+    </style>
+
+    <!-- Safety JS: remove any unexpected full-screen overlays with huge z-index -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var elements = document.querySelectorAll('body *');
+                elements.forEach(function (el) {
+                    try {
+                        var style = window.getComputedStyle(el);
+                        var z = parseInt(style.zIndex || '0', 10);
+                        if ((style.position === 'fixed' || style.position === 'absolute') &&
+                            z >= 9999 &&
+                            (style.width === '100%' || style.height === '100%')) {
+                            el.style.display = 'none';
+                            el.style.visibility = 'hidden';
+                            el.style.pointerEvents = 'none';
+                            el.style.opacity = 0;
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                });
+            }, 500);
+        });
+    </script>
 </head>

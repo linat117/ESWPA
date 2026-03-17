@@ -200,10 +200,15 @@ function updateMemberDetails($member_id, $post_data, $files) {
         // Log activity
         logAdminActivity($_SESSION['user_id'], 'member_updated', "Updated member ID: $member_id");
         
-        // If member was approved, create notification
+        // If member was approved, create notification (only if handler file exists)
         if (isset($updates['approval_status']) && $updates['approval_status'] == 'approved') {
-            require_once '../../include/notifications_handler.php';
-            notifyMemberApproved($member_id);
+            $notificationsPath = __DIR__ . '/../../include/notifications_handler.php';
+            if (file_exists($notificationsPath)) {
+                require_once $notificationsPath;
+                if (function_exists('notifyMemberApproved')) {
+                    notifyMemberApproved($member_id);
+                }
+            }
         }
         
         return [
@@ -295,11 +300,31 @@ function logAdminActivity($admin_id, $activity_type, $description) {
     $result = $conn->query($checkTable);
     
     if ($result && $result->num_rows > 0) {
-        $query = "INSERT INTO audit_logs (user_id, action_type, description, ip_address) VALUES (?, ?, ?, ?)";
+        // Align with actual audit_logs schema:
+        // user_id, user_type, action, table_name, record_id, old_value, new_value, ip_address, user_agent
+        $query = "INSERT INTO audit_logs (user_id, user_type, action, table_name, record_id, old_value, new_value, ip_address, user_agent)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if ($stmt) {
-            $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-            $stmt->bind_param("isss", $admin_id, $activity_type, $description, $ip_address);
+            $ip_address  = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $user_agent  = $_SERVER['HTTP_USER_AGENT'] ?? '';
+            $user_type   = 'admin';
+            $table_name  = null;
+            $record_id   = null;
+            $old_value   = null;
+            $new_value   = $description;
+            $stmt->bind_param(
+                "isssissss",
+                $admin_id,
+                $user_type,
+                $activity_type,
+                $table_name,
+                $record_id,
+                $old_value,
+                $new_value,
+                $ip_address,
+                $user_agent
+            );
             $stmt->execute();
             $stmt->close();
         }

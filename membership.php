@@ -2,6 +2,8 @@
 <html lang="en">
 <?php
 include 'head.php';
+include 'include/config.php';
+include 'include/partners_functions.php';
 ?>
 
 <body>
@@ -11,23 +13,40 @@ include 'head.php';
 
     <!-- End Header -->
 
-    <!-- Start Breadcrumb -->
-    <div class="breadcrumb-area text-center shadow dark bg-fixed padding-xl text-light" style="background-image: url(assets/img/content/vis.jpg);">
-        <div class="container">
-            <div class="breadcrumb-items">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2>Membership Info</h2>
+    <!-- Membership hero / breadcrumb -->
+    <section class="membership-hero-intro" aria-label="Membership info">
+        <div class="membership-hero-intro__bg"></div>
+        <div class="container membership-hero-intro__inner">
+            <div class="row align-center">
+                <div class="col-lg-7">
+                    <div class="membership-hero-intro__content">
+                        <span class="membership-hero-intro__eyebrow">Membership</span>
+                        <h1>Join Ethiopia's social work professional community.</h1>
+                        <p>
+                            ESWPA membership connects you with peers, learning opportunities, and a shared voice for
+                            social work practice and education across Ethiopia.
+                        </p>
+                        <ul class="membership-hero-intro__highlights">
+                            <li>Tiered fees for students and professionals</li>
+                            <li>Flexible quarterly, bi-annual, and annual payments</li>
+                            <li>Individual and organizational membership options</li>
+                        </ul>
+                        <div class="membership-hero-intro__breadcrumbs">
+                            <a href="index.php"><i class="fas fa-home"></i> Home</a>
+                            <span>/</span>
+                            <span>Membership</span>
+                        </div>
                     </div>
                 </div>
-                <ul class="breadcrumb">
-                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-                    <li class="active">Membership Info</li>
-                </ul>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="membership-hero-intro__badge">
+                        <span>ESWPA Membership</span>
+                        <p>Strengthening the profession, one member at a time.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- End Breadcrumb -->
+    </section>
 
     <!-- Membership Content
     ============================================= -->
@@ -49,9 +68,16 @@ include 'head.php';
                                     </div>
 
                                     <div class="account-info mb-4 text-center wow fadeInUp" data-wow-delay="0.15s">
-                                        <div class="card bg-light p-4">
-                                            <h4 class="text-primary mb-3">Payment Account Details</h4>
-                                            <h5 class="font-weight-bold">Account Number: 1000272480323</h5>
+                                        <div class="card membership-account-card p-4">
+                                            <span class="membership-account-card__label">Payment account</span>
+                                            <h4 class="membership-account-card__title mb-2">ESWPA official account</h4>
+                                            <p class="membership-account-card__description mb-3">
+                                                Use this account when paying your membership fees before completing registration.
+                                            </p>
+                                            <div class="membership-account-card__number">
+                                                <span>Account number</span>
+                                                <strong>1000272480323</strong>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -132,31 +158,29 @@ include 'head.php';
         </div>
     </div>
     <!-- End Membership Content -->
-    <div class="clients-area default-padding home-partners">
-    <div class="container">
-      <div class="row align-center">
-        <div class="col-lg-5 info">
-          <h2 style="color: #6B87B5; font-size: 30px;">
-            Our Partner Companies<br />
-          </h2>
-          <p>
-            We collaborate with various organizations and institutions to enhance social work practice and
-            create positive impact in Ethiopian communities.
-          </p>
-        </div>
-        <div class="col-lg-7 item-box">
-          <div class="client-items client-carousel owl-carousel owl-theme">
-            <div class="item">
-              <img src="assets/img/partner2.png" alt="Thumb" />
+    <div class="clients-area default-padding about-partners">
+        <div class="container">
+            <div class="row align-center">
+                <div class="col-lg-5 info">
+                    <h2 class="about-partners__title">
+                        Our Partner Companies
+                    </h2>
+                    <p>
+                        We collaborate with various organizations and institutions to enhance social work practice and
+                        create positive impact in Ethiopian communities.
+                    </p>
+                </div>
+                <div class="col-lg-7 item-box">
+                    <div class="partners-grid">
+                        <?php
+                        $partners = getPartners($conn);
+                        displayPartnersGrid($partners);
+                        ?>
+                    </div>
+                </div>
             </div>
-            <div class="item">
-              <img src="assets/img/partner1.png" alt="Thumb" />
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
     <!-- Start Footer 
     ============================================= -->
     <?php

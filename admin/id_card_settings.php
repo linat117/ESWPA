@@ -10,22 +10,83 @@ include 'include/conn.php';
 include 'header.php';
 
 $success_message = '';
-$error_message = '';
+$error_message   = '';
+
+/**
+ * Helper to get a setting from the `settings` table.
+ */
+function get_setting(mysqli $conn, string $key, string $default = ''): string {
+    $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1");
+    if (!$stmt) {
+        return $default;
+    }
+    $stmt->bind_param("s", $key);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $value = $default;
+    if ($row = $result->fetch_assoc()) {
+        $value = (string) $row['setting_value'];
+    }
+    $stmt->close();
+    return $value;
+}
+
+/**
+ * Helper to save a setting into the `settings` table.
+ */
+function save_setting(mysqli $conn, string $key, string $value): void {
+    $stmt = $conn->prepare("
+        INSERT INTO settings (setting_key, setting_value, category)
+        VALUES (?, ?, 'id_card')
+        ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)
+    ");
+    if (!$stmt) {
+        return;
+    }
+    $stmt->bind_param("ss", $key, $value);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Default values (used if no rows exist yet)
+$auto_generate          = get_setting($conn, 'id_card_auto_generate', '0');
+$code_format            = get_setting($conn, 'id_card_code_format', 'hex32');
+$expiry_warning_days    = get_setting($conn, 'id_card_expiry_warning_days', '30');
+$require_photo          = get_setting($conn, 'id_card_require_photo', '1');
+$default_template       = get_setting($conn, 'id_card_default_template', 'standard');
+$enable_qr_scan_setting = get_setting($conn, 'id_card_enable_qr_scan', '1');
+$track_scans_setting    = get_setting($conn, 'id_card_track_scans', '1');
 
 // Handle settings update
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['action']) && $_POST['action'] == 'update_settings') {
-        // In a real system, you might have a settings table
-        // For now, we'll use session or a simple approach
-        $success_message = "Settings saved successfully (Note: This is a placeholder - implement settings table if needed)";
+    if (isset($_POST['action']) && $_POST['action'] === 'update_settings') {
+        // Sanitize inputs
+        $auto_generate       = isset($_POST['auto_generate']) ? ($_POST['auto_generate'] === '1' ? '1' : '0') : '0';
+        $code_format         = $_POST['code_format'] ?? 'hex32';
+        $expiry_warning_days = isset($_POST['expiry_warning_days']) ? (string) max(0, min(365, (int) $_POST['expiry_warning_days'])) : '30';
+        $require_photo       = isset($_POST['require_photo']) ? ($_POST['require_photo'] === '1' ? '1' : '0') : '1';
+        $default_template    = $_POST['default_template'] ?? 'standard';
+        $enable_qr_scan_setting = isset($_POST['enable_qr_scan']) && $_POST['enable_qr_scan'] === '1' ? '1' : '0';
+        $track_scans_setting    = isset($_POST['track_scans']) && $_POST['track_scans'] === '1' ? '1' : '0';
+
+        // Persist to settings table
+        save_setting($conn, 'id_card_auto_generate', $auto_generate);
+        save_setting($conn, 'id_card_code_format', $code_format);
+        save_setting($conn, 'id_card_expiry_warning_days', $expiry_warning_days);
+        save_setting($conn, 'id_card_require_photo', $require_photo);
+        save_setting($conn, 'id_card_default_template', $default_template);
+        save_setting($conn, 'id_card_enable_qr_scan', $enable_qr_scan_setting);
+        save_setting($conn, 'id_card_track_scans', $track_scans_setting);
+
+        $success_message = "ID card settings saved successfully.";
     }
 }
 
 // Get current statistics
 $stats = [];
-$stats['total_codes'] = $conn->query("SELECT COUNT(*) as total FROM id_card_verification")->fetch_assoc()['total'];
+$stats['total_codes']    = $conn->query("SELECT COUNT(*) as total FROM id_card_verification")->fetch_assoc()['total'];
 $stats['generated_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrations WHERE id_card_generated = 1 AND approval_status = 'approved'")->fetch_assoc()['total'];
-$stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrations WHERE (id_card_generated = 0 OR id_card_generated IS NULL) AND approval_status = 'approved' AND (expiry_date IS NULL OR expiry_date >= CURDATE())")->fetch_assoc()['total'];
+$stats['pending_cards']   = $conn->query("SELECT COUNT(*) as total FROM registrations WHERE (id_card_generated = 0 OR id_card_generated IS NULL) AND approval_status = 'approved' AND (expiry_date IS NULL OR expiry_date >= CURDATE())")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -83,8 +144,8 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                         <div class="mb-3">
                                             <label class="form-label">Auto-Generate ID Cards</label>
                                             <select name="auto_generate" class="form-select">
-                                                <option value="0">Manual - Admin must generate</option>
-                                                <option value="1">Automatic - Generate on approval</option>
+                                                <option value="0" <?php echo $auto_generate === '0' ? 'selected' : ''; ?>>Manual - Admin must generate</option>
+                                                <option value="1" <?php echo $auto_generate === '1' ? 'selected' : ''; ?>>Automatic - Generate on approval</option>
                                             </select>
                                             <small class="text-muted">Automatically generate ID cards when a member is approved</small>
                                         </div>
@@ -92,9 +153,9 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                         <div class="mb-3">
                                             <label class="form-label">Verification Code Format</label>
                                             <select name="code_format" class="form-select">
-                                                <option value="hex32">32-character hexadecimal (default)</option>
-                                                <option value="alphanumeric32">32-character alphanumeric</option>
-                                                <option value="uuid">UUID format</option>
+                                                <option value="hex32" <?php echo $code_format === 'hex32' ? 'selected' : ''; ?>>32-character hexadecimal (default)</option>
+                                                <option value="alphanumeric32" <?php echo $code_format === 'alphanumeric32' ? 'selected' : ''; ?>>32-character alphanumeric</option>
+                                                <option value="uuid" <?php echo $code_format === 'uuid' ? 'selected' : ''; ?>>UUID format</option>
                                             </select>
                                             <small class="text-muted">Format for QR code verification codes</small>
                                         </div>
@@ -104,7 +165,7 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                             <input type="number" 
                                                    name="expiry_warning_days" 
                                                    class="form-control" 
-                                                   value="30" 
+                                                   value="<?php echo htmlspecialchars($expiry_warning_days); ?>" 
                                                    min="0" 
                                                    max="365">
                                             <small class="text-muted">Number of days before expiry to show warning</small>
@@ -113,8 +174,8 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                         <div class="mb-3">
                                             <label class="form-label">Require Photo for ID Card</label>
                                             <select name="require_photo" class="form-select">
-                                                <option value="1">Yes - Photo required</option>
-                                                <option value="0">No - Photo optional</option>
+                                                <option value="1" <?php echo $require_photo === '1' ? 'selected' : ''; ?>>Yes - Photo required</option>
+                                                <option value="0" <?php echo $require_photo === '0' ? 'selected' : ''; ?>>No - Photo optional</option>
                                             </select>
                                             <small class="text-muted">Whether a member photo is required to generate ID card</small>
                                         </div>
@@ -122,26 +183,27 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                         <div class="mb-3">
                                             <label class="form-label">Default ID Card Template</label>
                                             <select name="default_template" class="form-select">
-                                                <option value="standard">Standard Template</option>
-                                                <option value="premium">Premium Template</option>
-                                                <option value="custom">Custom Template</option>
+                                                <option value="standard" <?php echo $default_template === 'standard' ? 'selected' : ''; ?>>Standard Template</option>
+                                                <option value="premium" <?php echo $default_template === 'premium' ? 'selected' : ''; ?>>Premium Template</option>
+                                                <option value="custom" <?php echo $default_template === 'custom' ? 'selected' : ''; ?>>Custom Template</option>
                                             </select>
                                             <small class="text-muted">Default template to use for new ID cards</small>
                                         </div>
 
                                         <div class="mb-3">
+                                            <label class="form-label d-block">QR Code on ID Card</label>
                                             <div class="form-check">
                                                 <input type="checkbox" 
                                                        class="form-check-input" 
                                                        name="enable_qr_scan" 
                                                        id="enable_qr_scan" 
                                                        value="1" 
-                                                       checked>
+                                                       <?php echo $enable_qr_scan_setting === '1' ? 'checked' : ''; ?>>
                                                 <label class="form-check-label" for="enable_qr_scan">
-                                                    Enable QR Code Scanning
+                                                    Show QR code on back side of ID card
                                                 </label>
                                             </div>
-                                            <small class="text-muted">Allow QR code scanning for verification</small>
+                                            <small class="text-muted">If enabled, a QR code for online verification is printed on the back of the card.</small>
                                         </div>
 
                                         <div class="mb-3">
@@ -151,7 +213,7 @@ $stats['pending_cards'] = $conn->query("SELECT COUNT(*) as total FROM registrati
                                                        name="track_scans" 
                                                        id="track_scans" 
                                                        value="1" 
-                                                       checked>
+                                                       <?php echo $track_scans_setting === '1' ? 'checked' : ''; ?>>
                                                 <label class="form-check-label" for="track_scans">
                                                     Track Verification Scans
                                                 </label>

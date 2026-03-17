@@ -45,16 +45,20 @@ $verificationStmt->close();
 // Get company info
 $companyQuery = "SELECT * FROM company_info LIMIT 1";
 $companyResult = $conn->query($companyQuery);
-$company = $companyResult->fetch_assoc();
+$company = ($companyResult && $companyResult->num_rows > 0) ? $companyResult->fetch_assoc() : null;
 if (!$company) {
     $company = [
         'company_name' => 'Ethiopian Social Workers Professional Association',
         'address' => 'Addis Ababa, Ethiopia',
         'phone' => '+251-XXX-XXX-XXXX',
         'email' => 'info@eswpa.org',
-        'website' => 'www.eswpa.org'
+        'website' => 'www.eswpa.org',
+        'company_signature' => null
     ];
 }
+$company_name = $company['company_name'] ?? 'Ethiopian Social Workers Professional Association';
+$words = preg_split('/\s+/', trim($company_name), -1, PREG_SPLIT_NO_EMPTY);
+$company_short = $words ? strtoupper(substr(implode('', array_map(function ($w) { return isset($w[0]) ? $w[0] : ''; }, $words)), 0, 8)) : 'ESWPA';
 
 // Generate verification URL
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
@@ -626,8 +630,8 @@ $conn->close();
                 <!-- Top Red Banner with Logo -->
                 <div class="id-card-top-banner">
                     <div class="id-card-logo">
-                        <span class="id-card-logo-text">ESWPA</span>
-                        <span class="id-card-tagline">Ethiopian Social Workers Professional Association</span>
+                        <span class="id-card-logo-text"><?php echo htmlspecialchars($company_short); ?></span>
+                        <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
                     </div>
                 </div>
                 
@@ -685,8 +689,8 @@ $conn->close();
                 <!-- Top Red Banner (same as front) -->
                 <div class="id-card-back-top-banner">
                     <div class="id-card-back-logo-top">
-                        <span class="id-card-back-logo-text-top">ESWPA</span>
-                        <span class="id-card-back-tagline-top">Ethiopian Social Workers Professional Association</span>
+                        <span class="id-card-back-logo-text-top"><?php echo htmlspecialchars($company_short); ?></span>
+                        <span class="id-card-back-tagline-top"><?php echo htmlspecialchars($company_name); ?></span>
                     </div>
                 </div>
                 
@@ -714,7 +718,7 @@ $conn->close();
                     </div>
                     
                     <!-- Information Text -->
-                    <p class="id-back-text">This card is the property of Ethiopian Social Workers Professional Association and must be returned upon termination of membership.</p>
+                    <p class="id-back-text">This card is the property of <?php echo htmlspecialchars($company_name); ?> and must be returned upon termination of membership.</p>
                     <p class="id-back-text">For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.</p>
                     
                     <!-- QR Code -->
@@ -729,8 +733,8 @@ $conn->close();
                 <!-- Bottom Red Banner (same as front) -->
                 <div class="id-card-back-bottom">
                     <div class="id-card-back-logo">
-                        <span class="id-card-back-logo-text">ESWPA</span>
-                        <span class="id-card-back-tagline">Ethiopian Social Workers Professional Association</span>
+                        <span class="id-card-back-logo-text"><?php echo htmlspecialchars($company_short); ?></span>
+                        <span class="id-card-back-tagline"><?php echo htmlspecialchars($company_name); ?></span>
                     </div>
                 </div>
             </div>
@@ -747,8 +751,8 @@ $conn->close();
                 if (qrElement) {
                     var qrCode = new QRCode(qrElement, {
                         text: "<?php echo $verificationUrl; ?>",
-                        width: 50,
-                        height: 50,
+                        width: 80,
+                        height: 80,
                         colorDark: "#000000",
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.H

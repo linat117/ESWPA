@@ -32,9 +32,10 @@ include 'head.php';
 
 
     <div class="registration-area half-bg default-padding" style="background-color: white;">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="registration-form shadow p-4 bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="registration-form shadow p-4 bg-white">
                     <h4 class="text-center mb-4">Membership Registration</h4>
                     <p class="text-center mb-4">Join Ethiopian Social Workers Professional Association</p>
 
@@ -129,11 +130,11 @@ include 'head.php';
                             </div>
                         </div>
 
-                        <!-- Bank Slip Screenshot Upload -->
+                        <!-- Bank Slip Screenshot Upload (required only for bank payments) -->
                         <div class="col-12 mb-3">
-                            <label for="bankSlip" class="form-label">Bank Slip Screenshot*</label>
-                            <input type="file" class="form-control" id="bankSlip" name="bankSlip" required accept="image/*">
-                            <small class="text-muted">Upload a screenshot of your bank slip (Max size: 2MB)</small>
+                            <label for="bankSlip" class="form-label">Bank Slip Screenshot</label>
+                            <input type="file" class="form-control" id="bankSlip" name="bankSlip" accept="image/*">
+                            <small class="text-muted">Upload a screenshot of your bank slip (required only if you pay via bank, max size: 2MB)</small>
                         </div>
 
                         <!-- Update the ID Card Payment Option -->
@@ -151,10 +152,11 @@ include 'head.php';
                         <!-- Submit Button -->
                         <div class="col-12">
                             <button type="submit" id="submitBtn" class="btn btn-primary w-100" disabled>Submit Registration</button>
-                            <small class="text-muted d-block mt-2" id="submitHint">Please upload your payment slip to enable submission</small>
+                            <small class="text-muted d-block mt-2" id="submitHint">Select a payment option to continue. Upload your bank slip if you pay via bank.</small>
                         </div>
                     </form>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -427,12 +429,49 @@ include 'head.php';
             const paymentDurationSelect = $('#paymentDuration');
             const submitBtn = $('#submitBtn');
             const submitHint = $('#submitHint');
+            const paymentOptionInputs = $('input[name="paymentOption"]');
             
             // Check if email exists in system (for first registration validation)
             let isFirstRegistration = true;
             
-            // Enable/disable submit button based on payment slip upload
+            function updateSubmitState() {
+                const selectedOption = paymentOptionInputs.filter(':checked').val();
+                const hasSlip = bankSlipInput[0].files && bankSlipInput[0].files.length > 0;
+
+                if (!selectedOption) {
+                    submitBtn.prop('disabled', true);
+                    submitHint.text('Select a payment option to continue. Upload your bank slip if you pay via bank.')
+                        .removeClass('text-success').addClass('text-muted');
+                    return;
+                }
+
+                if (selectedOption === 'cash') {
+                    submitBtn.prop('disabled', false);
+                    submitHint.text('You selected cash. Bank slip upload is optional.')
+                        .removeClass('text-muted').addClass('text-success');
+                    return;
+                }
+
+                // Bank payment option
+                if (hasSlip) {
+                    submitBtn.prop('disabled', false);
+                    submitHint.text('Payment slip uploaded. You can now submit your registration.')
+                        .removeClass('text-muted').addClass('text-success');
+                } else {
+                    submitBtn.prop('disabled', true);
+                    submitHint.text('Please upload your payment slip to enable submission.')
+                        .removeClass('text-success').addClass('text-muted');
+                }
+            }
+
+            // Enable/disable submit button based on payment slip upload (for bank option)
             bankSlipInput.on('change', function() {
+                const selectedOption = paymentOptionInputs.filter(':checked').val();
+                if (selectedOption !== 'bank') {
+                    // For cash, slip is optional; no special validation here
+                    return updateSubmitState();
+                }
+
                 if (this.files && this.files.length > 0) {
                     const file = this.files[0];
                     const maxSize = 5 * 1024 * 1024; // 5MB
@@ -442,7 +481,7 @@ include 'head.php';
                         alert('File size exceeds 5MB. Please upload a smaller file.');
                         $(this).val('');
                         submitBtn.prop('disabled', true);
-                        submitHint.text('Please upload your payment slip to enable submission');
+                        submitHint.text('Please upload your payment slip to enable submission.');
                         return;
                     }
                     
@@ -450,7 +489,7 @@ include 'head.php';
                         alert('Invalid file type. Please upload an image (JPG, PNG, WEBP) or PDF.');
                         $(this).val('');
                         submitBtn.prop('disabled', true);
-                        submitHint.text('Please upload your payment slip to enable submission');
+                        submitHint.text('Please upload your payment slip to enable submission.');
                         return;
                     }
                     
@@ -465,10 +504,13 @@ include 'head.php';
                     submitHint.removeClass('text-muted').addClass('text-success');
                 } else {
                     submitBtn.prop('disabled', true);
-                    submitHint.text('Please upload your payment slip to enable submission');
+                    submitHint.text('Please upload your payment slip to enable submission.');
                     submitHint.removeClass('text-success').addClass('text-muted');
                 }
             });
+
+            // Update submit state when payment option changes
+            paymentOptionInputs.on('change', updateSubmitState);
             
             // Validate payment duration for first registration
             paymentDurationSelect.on('change', function() {
@@ -490,9 +532,12 @@ include 'head.php';
             
             // Form submission validation
             $('form').on('submit', function(e) {
-                if (!bankSlipInput[0].files || bankSlipInput[0].files.length === 0) {
+                const selectedOption = paymentOptionInputs.filter(':checked').val();
+                const hasSlip = bankSlipInput[0].files && bankSlipInput[0].files.length > 0;
+
+                if (selectedOption === 'bank' && !hasSlip) {
                     e.preventDefault();
-                    alert('Please upload your payment slip before submitting.');
+                    alert('Please upload your payment slip before submitting (required for bank payments).');
                     return false;
                 }
                 

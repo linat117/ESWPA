@@ -70,15 +70,6 @@ function calculateExpiryDate($paymentDuration, $createdAt) {
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validate payment slip is uploaded (required)
-    if (empty($_FILES['bankSlip']['name'])) {
-        echo "<script>
-                alert('Payment slip is required. Please upload your bank slip.');
-                window.location.href = '" . htmlspecialchars($signUpUrl) . "';
-              </script>";
-        exit();
-    }
-    
     // Get and sanitize form data
     $fullname = trim($_POST['fullname'] ?? '');
     $sex = $_POST['sex'] ?? '';
@@ -94,6 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($fullname) || empty($email) || empty($phone) || empty($address) || empty($paymentDuration) || empty($paymentOption)) {
         echo "<script>
                 alert('Please fill in all required fields.');
+                window.location.href = '" . htmlspecialchars($signUpUrl) . "';
+              </script>";
+        exit();
+    }
+    // If payment option is bank, require a bank slip
+    if ($paymentOption === 'bank' && empty($_FILES['bankSlip']['name'])) {
+        echo "<script>
+                alert('Payment slip is required for bank payments. Please upload your bank slip.');
                 window.location.href = '" . htmlspecialchars($signUpUrl) . "';
               </script>";
         exit();

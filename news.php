@@ -17,23 +17,35 @@ include 'include/config.php';
     ?>
     <!-- End Header -->
 
-    <!-- Start Breadcrumb (Only for non-members) -->
+    <!-- Start Breadcrumb / Hero -->
     <?php if (!isset($_SESSION['member_id'])): ?>
-    <div class="breadcrumb-area text-center shadow dark bg-fixed padding-xl text-light" style="background-image: url(assets/img/bgregister.png);">
-        <div class="container">
-            <div class="breadcrumb-items">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2>News & Media</h2>
+    <section class="membership-hero-intro news-hero-intro" aria-label="News &amp; Media">
+        <div class="membership-hero-intro__bg"></div>
+        <div class="container membership-hero-intro__inner">
+            <div class="row align-center">
+                <div class="col-lg-7">
+                    <div class="membership-hero-intro__content">
+                        <span class="membership-hero-intro__eyebrow">News &amp; Media</span>
+                        <h1>Stories and updates from ESWPA.</h1>
+                        <p>
+                            Read news, blogs, and reports that highlight social work practice, policy, and professional
+                            developments across Ethiopia.
+                        </p>
+                        <ul class="membership-hero-intro__highlights">
+                            <li>Latest ESWPA announcements and activities</li>
+                            <li>Blogs and reflections from practitioners</li>
+                            <li>Key reports and resources for the profession</li>
+                        </ul>
+                        <div class="membership-hero-intro__breadcrumbs">
+                            <a href="index.php"><i class="fas fa-home"></i> Home</a>
+                            <span>/</span>
+                            <span>News &amp; Media</span>
+                        </div>
                     </div>
                 </div>
-                <ul class="breadcrumb">
-                    <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                    <li class="active">News & Media</li>
-                </ul>
             </div>
         </div>
-    </div>
+    </section>
     <?php else: ?>
     <div class="mp-content-wrapper">
         <div class="mp-container">
@@ -135,7 +147,7 @@ include 'include/config.php';
                                         echo '</div>';
                                         echo '</div>';
                                     } else {
-                                        echo '<div class="col-md-6 col-lg-4 mb-4 wow fadeInUp" data-wow-delay="0.1s">';
+                                        echo '<div class="col-md-6 col-lg-4 mb-4 wow fadeInUp news-card-col" data-wow-delay="0.1s">';
                                         echo '<div class="card shadow-sm h-100">';
                                         if ($firstImage) {
                                             echo '<img src="' . htmlspecialchars($firstImage) . '" class="card-img-top" alt="' . htmlspecialchars($row['title']) . '" style="height: 200px; object-fit: cover;">';
@@ -274,15 +286,15 @@ include 'include/config.php';
     
     .news-tabs-horizontal .nav-link:hover {
         background: #e9ecef;
-        color: #2563eb;
-        border-color: #2563eb;
+        color: #0284c7;
+        border-color: #0284c7;
     }
     
     .news-tabs-horizontal .nav-link.active {
-        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
         color: white !important;
         border-color: #0ea5e9;
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
     }
     
     .news-tabs-horizontal .nav-link.active i {
@@ -291,7 +303,7 @@ include 'include/config.php';
     
     .news-tabs-horizontal .nav-link:focus {
         outline: none;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.22);
     }
     
     /* Tab Content */
@@ -316,9 +328,10 @@ include 'include/config.php';
     
     /* Responsive Tabs */
     @media (max-width: 767px) {
+        /* Mobile: each tab full-width, one per row */
         .news-tabs-horizontal .nav-item {
-            flex: 1 1 calc(50% - 4px);
-            min-width: calc(50% - 4px);
+            flex: 1 1 100%;
+            min-width: 100%;
         }
         
         .news-tabs-horizontal .nav-link {
@@ -330,20 +343,46 @@ include 'include/config.php';
         .news-tabs-horizontal .nav-link i {
             font-size: 18px;
         }
+
+        /* Mobile: ensure news cards are single-column */
+        .news-card-col {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
     }
-    
-    @media (max-width: 480px) {
-        .news-tabs-horizontal .nav-item {
-            flex: 1 1 100%;
-            min-width: 100%;
-        }
-        
-        .news-tabs-container {
-            padding: 5px;
-        }
+    /* Card styles */
+    .news-card-col .card {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .news-card-col .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+        border-color: rgba(37, 99, 235, 0.45);
     }
     </style>
     <?php endif; ?>
+
+    <!-- Shared mobile layout tweaks (member + public) -->
+    <style>
+    @media (max-width: 767px) {
+        /* Force news cards to single-column on mobile (public view) */
+        .news-card-col {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Member panel cards: stack vertically on mobile */
+        .mp-grid-auto {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+    </style>
     
     <?php
     // Close database connection if it exists

@@ -65,8 +65,45 @@ if (!empty($member['expiry_date'])) {
 <html lang="en">
 <?php include 'head.php'; ?>
 <link href="assets/css/member-panel.css" rel="stylesheet">
-        
-<body>
+<style>
+    /* Page-specific tweaks for member dashboard */
+    .member-dashboard-welcome {
+        background: #ffffff;
+        color: #1f2933;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+    .member-dashboard-welcome h2,
+    .member-dashboard-welcome p,
+    .member-dashboard-welcome strong {
+        color: #111827;
+    }
+    .member-dashboard-welcome i {
+        color: #1f2937;
+    }
+
+    /* Research stat card styled like welcome card */
+    .member-dashboard-research-card {
+        background: #ffffff !important;
+        color: #111827 !important;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+        border-left: 4px solid #2563eb;
+    }
+    .member-dashboard-research-card .mp-stat-value,
+    .member-dashboard-research-card .mp-stat-label {
+        color: #111827 !important;
+    }
+
+    /* Mobile-only: ensure one card per row on dashboard,
+       overrides any external grid settings on smaller screens */
+    @media screen and (max-width: 768px) {
+        .mp-grid-4,
+        .mp-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+<body class="member-dashboard-page">
     <!-- Header -->
     <?php include 'member-header-v1.2.php'; ?>
     <!-- End Header -->
@@ -92,7 +129,7 @@ if (!empty($member['expiry_date'])) {
             <?php endif; ?>
 
             <!-- Welcome Banner - Compact -->
-            <div class="mp-welcome-banner">
+            <div class="mp-welcome-banner member-dashboard-welcome">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
                     <div style="flex: 1;">
                                     <h2>Welcome back, <?php echo htmlspecialchars($member['fullname']); ?>!</h2>
@@ -113,23 +150,11 @@ if (!empty($member['expiry_date'])) {
                 </div>
             </div>
 
-            <!-- Stats Grid - 4 columns -->
+            <!-- Stats Grid - show only Research summary on dashboard -->
             <div class="mp-stat-grid">
-                <div class="mp-stat-card mp-stat-primary">
+                <div class="mp-stat-card mp-stat-primary member-dashboard-research-card">
                     <div class="mp-stat-value"><?php echo $stats['research_count']; ?></div>
                     <div class="mp-stat-label">Research</div>
-                </div>
-                <div class="mp-stat-card mp-stat-success">
-                    <div class="mp-stat-value"><?php echo $stats['citations_count']; ?></div>
-                    <div class="mp-stat-label">Citations</div>
-                </div>
-                <div class="mp-stat-card mp-stat-warning">
-                    <div class="mp-stat-value"><?php echo $stats['notes_count']; ?></div>
-                    <div class="mp-stat-label">Notes</div>
-                </div>
-                <div class="mp-stat-card mp-stat-info">
-                    <div class="mp-stat-value"><?php echo $stats['bibliography_count']; ?></div>
-                    <div class="mp-stat-label">Bibliography</div>
                 </div>
             </div>
 

@@ -553,3 +553,115 @@ Stack trace:
 #2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(120, Array, Array)
 #3 {main}
   thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[05-Mar-2026 13:43:42 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\about_team.php on line 195
+[05-Mar-2026 13:43:42 UTC] PHP Stack trace:
+[05-Mar-2026 13:43:42 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\about_team.php:0
+[05-Mar-2026 13:43:42 UTC] PHP   2. session_start() C:\wamp64\www\ethiosocialworks\admin\about_team.php:195
+[05-Mar-2026 13:49:10 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\about_team.php on line 288
+[05-Mar-2026 13:49:10 UTC] PHP Stack trace:
+[05-Mar-2026 13:49:10 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\about_team.php:0
+[05-Mar-2026 13:49:10 UTC] PHP   2. session_start() C:\wamp64\www\ethiosocialworks\admin\about_team.php:288
+[05-Mar-2026 13:49:25 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\about_team.php on line 288
+[05-Mar-2026 13:49:25 UTC] PHP Stack trace:
+[05-Mar-2026 13:49:25 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\about_team.php:0
+[05-Mar-2026 13:49:25 UTC] PHP   2. session_start() C:\wamp64\www\ethiosocialworks\admin\about_team.php:288
+[10-Mar-2026 11:54:11 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php on line 264
+[10-Mar-2026 11:54:11 UTC] PHP Stack trace:
+[10-Mar-2026 11:54:11 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:0
+[10-Mar-2026 11:54:11 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\id_card_templates.php:264
+[11-Mar-2026 07:29:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(12, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(39): updateMemberDetails(118, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[11-Mar-2026 07:36:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'action_type' in 'field list' in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:299
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(299): mysqli->prepare('INSERT INTO aud...')
+#1 C:\wamp64\www\ethiosocialworks\admin\include\update_member.php(201): logAdminActivity(12, 'member_updated', 'Updated member ...')
+#2 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(44): updateMemberDetails(118, Array, Array)
+#3 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 299
+[11-Mar-2026 07:37:46 UTC] PHP Warning:  require_once(../../include/notifications_handler.php): Failed to open stream: No such file or directory in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 205
+[11-Mar-2026 07:37:46 UTC] PHP Stack trace:
+[11-Mar-2026 07:37:46 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\edit_member.php:0
+[11-Mar-2026 07:37:46 UTC] PHP   2. updateMemberDetails($member_id = 118, $post_data = ['fullname' => 'Daglas man', 'email' => 'daglasmohamed@gmail.com', 'phone' => '+251-911-234-567', 'sex' => 'Male', 'address' => 'Addis Ababa, Ethiopia', 'qualification' => 'BSW - Bachelor of Social Work', 'membership_id' => 'ESWPA-2025-00001', 'approval_status' => 'approved', 'status' => 'active', 'expiry_date' => '2026-12-16', 'payment_duration' => '1_year', 'payment_option' => 'bank'], $files = ['photo' => ['name' => 'zenbil.png', 'full_path' => 'zenbil.png', 'type' => 'image/png', 'tmp_name' => 'C:\\wamp64\\tmp\\phpB459.tmp', 'error' => 0, 'size' => 18920]]) C:\wamp64\www\ethiosocialworks\admin\edit_member.php:44
+[11-Mar-2026 07:37:46 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../include/notifications_handler.php' (include_path='.;C:\php\pear') in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php:205
+Stack trace:
+#0 C:\wamp64\www\ethiosocialworks\admin\edit_member.php(44): updateMemberDetails(118, Array, Array)
+#1 {main}
+  thrown in C:\wamp64\www\ethiosocialworks\admin\include\update_member.php on line 205
+[16-Mar-2026 08:16:27 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:16:27 UTC] PHP Stack trace:
+[16-Mar-2026 08:16:27 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:16:27 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:16:27 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:16:29 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:16:29 UTC] PHP Stack trace:
+[16-Mar-2026 08:16:29 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:16:29 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:16:29 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:18:05 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:18:05 UTC] PHP Stack trace:
+[16-Mar-2026 08:18:05 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:18:05 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:18:05 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:18:21 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:18:21 UTC] PHP Stack trace:
+[16-Mar-2026 08:18:21 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:18:21 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:18:21 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:20:37 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:20:37 UTC] PHP Stack trace:
+[16-Mar-2026 08:20:37 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:20:37 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:20:37 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:22:02 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:22:02 UTC] PHP Stack trace:
+[16-Mar-2026 08:22:02 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:22:02 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:22:02 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:22:50 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:22:50 UTC] PHP Stack trace:
+[16-Mar-2026 08:22:50 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:22:50 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:22:50 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:23:02 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:23:02 UTC] PHP Stack trace:
+[16-Mar-2026 08:23:02 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:23:02 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:23:03 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:27:15 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:27:15 UTC] PHP Stack trace:
+[16-Mar-2026 08:27:15 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:27:15 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:27:15 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:29:05 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:29:05 UTC] PHP Stack trace:
+[16-Mar-2026 08:29:05 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:29:05 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:29:05 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:30:43 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:30:43 UTC] PHP Stack trace:
+[16-Mar-2026 08:30:43 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:30:43 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:30:43 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:32:36 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:32:36 UTC] PHP Stack trace:
+[16-Mar-2026 08:32:36 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:32:36 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:32:36 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 08:34:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\wamp64\www\ethiosocialworks\admin\add_partner.php on line 2
+[16-Mar-2026 08:34:54 UTC] PHP Stack trace:
+[16-Mar-2026 08:34:54 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:0
+[16-Mar-2026 08:34:54 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\admin\partners_list.php:11
+[16-Mar-2026 08:34:54 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\admin\add_partner.php:2
+[16-Mar-2026 09:12:52 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\edit_partner.php on line 202
+[16-Mar-2026 09:12:52 UTC] PHP Stack trace:
+[16-Mar-2026 09:12:52 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\edit_partner.php:0
+[16-Mar-2026 09:12:52 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\edit_partner.php:202
+[16-Mar-2026 09:12:52 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\ethiosocialworks\admin\edit_partner.php on line 207
+[16-Mar-2026 09:12:52 UTC] PHP Stack trace:
+[16-Mar-2026 09:12:52 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\admin\edit_partner.php:0
+[16-Mar-2026 09:12:52 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\ethiosocialworks\admin\edit_partner.php:207

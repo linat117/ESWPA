@@ -130,12 +130,12 @@
 
                               <!-- Member Management -->
                               <li class="side-nav-title">Member Management</li>
-                              <li class="side-nav-item">
+                              <!-- <li class="side-nav-item">
                                   <a href="members_dashboard.php" class="side-nav-link">
                                       <i class="ri-dashboard-line"></i>
                                       <span> Members Dashboard </span>
                                   </a>
-                              </li>
+                              </li> -->
                               <li class="side-nav-item">
                                   <a data-bs-toggle="collapse" href="#membersSubmenu" aria-expanded="false" aria-controls="membersSubmenu" class="side-nav-link">
                                       <i class="ri-team-line"></i>
@@ -147,9 +147,9 @@
                                           <li>
                                               <a href="members_list.php">All Members</a>
                                           </li>
-                                          <li>
+                                         <!-- <li>
                                               <a href="add_member.php">Add Member</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="member_approval.php">Approval Workflow</a>
                                           </li>
@@ -168,9 +168,9 @@
                                           <li>
                                               <a href="member_permissions.php">Permissions</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="member_reports.php">Reports</a>
-                                          </li>
+                                          </li> -->
                                       </ul>
                                   </div>
                               </li>
@@ -185,15 +185,15 @@
                                   </a>
                                   <div class="collapse" id="resourcesSubmenu">
                                       <ul class="side-nav-second-level">
-                                          <li>
+                                          <!-- <li>
                                               <a href="resources_dashboard.php">Dashboard</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="resources_list.php">All Resources</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="add_resource.php">Add Resource</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="resource_sections.php">Sections</a>
                                           </li>
@@ -229,9 +229,9 @@
                                           <li>
                                               <a href="research_list.php">All Research</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="add_research.php">Add Research</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="research_categories.php">Categories</a>
                                           </li>
@@ -264,9 +264,9 @@
                                   </a>
                                   <div class="collapse" id="digitalIdSubmenu">
                                       <ul class="side-nav-second-level">
-                                          <li>
+                                          <!-- <li>
                                               <a href="digital_id_dashboard.php">ID Cards Dashboard</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="id_cards_list.php">All ID Cards</a>
                                           </li>
@@ -293,33 +293,33 @@
                                           <li>
                                               <a href="reports_dashboard.php">Reports Dashboard</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="reports_payments.php">Payments</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="reports_research.php">Research</a>
                                           </li>
                                           <li>
                                               <a href="reports_activity.php">Activity</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="reports_notes.php">Notes</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="reports_users.php">Users</a>
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                               <a href="reports_members.php">Members</a>
-                                          </li>
-                                          <li>
+                                          </li> -->
+                                          <!-- <li>
                                               <a href="reports_finance.php">Finance</a>
-                                          </li>
-                                          <li>
+                                          </li> -->
+                                          <!-- <li>
                                               <a href="reports_accounting.php">Accounting</a>
-                                          </li>
-                                          <li>
+                                          </li> -->
+                                          <!-- <li>
                                               <a href="reports_details.php">Details</a>
-                                          </li>
+                                          </li> -->
                                           <li>
                                               <a href="report.php">Legacy Reports</a>
                                           </li>
@@ -390,8 +390,16 @@
                                           <li>
                                               <a href="news_list.php">News & Media</a>
                                           </li>
+                                          <!-- Temporarily disabled: Add News/Blog from sidebar
                                           <li>
                                               <a href="add_news.php">Add News/Blog</a>
+                                          </li>
+                                          -->
+                                          <li>
+                                              <a href="about_team.php">About Page &mdash; Team Members</a>
+                                          </li>
+                                          <li>
+                                              <a href="partners_list.php">Partners</a>
                                           </li>
                                       </ul>
                                   </div>

@@ -24,6 +24,42 @@ $post = $result->fetch_assoc();
 $stmt->close();
 
 $images = !empty($post['images']) ? json_decode($post['images'], true) : [];
+
+// Clean up post content for display (remove garbage blobs, strip tags, trim footer-like noise)
+$rawContent = $post['content'] ?? '';
+if (!empty($rawContent)) {
+    // Remove extremely long non-space sequences (likely encoded blobs)
+    $cleanContent = preg_replace('/\S{200,}/', '', $rawContent);
+
+    // Cut off any copied navigation/footer text if present
+    $markers = [
+        'Navigation',
+        'The association works in partnership with diverse sectors',
+        'Explore',
+        'Contact Info',
+        'Copyright ©',
+    ];
+    $cutPos = null;
+    foreach ($markers as $marker) {
+        $pos = mb_stripos($cleanContent, $marker);
+        if ($pos !== false && ($cutPos === null || $pos < $cutPos)) {
+            $cutPos = $pos;
+        }
+    }
+    if ($cutPos !== null) {
+        $cleanContent = mb_substr($cleanContent, 0, $cutPos);
+    }
+
+    // Strip HTML tags so only plain text remains
+    $cleanContent = strip_tags($cleanContent);
+
+    // Normalize whitespace
+    $cleanContent = trim($cleanContent);
+
+    $post['content_clean'] = $cleanContent;
+} else {
+    $post['content_clean'] = '';
+}
 ?>
 <?php
 session_start();
@@ -31,6 +67,16 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
+<style>
+    /* Prevent very long words/URLs in news content from causing horizontal scroll on mobile */
+    @media screen and (max-width: 768px) {
+        .blog-area.single .content {
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+    }
+</style>
 
 <body>
     <!-- Header -->
@@ -122,7 +168,7 @@ session_start();
                                     <?php endif; ?>
 
                                     <div class="content">
-                                        <?php echo nl2br(htmlspecialchars($post['content'])); ?>
+                                        <?php echo nl2br(htmlspecialchars($post['content_clean'])); ?>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +227,7 @@ session_start();
                 <?php endif; ?>
 
                 <div style="color: var(--mp-gray-800); line-height: 1.7; font-size: 0.9375rem;">
-                    <?php echo nl2br(htmlspecialchars($post['content'])); ?>
+                    <?php echo nl2br(htmlspecialchars($post['content_clean'])); ?>
                 </div>
 
                 <div class="mp-mt-lg">

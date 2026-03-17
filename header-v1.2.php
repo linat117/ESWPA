@@ -203,7 +203,8 @@ if ($is_member_logged_in) {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
-    border-bottom: 1px solid rgba(37, 99, 235, 0.12);
+    /* Use lighter blue from logo for subtle border glow */
+    border-bottom: 1px solid rgba(14, 165, 233, 0.22);
     transition: all 0.3s ease;
 }
 
@@ -214,7 +215,8 @@ if ($is_member_logged_in) {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 50%, #0ea5e9 100%);
+    /* Top accent bar using lighter blue gradient */
+    background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 50%, #0ea5e9 100%);
     background-size: 200% 100%;
     animation: gradientShift 3s ease infinite;
 }
@@ -239,7 +241,8 @@ if ($is_member_logged_in) {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+    /* Match primary brand lighter blue */
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     border: none;
     padding: 12px;
     border-radius: 10px;
@@ -474,7 +477,7 @@ if ($is_member_logged_in) {
     width: 320px;
     max-width: 85vw;
     height: 100vh;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    background: radial-gradient(circle at top left, #1d4ed8 0%, #020617 55%, #020617 100%);
     z-index: 10000;
     transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;

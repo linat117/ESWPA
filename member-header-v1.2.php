@@ -134,6 +134,7 @@ $member_pages = [
                 </a>
             </div>
             
+            <!-- Tools & Features section temporarily disabled for this version
             <div class="member-sidebar-section-v1-2">
                 <div class="member-sidebar-section-title">Tools & Features</div>
                 <a href="member-tools.php" class="member-sidebar-item-v1-2 <?php echo in_array($current_page, ['member-tools.php', 'member-citations.php', 'member-notes.php', 'member-bibliography.php', 'member-reading-progress.php', 'member-research-library.php', 'member-create-research.php', 'member-profile-edit.php', 'member-badges.php', 'member-notifications.php', 'member-generate-id-card.php']) ? 'active' : ''; ?>">
@@ -144,6 +145,7 @@ $member_pages = [
                     <?php endif; ?>
                 </a>
             </div>
+            -->
             
             <div class="member-sidebar-section-v1-2">
                 <div class="member-sidebar-section-title">Explore</div>
@@ -228,10 +230,12 @@ $member_pages = [
                     <i class="fas fa-search"></i>
                     <span>Research</span>
                 </a>
+                <!-- Tools nav item temporarily disabled for this version
                 <a href="member-tools.php" class="member-navbar-link-v1-2 <?php echo in_array($current_page, ['member-tools.php', 'member-citations.php', 'member-notes.php', 'member-bibliography.php', 'member-reading-progress.php', 'member-research-library.php', 'member-create-research.php', 'member-profile-edit.php', 'member-badges.php', 'member-notifications.php', 'member-generate-id-card.php']) ? 'active' : ''; ?>" title="Tools & Features">
                     <i class="fas fa-tools"></i>
                     <span>Tools</span>
                 </a>
+                -->
                 <a href="news.php" class="member-navbar-link-v1-2 <?php echo $current_page == 'news.php' ? 'active' : ''; ?>">
                     <i class="fas fa-newspaper"></i>
                     <span>News</span>
@@ -332,12 +336,14 @@ $member_pages = [
         </div>
         <span>Research</span>
     </a>
+    <!-- Tools bottom-nav item temporarily disabled for this version
     <a href="member-tools.php" class="member-bottom-nav-item-v1-2 <?php echo in_array($current_page, ['member-tools.php', 'member-citations.php', 'member-notes.php', 'member-bibliography.php', 'member-reading-progress.php', 'member-research-library.php', 'member-create-research.php', 'member-profile-edit.php', 'member-badges.php', 'member-notifications.php', 'member-generate-id-card.php']) ? 'active' : ''; ?>">
         <div class="bottom-nav-icon-wrapper">
             <i class="fas fa-tools"></i>
         </div>
         <span>Tools</span>
     </a>
+    -->
     <a href="news.php" class="member-bottom-nav-item-v1-2 <?php echo $current_page == 'news.php' ? 'active' : ''; ?>">
         <div class="bottom-nav-icon-wrapper">
             <i class="fas fa-newspaper"></i>
@@ -416,7 +422,7 @@ $member_pages = [
     display: flex;
     flex-direction: column;
     gap: 4px;
-    background: #2563eb;
+    background: #0284c7;
     border: none;
     padding: 10px;
     border-radius: 6px;
@@ -435,8 +441,8 @@ $member_pages = [
 }
 
 .member-hamburger-v1-2:hover {
-    background: #1e40af;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    background: #0369a1;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
 }
 
 .member-hamburger-v1-2.active span:nth-child(1) {
@@ -495,14 +501,14 @@ $member_pages = [
 }
 
 .member-navbar-link-v1-2:hover {
-    background: rgba(37, 99, 235, 0.08);
-    color: #2563eb;
+    background: rgba(14, 165, 233, 0.08);
+    color: #0284c7;
     text-decoration: none;
 }
 
 .member-navbar-link-v1-2.active {
-    background: rgba(37, 99, 235, 0.1);
-    color: #2563eb;
+    background: rgba(14, 165, 233, 0.12);
+    color: #0284c7;
 }
 
 .member-navbar-link-v1-2 i {
@@ -523,8 +529,8 @@ $member_pages = [
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    background: rgba(37, 99, 235, 0.1);
-    border: 1px solid rgba(37, 99, 235, 0.2);
+    background: rgba(14, 165, 233, 0.08);
+    border: 1px solid rgba(14, 165, 233, 0.2);
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -976,15 +982,15 @@ $member_pages = [
 }
 
 .member-bottom-nav-item-v1-2.active {
-    color: #2563eb;
+    color: #0284c7;
 }
 
 .member-bottom-nav-item-v1-2.active .bottom-nav-icon-wrapper {
-    background: rgba(37, 99, 235, 0.1);
+    background: rgba(14, 165, 233, 0.1);
 }
 
 .member-bottom-nav-item-v1-2.active i {
-    color: #2563eb;
+    color: #0284c7;
 }
 
 .member-bottom-nav-avatar-v1-2 {
@@ -992,7 +998,7 @@ $member_pages = [
     height: 24px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #2563eb;
+    border: 2px solid #0284c7;
 }
 
 /* Responsive */

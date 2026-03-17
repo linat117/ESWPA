@@ -43,36 +43,13 @@ if ($member['id_card_generated'] != 1) {
     die("ID card has not been generated for this member yet.");
 }
 
-// Get verification code
-$verificationCode = '';
-$verificationUrl = '';
-if (!empty($member['membership_id'])) {
-    $verificationQuery = "SELECT verification_code FROM id_card_verification WHERE membership_id = ? LIMIT 1";
-    $verificationStmt = $conn->prepare($verificationQuery);
-    if ($verificationStmt) {
-        $verificationStmt->bind_param("s", $member['membership_id']);
-        $verificationStmt->execute();
-        $verificationResult = $verificationStmt->get_result();
-        if ($verificationResult->num_rows > 0) {
-            $verificationData = $verificationResult->fetch_assoc();
-            $verificationCode = $verificationData['verification_code'];
-        }
-        $verificationStmt->close();
-    }
-    
-    // Generate verification URL only if code exists
-    if (!empty($verificationCode)) {
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        $host = $_SERVER['HTTP_HOST'];
-        $scriptPath = dirname(dirname($_SERVER['PHP_SELF']));
-        $verificationUrl = $protocol . "://" . $host . $scriptPath . "/verify_id.php?code=" . $verificationCode;
-    }
-}
+// Get verification URL: fixed website for all cards
+$verificationUrl = 'https://ethiosocialworkers.igebeya.com';
 
 // Get company info
 $companyQuery = "SELECT * FROM company_info LIMIT 1";
 $companyResult = $conn->query($companyQuery);
-$company = $companyResult ? $companyResult->fetch_assoc() : null;
+$company = ($companyResult && $companyResult->num_rows > 0) ? $companyResult->fetch_assoc() : null;
 if (!$company) {
     $company = [
         'company_name' => 'Ethiopian Social Workers Professional Association',
@@ -86,6 +63,43 @@ if (!$company) {
 }
 $company_name = $company['company_name'] ?? 'Ethiopian Social Workers Professional Association';
 $terms_conditions = trim($company['terms_conditions'] ?? '');
+
+// (company website field no longer controls the QR destination)
+$words = preg_split('/\s+/', trim($company_name), -1, PREG_SPLIT_NO_EMPTY);
+$company_short = $words ? strtoupper(substr(implode('', array_map(function ($w) { return isset($w[0]) ? $w[0] : ''; }, $words)), 0, 8)) : 'ESWPA';
+
+// Helper to read a simple string setting
+$getSetting = static function (\mysqli $conn, string $key, string $default = '') {
+    $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1");
+    if (!$stmt) {
+        return $default;
+    }
+    $stmt->bind_param("s", $key);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $value = $default;
+    if ($row = $result->fetch_assoc()) {
+        $value = (string) $row['setting_value'];
+    }
+    $stmt->close();
+    return $value;
+};
+
+// Read QR enable/disable setting from `settings` table (defaults to enabled)
+$qrEnabled = $getSetting($conn, 'id_card_enable_qr_scan', '1') !== '0';
+
+// Read logo show/hide setting from `settings` table (defaults to show)
+$logoEnabled = $getSetting($conn, 'id_card_show_logo', '1') !== '0';
+
+// Read optional custom QR image path
+$customQrImage = $getSetting($conn, 'id_card_custom_qr_image', '');
+
+// Read default back text when no terms & conditions
+$backDefaultText = $getSetting(
+    $conn,
+    'id_card_back_default_text',
+    'Scan the QR code to visit our website. Report lost or stolen cards immediately.'
+);
 
 $conn->close();
 ob_end_flush();
@@ -108,8 +122,10 @@ ob_end_flush();
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            min-height: 100vh;
-            background: #f5f5f5;
+            /* Use a subtle neutral background so extra space around the cards is less visible,
+               while letting the content define the height. */
+            min-height: auto;
+            background: #f5f7fa;
         }
 
         /* Print Controls - Base Styles */
@@ -177,7 +193,7 @@ ob_end_flush();
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* Mobile: stack buttons full-width */
+        /* Mobile: stack buttons full-width and minimize space above cards */
         @media screen and (max-width: 600px) {
             .print-actions {
                 flex-direction: column;
@@ -187,6 +203,11 @@ ob_end_flush();
             .print-actions button,
             .print-actions a {
                 justify-content: center;
+            }
+
+            .print-controls {
+                margin-bottom: 4px;
+                padding: 8px 8px;
             }
         }
 
@@ -222,11 +243,11 @@ ob_end_flush();
         <!-- Front of ID Card - identity card style (blue header, white body, blue footer) -->
         <div class="id-card-wrapper">
             <div class="id-card-front">
-                <!-- Top blue header: logo left, title + contact right -->
+                <!-- Top header: logo + company name + address/phone (no email) -->
                 <div class="id-card-front-header">
                     <div class="id-card-header-left">
                         <div class="id-card-logo-img">
-                            <?php if (!empty($company['company_logo'])): ?>
+                            <?php if ($logoEnabled && !empty($company['company_logo'])): ?>
                                 <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="" role="presentation" class="id-logo-image" onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
                                 <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
                             <?php else: ?>
@@ -234,7 +255,7 @@ ob_end_flush();
                             <?php endif; ?>
                         </div>
                         <div class="id-card-logo">
-                            <span class="id-card-logo-text"></span>
+                            <!-- Show only full company name in header (no ESWPA text) -->
                             <span class="id-card-tagline"><?php echo htmlspecialchars($company_name); ?></span>
                         </div>
                     </div>
@@ -242,15 +263,13 @@ ob_end_flush();
                         <div class="id-card-title"></div>
                         <div class="id-card-contact">
                             <?php
-                            $addr = trim($company['address'] ?? '');
+                            $addr  = trim($company['address'] ?? '');
                             $phone = trim($company['phone'] ?? '');
-                            $email = trim($company['email'] ?? '');
                             $parts = array_filter([
                                 $addr,
-                                $phone ? 'Ph: ' . $phone : '',
-                                $email ? 'Email: ' . $email : ''
+                                $phone ? $phone : ''
                             ]);
-                            echo implode('  ', array_map('htmlspecialchars', $parts)) ?: '—';
+                            echo implode('  |  ', array_map('htmlspecialchars', $parts)) ?: '—';
                             ?>
                         </div>
                     </div>
@@ -271,23 +290,23 @@ ob_end_flush();
                     </div>
                     <div class="id-card-front-right">
                         <div class="id-card-field id-card-field-name">
-                            <span class="id-card-label">NAME</span>
+                            <span class="id-card-label">Name</span>
                             <span class="id-card-val"><?php echo htmlspecialchars(strtoupper($member['fullname'])); ?></span>
                         </div>
                         <div class="id-card-field">
-                            <span class="id-card-label">MEMBER ID</span>
+                            <span class="id-card-label">Member ID</span>
                             <span class="id-card-val"><?php echo htmlspecialchars($member['membership_id']); ?></span>
                         </div>
                         <div class="id-card-field">
-                            <span class="id-card-label">DATE ISSUED</span>
+                            <span class="id-card-label">Date issued</span>
                             <span class="id-card-val"><?php echo date('d M Y', strtotime($member['created_at'])); ?></span>
                         </div>
                         <div class="id-card-field">
-                            <span class="id-card-label">QUALIFICATION</span>
+                            <span class="id-card-label">Qualification</span>
                             <span class="id-card-val"><?php echo htmlspecialchars($member['qualification']); ?></span>
                         </div>
                         <div class="id-card-field">
-                            <span class="id-card-label">EXPIRES</span>
+                            <span class="id-card-label">Expires</span>
                             <?php $expiryDate = strtotime('+1 year', strtotime($member['created_at'])); ?>
                             <span class="id-card-val"><?php echo date('d M Y', $expiryDate); ?></span>
                         </div>
@@ -299,29 +318,39 @@ ob_end_flush();
                     <?php if (!empty($company['company_signature'])): ?>
                         <img src="../<?php echo htmlspecialchars($company['company_signature']); ?>" alt="Signature" class="id-card-footer-signature-img">
                     <?php else: ?>
-                        <span class="id-card-footer-text">This ID holder is a member of ESWPA</span>
+                        <span class="id-card-footer-text">This ID holder is a member of <?php echo htmlspecialchars($company_name); ?></span>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Back of ID Card -->
+                <!-- Back of ID Card -->
         <div class="id-card-wrapper">
             <div class="id-card-back">
-                <!-- Top Banner (same as front) -->
+                        <!-- Top Banner (same content style as front: logo + company + address/phone) -->
                 <div class="id-card-back-top-banner">
                     <div class="id-card-logo-img">
-                        <?php if (!empty($company['company_logo'])): ?>
+                        <?php if ($logoEnabled && !empty($company['company_logo'])): ?>
                             <img src="../<?php echo htmlspecialchars($company['company_logo']); ?>" alt="" role="presentation" class="id-logo-image" onerror="this.style.display='none'; this.nextElementSibling&&(this.nextElementSibling.style.display='flex');">
                             <div class="id-logo-placeholder" style="display:none"><i class="fas fa-id-card"></i></div>
                         <?php else: ?>
                             <div class="id-logo-placeholder"><i class="fas fa-id-card"></i></div>
                         <?php endif; ?>
-                    </div>
-                    <div class="id-card-back-logo-top">
-                        <span class="id-card-back-logo-text-top">ESWPA</span>
-                        <span class="id-card-back-tagline-top"><?php echo htmlspecialchars($company_name); ?></span>
-                    </div>
+                            </div>
+                            <div class="id-card-back-logo-top">
+                                <span class="id-card-back-tagline-top"><?php echo htmlspecialchars($company_name); ?></span>
+                                <div class="id-card-back-contact">
+                                    <?php
+                                    $addr  = trim($company['address'] ?? '');
+                                    $phone = trim($company['phone'] ?? '');
+                                    $parts = array_filter([
+                                        $addr,
+                                        $phone ? $phone : ''
+                                    ]);
+                                    echo implode('  |  ', array_map('htmlspecialchars', $parts)) ?: '';
+                                    ?>
+                                </div>
+                            </div>
                 </div>
                 
                 <!-- Back Content -->
@@ -344,50 +373,21 @@ ob_end_flush();
                     <?php if ($terms_conditions !== ''): ?>
                     <p class="id-back-text"><?php echo nl2br(htmlspecialchars($terms_conditions)); ?></p>
                     <?php else: ?>
-                    <p class="id-back-text">For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.</p>
+                    <p class="id-back-text"><?php echo nl2br(htmlspecialchars($backDefaultText)); ?></p>
                     <?php endif; ?>
                     
-                    <!-- QR Code -->
-                    <?php if (!empty($verificationUrl)): ?>
+                    <!-- QR Code (static image shared with member page) -->
                     <div class="id-qr-container">
-                        <div id="qrcode"></div>
+                        <img src="../assets/images/id-card-qr.jpg"
+                             alt="QR Code"
+                             style="width: 14mm; height: 14mm; object-fit: contain;">
                     </div>
-                    <?php else: ?>
-                    <div class="id-qr-container">
-                        <p class="text-muted small">Verification code not available</p>
-                    </div>
-                    <?php endif; ?>
                     
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- QR Code Library -->
-    <?php if (!empty($verificationUrl)): ?>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script>
-        // Generate QR Code after page load
-        window.addEventListener('load', function() {
-            if (typeof QRCode !== 'undefined') {
-                var qrElement = document.getElementById("qrcode");
-                if (qrElement) {
-                    try {
-                        var qrCode = new QRCode(qrElement, {
-                            text: "<?php echo htmlspecialchars($verificationUrl, ENT_QUOTES); ?>",
-                            width: 50,
-                            height: 50,
-                            colorDark: "#000000",
-                            colorLight: "#ffffff",
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                    } catch (e) {
-                        console.error("QR Code generation error:", e);
-                    }
-                }
-            }
-        });
-    </script>
-    <?php endif; ?>
+    <!-- Static QR image is used for the back of the card; no JS generation needed -->
 </body>
 </html>

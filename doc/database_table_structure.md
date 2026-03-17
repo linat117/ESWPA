@@ -22,6 +22,7 @@
 16. `upcoming` - Upcoming events
 17. `user` - Admin users
 18. `user_roles` - Role-based access control
+19. `about_team_members` - Public “Our Team Members” section
 
 ---
 

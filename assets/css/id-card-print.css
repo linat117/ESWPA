@@ -8,12 +8,14 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    /* Subtle neutral background so extra space is less visible */
+    background: #f5f7fa;
+    /* Let the content define height instead of forcing full viewport */
+    min-height: auto;
+    /* Tighter padding so cards sit closer to the top */
+    padding: 8px 0 16px;
+    /* Avoid flex centering that creates big vertical gaps */
+    display: block;
 }
 
 /* ========== Print Controls ========== */
@@ -23,7 +25,8 @@ body {
     background: white;
     border-radius: 12px;
     padding: 24px;
-    margin-bottom: 30px;
+    /* Center the header block and reduce gap above cards */
+    margin: 0 auto 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -33,7 +36,9 @@ body {
     font-size: 24px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    text-align: center;
 }
 
 .print-controls-content p {
@@ -89,15 +94,18 @@ body {
     align-items: flex-start;
     /* Tight gap between front and back cards */
     gap: 2mm;
-    max-width: 2000px;
+    /* Slightly narrower container so the layout is more compact */
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 24px 16px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    /* Tighten top padding so cards sit closer to the header */
+    padding: 8px 16px 24px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
     position: relative;
-    min-height: 400px;
+    /* Let the container height shrink to the cards to avoid extra white space on the route */
+    min-height: auto;
     width: 100%;
 }
 
@@ -105,12 +113,13 @@ body {
 .id-card-wrapper {
     position: relative;
     display: block;
-    flex: 0 0 188mm;
-    width: 188mm;
-    min-width: 188mm;
+    /* Further reduced individual card wrapper */
+    flex: 0 0 125mm;
+    width: 125mm;
+    min-width: 125mm;
     padding: 2mm;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 4px;
+    border: none;
+    border-radius: 0;
     background: transparent;
     /* Show a zoomed preview on screen (slightly larger than real size) */
     transform: scale(1.25);
@@ -122,7 +131,7 @@ body {
 .id-card-wrapper:hover {
     transform: scale(1.65) translateY(-1px);
     transform-origin: top left;
-    border-color: rgba(0, 0, 0, 0.12);
+    border-color: transparent;
 }
 
 /* Optional: show subtle crop marks only when printing */
@@ -154,6 +163,44 @@ body {
     }
 }
 
+/* ========== Mobile adjustments: remove extra whitespace ========== */
+@media (max-width: 768px) {
+    .id-card-print-container {
+        flex-direction: column;
+        align-items: center;
+        /* Revert to simple stacking with minimal spacing between cards */
+        justify-content: flex-start;
+        gap: 6px;
+        padding: 4px 4px 12px;
+        min-height: auto;
+    }
+
+    .id-card-wrapper {
+        /* Remove zoom and let card use full width to minimize side whitespace */
+        flex: 0 0 auto;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        transform: scale(1);
+        transform-origin: top center;
+        margin: 0;
+    }
+
+    /* Let cards scale to screen width so full content is visible */
+    .id-card-front,
+    .id-card-back {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Slightly tighten body padding on mobile so card fits better */
+    .id-card-front-body,
+    .id-card-back-body {
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+}
+
 /* ========== ID Card Base Styles ========== */
 .id-card-front,
 .id-card-back {
@@ -169,6 +216,8 @@ body {
     background: #ffffff;
     display: flex;
     flex-direction: column;
+    /* Show all text on the card in lowercase */
+    text-transform: lowercase;
 }
 
 /* Make on-screen text readable (print keeps original pt sizes) */
@@ -207,9 +256,11 @@ body {
 
 /* Top blue header: logo + tagline left, title + contact right */
 .id-card-front-header {
-    background: linear-gradient(135deg, #1a5276 0%, #2874a6 100%);
-    min-height: 6mm;
-    max-height: 10mm;
+    /* Use dark blue theme */
+    background: linear-gradient(135deg, #1a5276 0%, #2874a6 45%, #3498db 100%);
+    /* Slightly taller header so wide logo is clearer */
+    min-height: 8mm;
+    max-height: 12mm;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -229,19 +280,23 @@ body {
 
 .id-card-logo-img {
     flex-shrink: 0;
-    width: 6mm;
-    height: 6mm;
+    /* Make logo area wider and a bit taller for horizontal logo */
+    width: 14mm;
+    height: 8mm;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 1px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.2);
+    /* Slight translucent white so logo is visible but header color still shows */
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .id-card-logo-img .id-logo-image {
+    /* Preserve full logo inside box */
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     object-fit: contain;
     display: block;
 }
@@ -363,7 +418,8 @@ body {
     color: #94a3b8;
     font-size: 0.6pt;
     font-weight: 600;
-    text-transform: uppercase;
+    /* keep placeholder text as typed (no forced upper-case) */
+    text-transform: none;
     letter-spacing: 0.02em;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -391,7 +447,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 0.15mm;
+    gap: 0.1mm; /* slightly tighter spacing so fields don’t crowd */
     overflow: hidden;
 }
 
@@ -405,15 +461,17 @@ body {
 }
 
 .id-card-label {
-    font-size: 0.14pt;
+    /* Smaller so content does not crowd */
+    font-size: 0.12pt;
     color: #6b7280;
     line-height: 1.04;
-    text-transform: uppercase;
+    /* keep label case as authored in HTML */
+    text-transform: none;
     letter-spacing: 0.01pt;
 }
 
 .id-card-val {
-    font-size: 0.18pt;
+    font-size: 0.16pt;
     font-weight: 700;
     color: #1a5276;
     line-height: 1.05;
@@ -423,18 +481,18 @@ body {
 }
 
 .id-card-field-name .id-card-val {
-    font-size: 0.24pt;
+    font-size: 0.19pt;
     font-weight: 800;
 }
 
 /* Bottom blue footer */
 .id-card-front-footer {
-    background: linear-gradient(135deg, #1a5276 0%, #2874a6 100%);
-    min-height: 3.5mm;
+    background: linear-gradient(135deg, #1a5276 0%, #3498db 100%);
+    height: 1.2mm;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0.35mm 1.5mm;
+    padding: 0.1mm 1.5mm;
     flex-shrink: 0;
 }
 
@@ -446,10 +504,10 @@ body {
 }
 
 .id-card-footer-text {
-    font-size: 0.24pt;
+    font-size: 8px;
+    letter-spacing: 0.3px;
     color: white;
     font-weight: 600;
-    letter-spacing: 0.02em;
 }
 
 /* Legacy: Top red banner (back card) */
@@ -568,7 +626,8 @@ body {
     color: #dc2626;
     margin: 0 0 0.1mm 0;
     padding: 0;
-    text-transform: uppercase;
+    /* show member name exactly as stored */
+    text-transform: none;
     letter-spacing: 0.05pt;
     line-height: 1.1;
     flex-shrink: 0;
@@ -580,7 +639,7 @@ body {
     margin: 0 0 0.35mm 0;
     padding: 0;
     font-weight: 600;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.02pt;
     line-height: 1.1;
     flex-shrink: 0;
@@ -694,9 +753,10 @@ body {
 
 /* Top blue banner (match front) */
 .id-card-back-top-banner {
-    background: linear-gradient(135deg, #1a5276 0%, #2874a6 100%);
-    min-height: 5mm;
-    max-height: 7mm;
+    background: linear-gradient(135deg, #1a5276 0%, #2874a6 45%, #3498db 100%);
+    /* Match front header height for visual consistency */
+    min-height: 8mm;
+    max-height: 12mm;
     display: flex;
     align-items: center;
     padding: 0.5mm 1.5mm;
@@ -714,7 +774,7 @@ body {
     height: 0;
     border-style: solid;
     border-width: 5mm 4mm 0 0;
-    border-color: #1a5276 transparent transparent #ffffff;
+    border-color: #2874a6 transparent transparent #ffffff;
 }
 
 .id-card-back-logo-top {
@@ -745,6 +805,16 @@ body {
     overflow-wrap: break-word;
 }
 
+.id-card-back-contact {
+    font-size: 0.13pt;
+    opacity: 0.95;
+    margin-top: 0.04mm;
+    line-height: 1.1;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
 /* Back Content */
 .id-card-back-content {
     padding: 0.35mm 1.2mm;
@@ -761,7 +831,7 @@ body {
     font-weight: 800;
     color: #dc2626;
     margin: 0 0 0.1mm 0;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.05pt;
     line-height: 1.1;
 }
@@ -771,7 +841,7 @@ body {
     color: #1f2937;
     margin: 0 0 0.25mm 0;
     font-weight: 600;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.03pt;
     line-height: 1.1;
 }
@@ -852,7 +922,7 @@ body {
 
 /* Bottom blue banner (match front) */
 .id-card-back-bottom {
-    background: linear-gradient(135deg, #1a5276 0%, #2874a6 100%);
+    background: linear-gradient(135deg, #1a5276 0%, #2874a6 60%, #3498db 100%);
     height: 3.5mm;
     position: relative;
     overflow: hidden;
@@ -871,7 +941,7 @@ body {
     height: 0;
     border-style: solid;
     border-width: 3.5mm 0 0 6mm;
-    border-color: #1a5276 transparent transparent #ffffff;
+    border-color: #2874a6 transparent transparent #ffffff;
 }
 
 .id-card-back-logo {
@@ -897,19 +967,27 @@ body {
     line-height: 1.08;
 }
 
+.id-card-back-email {
+    font-size: 0.13pt;
+    opacity: 0.95;
+    margin-top: 0.02mm;
+    line-height: 1.05;
+}
+
 /* QR Code Container - proportional to ATM card */
 .id-qr-container {
     text-align: center;
-    margin: 0.3mm 0;
+    margin: 0.6mm 0;
     flex-shrink: 0;
 }
 
 #qrcode {
     display: inline-block;
-    width: 8mm;
-    height: 8mm;
+    /* Medium QR size so it is readable but not too dominant */
+    width: 14mm;
+    height: 14mm;
     background: white;
-    padding: 0.3mm;
+    padding: 0.4mm;
     border-radius: 0.5mm;
     border: 1px solid #e5e7eb;
 }
@@ -921,10 +999,77 @@ body {
     height: 100%;
 }
 
+/* ========== Screen/Mobile readability overrides (after print-tuned pt sizes) ========== */
+@media screen and (max-width: 768px) {
+    /* Make header and footer texts clearly readable */
+    .id-card-front-header .id-card-logo-text,
+    .id-card-back-logo-text {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .id-card-front-header .id-card-tagline,
+    .id-card-back-tagline {
+        font-size: 8px;
+        line-height: 1.2;
+    }
+
+    .id-card-title {
+        font-size: 9px;
+        letter-spacing: 0.5px;
+    }
+
+    .id-card-contact {
+        font-size: 8px;
+        line-height: 1.2;
+        -webkit-line-clamp: 2;
+    }
+
+    /* Ensure back-of-card paragraph text is visible and not microscopic */
+    .id-back-text {
+        font-size: 8px;
+        line-height: 1.3;
+        padding-left: 10px;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    /* Ensure the NAME value and other field values are clearly visible */
+    .id-card-field-name .id-card-val {
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .id-card-val {
+        font-size: 9px;
+        line-height: 1.2;
+    }
+
+    /* Back top banner text on mobile */
+    .id-card-back-logo-text-top {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .id-card-back-tagline-top {
+        font-size: 8px;
+        line-height: 1.2;
+    }
+
+    /* Front footer text visibility */
+    .id-card-footer-text {
+        font-size: 9px;
+        letter-spacing: 0.5px;
+    }
+}
+
 /* ========== Print Styles - Standard ATM/ID size (85.6mm x 53.98mm) ========== */
 @media print {
     @page {
-        size: A4 landscape;
+        /* Portrait A4 so cards stack vertically (front above back) */
+        size: A4;
         margin: 10mm;
     }
     * {
@@ -949,15 +1094,16 @@ body {
     
     .id-card-print-container {
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: center !important;
+        /* Stack front and back vertically (portrait) */
+        flex-direction: column !important;
+        justify-content: flex-start !important;
         align-items: center !important;
-        gap: 20mm !important;
+        gap: 12mm !important;
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 auto !important;
         padding: 0 !important;
-        background: white !important;
+        background: transparent !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         page-break-inside: avoid !important;
@@ -971,50 +1117,25 @@ body {
         transform-origin: initial !important;
         flex: 0 0 auto !important;
         padding: 2mm !important;
-        border: 0.5mm dashed #ff0000 !important;
+        border: none !important;
         border-radius: 0 !important;
         background: transparent !important;
         page-break-inside: avoid !important;
         page-break-after: avoid !important;
-        display: inline-block !important;
+        /* Make wrapper a fixed-size box and center the card inside it */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 95mm !important;
+        height: 65mm !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
+        box-sizing: border-box !important;
     }
     
     .id-card-wrapper::before {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        pointer-events: none !important;
-        z-index: 10 !important;
-        background-image: 
-            linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to bottom, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to right, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to left, #ff0000 0, #ff0000 3mm, transparent 3mm),
-            linear-gradient(to top, #ff0000 0, #ff0000 3mm, transparent 3mm) !important;
-        background-position:
-            top left, top left,
-            top right, top right,
-            bottom left, bottom left,
-            bottom right, bottom right !important;
-        background-size:
-            3mm 0.5mm, 0.5mm 3mm,
-            3mm 0.5mm, 0.5mm 3mm,
-            3mm 0.5mm, 0.5mm 3mm,
-            3mm 0.5mm, 0.5mm 3mm !important;
-        background-repeat: no-repeat !important;
-        opacity: 1 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
+        content: none !important;
     }
     
     .id-card-front,
@@ -1061,15 +1182,15 @@ body {
     }
     
     .id-card-wrapper {
-        /* Mobile: slightly scale down whole card so nothing is cut */
-        transform: scale(0.9) !important;
-        transform-origin: top left !important;
-        width: 188mm;
-        min-width: 188mm;
+        /* Mobile: let the card use full width without horizontal overflow */
+        transform: scale(1) !important;
+        transform-origin: top center !important;
+        width: 100% !important;
+        min-width: 0 !important;
     }
     
     .id-card-wrapper:hover {
-        transform: scale(0.9) !important;
+        transform: scale(1) !important;
     }
     
     .print-actions {
@@ -1082,5 +1203,39 @@ body {
     .btn-back {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* ========== Cross-browser screen font-size overrides (ensure visibility in Edge/Firefox) ========== */
+@media screen {
+    /* Main header / title text on front & back */
+    .id-card-front-header .id-card-logo-text,
+    .id-card-back-logo-text-top,
+    .id-card-back-logo-text,
+    .id-card-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    /* Taglines and small heading text */
+    .id-card-front-header .id-card-tagline,
+    .id-card-back-tagline-top,
+    .id-card-back-tagline,
+    .id-card-contact,
+    .id-back-text {
+        font-size: 9px;
+        line-height: 1.3;
+    }
+
+    /* Ensure main field values are clearly visible */
+    .id-card-field-name .id-card-val {
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .id-card-val {
+        font-size: 11px;
+        line-height: 1.2;
     }
 }

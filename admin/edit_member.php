@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+// Temporary: show PHP errors on this page so blank screens become visible problems during debugging.
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();

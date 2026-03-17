@@ -21,90 +21,89 @@ function strip_outer_p($html) {
     include 'header-v1.2.php';
     ?>
 
-    <!-- Start Breadcrumb 
-    ============================================= -->
-    <div class="breadcrumb-area text-center shadow dark bg-fixed padding-xl text-light" style="background-image: url(assets/img/2240.png);">
-        <div class="container">
-            <div class="breadcrumb-items">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2>Latest Events</h2>
+    <!-- Events hero / breadcrumb -->
+    <section class="membership-hero-intro events-hero-intro" aria-label="Events">
+        <div class="membership-hero-intro__bg"></div>
+        <div class="container membership-hero-intro__inner">
+            <div class="row align-center">
+                <div class="col-lg-7">
+                    <div class="membership-hero-intro__content">
+                        <span class="membership-hero-intro__eyebrow">Events</span>
+                        <h1>Stay connected with ESWPA events.</h1>
+                        <p>
+                            Explore upcoming and past events that bring together social work professionals,
+                            educators, and students across Ethiopia.
+                        </p>
+                        <ul class="membership-hero-intro__highlights">
+                            <li>Professional development and learning</li>
+                            <li>Networking and collaboration opportunities</li>
+                            <li>National and regional engagements</li>
+                        </ul>
+                        <div class="membership-hero-intro__breadcrumbs">
+                            <a href="index.php"><i class="fas fa-home"></i> Home</a>
+                            <span>/</span>
+                            <span>Events</span>
+                        </div>
                     </div>
                 </div>
-                <ul class="breadcrumb">
-                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-                    <li class="active">Events</li>
-                </ul>
             </div>
         </div>
-    </div>
-    <!-- End Breadcrumb -->
+    </section>
 
-    <!-- Star Recent events Area
+    <!-- Upcoming events
     ============================================= -->
     <?php 
-$query = "SELECT * FROM upcoming ORDER BY event_date ASC";
-$result = mysqli_query($conn, $query);
+    $query = "SELECT * FROM upcoming ORDER BY event_date ASC";
+    $result = mysqli_query($conn, $query);
+    $has_upcoming = ($result && mysqli_num_rows($result) > 0);
+    ?>
 
-if (mysqli_num_rows($result) > 0) : 
-?>
-    <div class="recent-causes-area carousel-shadow causes-area default-padding home-events events-page-upcoming wow fadeInUp" data-wow-delay="0.1s">
+    <div class="causes-area bg-gray default-padding events-page-upcoming">
         <div class="site-heading text-center">
             <h2>Upcoming Events</h2>
             <div class="heading-divider"></div>
         </div>
 
-    <div class="container-full">
-        <div class="row">
-            <div class="col-lg-12 causes-items">
-                <?php if (mysqli_num_rows($result) > 1) : ?>
-                    <div class="recent-causes-carousel owl-carousel owl-theme">
-                <?php else : ?>
-                    <div class="recent-causes-single">
-                <?php endif; ?>
-
-                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                    <?php $event_images = json_decode($row['event_images'], true); ?>
-                    <div class="item event-card-upcoming wow fadeInUp" data-wow-delay="0.15s">
-                        <div class="thumb">
-                            <a href="#">
-                                <?php if (!empty($event_images)) : ?>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                                        <?php foreach ($event_images as $image) : ?>
-                                            <?php $image_path = "uploads/" . basename($image); ?>
-                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image" width="400" height="400"
-                                                style="object-fit: cover; border-radius: 5px;">
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php else : ?>
-                                    <img src="assets/img/default-event.jpg" alt="No Image Available" width="400" height="400"
-                                        style="object-fit: cover; border-radius: 5px;">
-                                <?php endif; ?>
-
-                                <span class="overlay">
-                                    <?php echo date("M j, Y", strtotime($row['event_date'])); ?>
-                                </span>
-                            </a>
+        <div class="container-full">
+            <?php if ($has_upcoming): ?>
+                <div class="row">
+                    <?php while ($row = mysqli_fetch_assoc($result)) : 
+                        $event_images = json_decode($row['event_images'], true);
+                        $image_path = null;
+                        if (!empty($event_images) && is_array($event_images)) {
+                            $first = reset($event_images);
+                            $image_path = "uploads/" . basename($first);
+                        }
+                    ?>
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <div class="event-card-upcoming wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="thumb">
+                                    <a href="events.php">
+                                        <?php if ($image_path): ?>
+                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image" style="width: 100%; height: 220px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <img src="assets/img/default-event.jpg" alt="No Image Available" style="width: 100%; height: 220px; object-fit: cover;">
+                                        <?php endif; ?>
+                                        <span class="overlay">
+                                            <?php echo date("M j, Y", strtotime($row['event_date'])); ?>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <h4>
+                                        <a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a>
+                                    </h4>
+                                    <p><?php echo strip_outer_p($row['event_description']); ?></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info">
-                            <h4>
-                                <a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a>
-                            </h4>
-                            <p><?php echo strip_outer_p($row['event_description']); ?></p>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-
-                </div> <!-- Close either carousel or single container -->
-            </div>
+                    <?php endwhile; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-center text-muted mb-0">There are no upcoming events at the moment. Please check back soon.</p>
+            <?php endif; ?>
         </div>
     </div>
-<?php endif; ?> <!-- Completely hide section if no events -->
-            </div>
-
-    </div>
-
-    <!-- End Recent Causes Area -->
 
     <!-- Start Causes 
     ============================================= -->
@@ -141,19 +140,21 @@ if (mysqli_num_rows($result) > 0) :
                             <div class="grid-item wow fadeInUp" data-wow-delay="0.15s">
                                 <div class="row">
                                     <div class="thumb col-lg-5">
-    <?php if (!empty($event_images)) : ?>
-        <div class="event-carousel owl-carousel owl-theme">
-            <?php foreach ($event_images as $image) : ?>
-                <?php $image_path = "uploads/" . basename($image); ?>
-                <img src="<?php echo $image_path; ?>" alt="Event Image"
-                    style="width: 400px; height: 300px; object-fit: cover; border-radius: 8px;">
-            <?php endforeach; ?>
-        </div>
-    <?php else : ?>
-        <img src="assets/img/default-event.jpg" alt="No Image Available"
-            style="width: 300px; height: 300px; object-fit: cover; border-radius: 8px;">
-    <?php endif; ?>
-</div>
+                                        <?php
+                                        $image_path = null;
+                                        if (!empty($event_images) && is_array($event_images)) {
+                                            $first = reset($event_images);
+                                            $image_path = "uploads/" . basename($first);
+                                        }
+                                        ?>
+                                        <?php if ($image_path): ?>
+                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image"
+                                                style="width: 100%; height: 260px; object-fit: cover; border-radius: 8px;">
+                                        <?php else : ?>
+                                            <img src="assets/img/default-event.jpg" alt="No Image Available"
+                                                style="width: 100%; height: 260px; object-fit: cover; border-radius: 8px;">
+                                        <?php endif; ?>
+                                    </div>
 
                                     <div class="info col-lg-7">
                                         <h3>
@@ -206,39 +207,6 @@ if (mysqli_num_rows($result) > 0) :
     include 'footer.php';
     ?>
     <!-- End Footer -->
-    <!-- Ensure Owl Carousel is only initialized when more than one event exists -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let eventCount = <?php echo $eventCount ?? 0; ?>;
-            if (eventCount > 1) {
-                $(".recent-causes-carousel").owlCarousel({
-                    loop: true,
-                    margin: 10,
-                    nav: true,
-                    dots: true,
-                    autoplay: true,
-                    responsive: {
-                        0: {
-                            items: 1
-                        },
-                        600: {
-                            items: 2
-                        },
-                        1000: {
-                            items: 3
-                        }
-                    }
-                });
-            }
-
-            $(".event-carousel").owlCarousel({
-                loop: true,
-                margin: 10,
-                autoplay: true,
-                items: 1
-            });
-        });
-    </script>
     <!-- jQuery Frameworks
     ============================================= -->
     <script src="assets/js/jquery-1.12.4.min.js"></script>

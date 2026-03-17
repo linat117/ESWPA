@@ -15,25 +15,33 @@ include 'head.php'?>
    ?>
     <!-- End Header -->
 
-    <!-- Start Breadcrumb 
-    ============================================= -->
-    <div class="breadcrumb-area text-center shadow dark bg-fixed padding-xl text-light" style="background-image: url(assets/img/content/contact.jpg);">
-        <div class="container">
-            <div class="breadcrumb-items">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2>Contact Us</h2>
+    <!-- Contact hero / breadcrumb -->
+    <section class="membership-hero-intro" aria-label="Contact ESWPA">
+        <div class="membership-hero-intro__bg"></div>
+        <div class="container membership-hero-intro__inner">
+            <div class="row align-center">
+                <div class="col-lg-7">
+                    <div class="membership-hero-intro__content">
+                        <span class="membership-hero-intro__eyebrow">Contact</span>
+                        <h1>Get in touch with ESWPA.</h1>
+                        <p>
+                            Reach out with questions, partnership ideas, or feedback about social work practice,
+                            education, and membership in Ethiopia.
+                        </p>
+                        <ul class="membership-hero-intro__highlights">
+                            <li>Located at Addis Ababa, Stadium, Amhara Bank Building</li>
+                            <li>Contact via phone, email, or the form below</li>
+                        </ul>
+                        <div class="membership-hero-intro__breadcrumbs">
+                            <a href="index.php"><i class="fas fa-home"></i> Home</a>
+                            <span>/</span>
+                            <span>Contact</span>
+                        </div>
                     </div>
                 </div>
-                <ul class="breadcrumb">
-                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="#">Page</a></li>
-                    <li class="active">Contact</li>
-                </ul>
             </div>
         </div>
-    </div>
-    <!-- End Breadcrumb -->
+    </section>
 
     <!-- Start Contact 
     ============================================= -->

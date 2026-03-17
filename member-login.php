@@ -30,9 +30,10 @@ include 'head.php';
     <!-- End Breadcrumb -->
 
     <div class="registration-area half-bg default-padding" style="background-color: white;">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8">
-                <div class="registration-form shadow p-4 bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="registration-form shadow p-4 bg-white">
                     <h4 class="text-center mb-4">Member Login</h4>
                     <p class="text-center mb-4">Access your member dashboard</p>
 
@@ -117,6 +118,7 @@ include 'head.php';
                         </div>
                     </form>
                 </div>
+            </div>
             </div>
         </div>
     </div>

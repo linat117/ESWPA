@@ -10,26 +10,75 @@ include 'include/conn.php';
 include 'header.php';
 
 $success_message = '';
-$error_message = '';
+$error_message   = '';
+
+/**
+ * Helper to get a setting from the `settings` table.
+ */
+function idcard_get_setting(mysqli $conn, string $key, string $default = ''): string {
+    $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1");
+    if (!$stmt) {
+        return $default;
+    }
+    $stmt->bind_param("s", $key);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $value = $default;
+    if ($row = $result->fetch_assoc()) {
+        $value = (string) $row['setting_value'];
+    }
+    $stmt->close();
+    return $value;
+}
+
+/**
+ * Helper to save a setting into the `settings` table.
+ */
+function idcard_save_setting(mysqli $conn, string $key, string $value): void {
+    $stmt = $conn->prepare("
+        INSERT INTO settings (setting_key, setting_value, category)
+        VALUES (?, ?, 'id_card')
+        ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)
+    ");
+    if (!$stmt) {
+        return;
+    }
+    $stmt->bind_param("ss", $key, $value);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Load current ID card visual settings
+$show_logo_setting   = idcard_get_setting($conn, 'id_card_show_logo', '1');
+$qr_setting          = idcard_get_setting($conn, 'id_card_enable_qr_scan', '1');
+$custom_qr_image     = idcard_get_setting($conn, 'id_card_custom_qr_image', '');
+$back_default_text   = idcard_get_setting(
+    $conn,
+    'id_card_back_default_text',
+    'For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.'
+);
 
 // Handle template settings update
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['action']) && $_POST['action'] == 'update_company') {
-        $company_name = trim($_POST['company_name'] ?? '');
-        $address = trim($_POST['address'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $website = trim($_POST['website'] ?? '');
+    $action = $_POST['action'] ?? '';
+
+    // 1) Company info + logo + show/hide logo
+    if ($action === 'update_company') {
+        $company_name    = trim($_POST['company_name'] ?? '');
+        $address         = trim($_POST['address'] ?? '');
+        $phone           = trim($_POST['phone'] ?? '');
+        $email           = trim($_POST['email'] ?? '');
+        $website         = trim($_POST['website'] ?? '');
         $terms_conditions = trim($_POST['terms_conditions'] ?? '');
         
         // Check if company_info exists and get id and current logo
-        $companyId = null;
+        $companyId   = null;
         $currentLogo = null;
-        $checkStmt = $conn->prepare("SELECT id, company_logo FROM company_info LIMIT 1");
+        $checkStmt   = $conn->prepare("SELECT id, company_logo FROM company_info LIMIT 1");
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         if ($checkResult->num_rows > 0) {
-            $row = $checkResult->fetch_assoc();
+            $row       = $checkResult->fetch_assoc();
             $companyId = (int) $row['id'];
             $currentLogo = $row['company_logo'];
         }
@@ -44,11 +93,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            $fileType = $_FILES['company_logo']['type'];
+            $fileType     = $_FILES['company_logo']['type'];
             
             if (in_array($fileType, $allowedTypes)) {
-                $extension = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
-                $fileName = 'company_logo_' . time() . '.' . $extension;
+                $extension  = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
+                $fileName   = 'company_logo_' . time() . '.' . $extension;
                 $targetPath = $uploadDir . $fileName;
                 
                 if (move_uploaded_file($_FILES['company_logo']['tmp_name'], $targetPath)) {
@@ -73,6 +122,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $logoPath = null;
         }
         
+        // Handle "show logo" toggle (from checkbox)
+        $show_logo_setting = isset($_POST['show_logo']) && $_POST['show_logo'] === '1' ? '1' : '0';
+        idcard_save_setting($conn, 'id_card_show_logo', $show_logo_setting);
+
         if (empty($error_message)) {
             if ($companyId !== null) {
                 // Update existing row
@@ -96,13 +149,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $insertStmt->close();
             }
         }
+
+    // 2) QR toggle, custom QR image, and default back text
+    } elseif ($action === 'update_qr_text') {
+        // QR enable/disable
+        $qr_setting = isset($_POST['enable_qr_scan']) && $_POST['enable_qr_scan'] === '1' ? '1' : '0';
+        idcard_save_setting($conn, 'id_card_enable_qr_scan', $qr_setting);
+
+        // Custom QR image upload/removal
+        $currentQr = $custom_qr_image;
+        if (isset($_FILES['qr_image']) && $_FILES['qr_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = '../uploads/company/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $fileType     = $_FILES['qr_image']['type'];
+            if (in_array($fileType, $allowedTypes)) {
+                $extension  = pathinfo($_FILES['qr_image']['name'], PATHINFO_EXTENSION);
+                $fileName   = 'id_card_qr_' . time() . '.' . $extension;
+                $targetPath = $uploadDir . $fileName;
+                if (move_uploaded_file($_FILES['qr_image']['tmp_name'], $targetPath)) {
+                    if ($currentQr && file_exists('../' . $currentQr)) {
+                        unlink('../' . $currentQr);
+                    }
+                    $custom_qr_image = 'uploads/company/' . $fileName;
+                } else {
+                    $error_message = $error_message ?: "Failed to upload QR image file";
+                }
+            } else {
+                $error_message = $error_message ?: "Invalid QR image type. Please upload JPG, PNG, GIF or WebP";
+            }
+        }
+        if (isset($_POST['remove_qr_image']) && $_POST['remove_qr_image'] === '1') {
+            if ($custom_qr_image && file_exists('../' . $custom_qr_image)) {
+                unlink('../' . $custom_qr_image);
+            }
+            $custom_qr_image = '';
+        }
+        idcard_save_setting($conn, 'id_card_custom_qr_image', $custom_qr_image);
+
+        // Default back text when no terms & conditions
+        $back_default_text = trim($_POST['back_default_text'] ?? '');
+        if ($back_default_text === '') {
+            $back_default_text = 'For verification, scan the QR code or visit our website. Report lost or stolen cards immediately.';
+        }
+        idcard_save_setting($conn, 'id_card_back_default_text', $back_default_text);
+
+        if (empty($error_message)) {
+            $success_message = "QR and back text settings saved successfully.";
+        }
     }
 }
 
 // Get company info
 $companyQuery = "SELECT * FROM company_info LIMIT 1";
 $companyResult = $conn->query($companyQuery);
-$company = $companyResult->fetch_assoc();
+$company = ($companyResult && $companyResult->num_rows > 0) ? $companyResult->fetch_assoc() : null;
 if (!$company) {
     $company = [
         'company_name' => 'Ethiopian Social Workers Professional Association',
@@ -111,7 +214,8 @@ if (!$company) {
         'email' => 'info@eswpa.org',
         'website' => 'www.eswpa.org',
         'terms_conditions' => '',
-        'company_logo' => ''
+        'company_logo' => '',
+        'company_signature' => ''
     ];
 }
 ?>
@@ -205,6 +309,22 @@ if (!$company) {
                                             </div>
                                         </div>
                                         
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Show Logo on ID Card</label>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       name="show_logo"
+                                                       id="show_logo"
+                                                       value="1"
+                                                       <?php echo $show_logo_setting === '1' ? 'checked' : ''; ?>>
+                                                <label class="form-check-label" for="show_logo">
+                                                    Display this logo on the printed ID card
+                                                </label>
+                                            </div>
+                                            <small class="text-muted">Uncheck if you want to temporarily hide the logo while keeping it uploaded.</small>
+                                        </div>
+
                                         <hr class="mb-4">
                                         
                                         <div class="mb-3">
@@ -308,6 +428,90 @@ if (!$company) {
 
                         <div class="col-lg-4">
                             <div class="card">
+                                <div class="card-header">
+                                    <h4 class="header-title">QR Code & Background Text</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="action" value="update_qr_text">
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">QR Code on ID Card</label>
+                                            <div class="form-check mb-2">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       name="enable_qr_scan"
+                                                       id="tpl_enable_qr_scan"
+                                                       value="1"
+                                                       <?php echo $qr_setting === '1' ? 'checked' : ''; ?>>
+                                                <label class="form-check-label" for="tpl_enable_qr_scan">
+                                                    Show QR code on back side of ID card
+                                                </label>
+                                            </div>
+                                            <small class="text-muted d-block mb-2">
+                                                When enabled, the system will generate a QR code (or use the custom image below) for online verification.
+                                            </small>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Custom QR Image (optional)</label>
+                                            <div class="d-flex align-items-start gap-3">
+                                                <div class="logo-preview-container">
+                                                    <?php if (!empty($custom_qr_image)): ?>
+                                                        <img src="../<?php echo htmlspecialchars($custom_qr_image); ?>"
+                                                             alt="QR Image"
+                                                             class="img-thumbnail"
+                                                             style="max-width: 100px; max-height: 100px; object-fit: contain;">
+                                                    <?php else: ?>
+                                                        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                                                             style="width: 100px; height: 100px;">
+                                                            <i class="ri-qr-code-line fs-2 text-muted"></i>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <input type="file"
+                                                           name="qr_image"
+                                                           class="form-control mb-2"
+                                                           accept="image/jpeg,image/png,image/gif,image/webp">
+                                                    <small class="text-muted d-block mb-2">
+                                                        If set, this image will be printed instead of the generated QR square.
+                                                    </small>
+                                                    <?php if (!empty($custom_qr_image)): ?>
+                                                        <div class="form-check">
+                                                            <input type="checkbox"
+                                                                   class="form-check-input"
+                                                                   name="remove_qr_image"
+                                                                   id="remove_qr_image"
+                                                                   value="1">
+                                                            <label class="form-check-label text-danger" for="remove_qr_image">
+                                                                <i class="ri-delete-bin-line"></i> Remove current QR image
+                                                            </label>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Back Text (when no Terms & Conditions)</label>
+                                            <textarea name="back_default_text"
+                                                      class="form-control"
+                                                      rows="3"
+                                                      placeholder="Enter the default guidance text shown on the back when there are no Terms &amp; Conditions set..."><?php echo htmlspecialchars($back_default_text); ?></textarea>
+                                            <small class="text-muted">
+                                                This text appears on the back of the card if the Terms &amp; Conditions field is empty.
+                                            </small>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="ri-save-line"></i> Save QR & Text
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="card mt-3">
                                 <div class="card-header">
                                     <h4 class="header-title">Quick Actions</h4>
                                 </div>

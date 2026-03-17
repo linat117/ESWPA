@@ -569,8 +569,9 @@ body {
 
 /* ========== Professional Color Variables ========== */
 :root {
-    --primary-color: #2563eb;
-    --primary-dark: #1e40af;
+    /* Primary brand colors taken from site logo (lighter blue theme) */
+    --primary-color: #0ea5e9;
+    --primary-dark: #0284c7;
     --secondary-color: #64748b;
     --success-color: #10b981;
     --info-color: #0ea5e9;
