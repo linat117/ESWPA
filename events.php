@@ -13,6 +13,21 @@ function strip_outer_p($html) {
     }
     return $html;
 }
+
+// Helper to create clean excerpt from HTML content
+function create_excerpt($html, $length = 120) {
+    // Remove HTML tags
+    $text = strip_tags($html);
+    // Trim whitespace
+    $text = trim($text);
+    // Create excerpt
+    if (strlen($text) > $length) {
+        $excerpt = substr($text, 0, $length) . '...';
+    } else {
+        $excerpt = $text;
+    }
+    return $excerpt;
+}
 ?>
 
 <style>
@@ -175,8 +190,7 @@ function strip_outer_p($html) {
                         }
                         
                         // Create excerpt from description
-                        $description = strip_outer_p($row['event_description']);
-                        $excerpt = strlen($description) > 120 ? substr($description, 0, 120) . '...' : $description;
+                        $excerpt = create_excerpt($row['event_description'], 120);
                     ?>
                         <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
                             <div class="event-card-modern card h-100 shadow-sm">
@@ -259,8 +273,7 @@ function strip_outer_p($html) {
                     }
                     
                     // Create excerpt from description
-                    $description = strip_outer_p($row['event_description']);
-                    $excerpt = strlen($description) > 150 ? substr($description, 0, 150) . '...' : $description;
+                    $excerpt = create_excerpt($row['event_description'], 150);
                 ?>
                     <div class="col-lg-6 col-xl-4 mb-4">
                         <div class="event-card-modern card h-100 shadow-sm">

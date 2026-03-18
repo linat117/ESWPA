@@ -160,16 +160,74 @@ function generateEmailContent($content_type, $content_data, $template_id = null)
     // If still no template, use basic default
     if (empty($template)) {
         $subject = "New " . ucfirst($content_type) . ": " . ($content_data['title'] ?? '');
-        $body = "<h1>" . htmlspecialchars($content_data['title'] ?? '') . "</h1>";
-        $body .= "<p>" . nl2br(htmlspecialchars($content_data['content'] ?? '')) . "</p>";
-        if (!empty($content_data['link'])) {
-            $body .= "<p><a href=\"" . htmlspecialchars($content_data['link']) . "\">Read more</a></p>";
+        
+        $body = '<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; font-family: Arial, sans-serif;">';
+        
+        // Header section
+        $body .= '<div style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); padding: 40px 30px; text-align: center; color: white;">';
+        $body .= '<h1 style="margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">' . htmlspecialchars($content_data['title'] ?? '') . '</h1>';
+        if (!empty($content_data['date'])) {
+            $body .= '<div style="margin-top: 15px; font-size: 16px; opacity: 0.9;">';
+            $body .= '<i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>' . htmlspecialchars($content_data['date']);
+            $body .= '</div>';
+        }
+        $body .= '</div>';
+        
+        // Content section
+        $body .= '<div style="padding: 40px 30px;">';
+        
+        // Add image if available
+        if (!empty($content_data['images']) && is_array($content_data['images']) && !empty($content_data['images'][0])) {
+            $firstImage = $content_data['images'][0];
+            
+            // Handle different image path formats
+            if (strpos($firstImage, 'http') === 0) {
+                $imageUrl = $firstImage;
+            } elseif (strpos($firstImage, '../../') === 0) {
+                $cleanPath = str_replace('../../', '', $firstImage);
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                $host = $_SERVER['HTTP_HOST'];
+                $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+            } elseif (strpos($firstImage, '../') === 0) {
+                $cleanPath = str_replace('../', '', $firstImage);
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                $host = $_SERVER['HTTP_HOST'];
+                $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+            } else {
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                $host = $_SERVER['HTTP_HOST'];
+                $imageUrl = $protocol . "://" . $host . "/" . ltrim($firstImage, '/');
+            }
+            
+            error_log("Email automation image URL: " . $imageUrl);
+            
+            $body .= '<div style="text-align: center; margin: 30px 0;">';
+            $body .= '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($content_data['title'] ?? '') . '" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">';
+            $body .= '</div>';
         }
         
-        // Add professional footer to basic template
-        $body .= '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
-        $body .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
-        $body .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+        // Content description
+        $body .= '<div style="font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 30px;">';
+        $body .= nl2br(htmlspecialchars($content_data['content'] ?? ''));
+        $body .= '</div>';
+        
+        // Call to action button
+        if (!empty($content_data['link'])) {
+            $body .= '<div style="text-align: center; margin: 40px 0;">';
+            $body .= '<a href="' . htmlspecialchars($content_data['link']) . '" style="background-color: #007bff; color: white; padding: 15px 35px; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 16px; display: inline-block; transition: all 0.3s ease;">';
+            $body .= 'View Details <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
+            $body .= '</a>';
+            $body .= '</div>';
+        }
+        
+        $body .= '</div>';
+        
+        // Professional footer
+        $body .= '<div style="background-color: #0084c7; padding: 30px; text-align: center; color: #ffffff; font-size: 12px;">';
+        $body .= '<p style="margin: 0 0 10px 0; font-weight: 600;">This email is sent for you because you are member of ESWPA</p>';
+        $body .= '<p style="margin: 0; opacity: 0.8;">Powered by Lebawi net trading</p>';
+        $body .= '</div>';
+        
         $body .= '</div>';
         
         return ['subject' => $subject, 'body' => $body];
@@ -227,9 +285,9 @@ function generateEmailContent($content_type, $content_data, $template_id = null)
     $unsubscribeLink = $protocol . "://" . $host . "/unsubscribe.php";
     
     // Generate professional footer
-    $footer = '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
-    $footer .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
-    $footer .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+    $footer = '<div style="background-color: #0084c7; padding: 30px; text-align: center; color: #ffffff; font-size: 12px;">';
+    $footer .= '<p style="margin: 0 0 10px 0; font-weight: 600;">This email is sent for you because you are member of ESWPA</p>';
+    $footer .= '<p style="margin: 0; opacity: 0.8;">Powered by Lebawi net trading</p>';
     $footer .= '</div>';
     
     // Replace template variables

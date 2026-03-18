@@ -451,3 +451,13 @@ Stack trace:
 [18-Mar-2026 19:19:26 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\event-details.php:0
 [18-Mar-2026 19:19:26 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\event-details.php:179
 [18-Mar-2026 19:19:26 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\header-v1.2.php:19
+[18-Mar-2026 19:40:41 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\wamp64\www\ethiosocialworks\header-v1.2.php on line 19
+[18-Mar-2026 19:40:41 UTC] PHP Stack trace:
+[18-Mar-2026 19:40:41 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\events.php:0
+[18-Mar-2026 19:40:41 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\events.php:120
+[18-Mar-2026 19:40:41 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\header-v1.2.php:19
+[18-Mar-2026 19:40:47 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\wamp64\www\ethiosocialworks\header-v1.2.php on line 19
+[18-Mar-2026 19:40:47 UTC] PHP Stack trace:
+[18-Mar-2026 19:40:47 UTC] PHP   1. {main}() C:\wamp64\www\ethiosocialworks\event-details.php:0
+[18-Mar-2026 19:40:47 UTC] PHP   2. include() C:\wamp64\www\ethiosocialworks\event-details.php:179
+[18-Mar-2026 19:40:47 UTC] PHP   3. session_start() C:\wamp64\www\ethiosocialworks\header-v1.2.php:19

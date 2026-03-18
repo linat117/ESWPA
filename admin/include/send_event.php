@@ -62,48 +62,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             }
 
             if (!empty($subscribers)) {
-                // Create email content
+                // Create professional email content
                 $subject = "New Event: " . $event_header;
-                $body = "<h1>" . htmlspecialchars($event_header) . "</h1>";
-                $body .= "<h4>Event Date: " . htmlspecialchars($event_date) . "</h4>";
-                $body .= "<div>" . $event_description . "</div>";
+                
+                // Email header with logo and branding
+                $body = '<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; font-family: Arial, sans-serif;">';
+                
+                // Header section
+                $body .= '<div style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); padding: 40px 30px; text-align: center; color: white;">';
+                $body .= '<h1 style="margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">' . htmlspecialchars($event_header) . '</h1>';
+                $body .= '<div style="margin-top: 15px; font-size: 16px; opacity: 0.9;">';
+                $body .= '<i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>' . date("F j, Y", strtotime($event_date));
+                $body .= '</div>';
+                $body .= '</div>';
+                
+                // Content section
+                $body .= '<div style="padding: 40px 30px;">';
                 
                 // Add images to email if any were uploaded
                 if (!empty($uploaded_images)) {
                     foreach ($uploaded_images as $image) {
-                        // Convert relative path to full URL - fix path resolution
+                        // Convert relative path to full URL
                         if (strpos($image, '../../') === 0) {
-                            // Handle ../../ prefix
                             $cleanPath = str_replace('../../', '', $image);
                             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
                             $host = $_SERVER['HTTP_HOST'];
                             $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
                         } elseif (strpos($image, '../') === 0) {
-                            // Handle ../ prefix
                             $cleanPath = str_replace('../', '', $image);
                             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
                             $host = $_SERVER['HTTP_HOST'];
                             $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
                         } else {
-                            // Regular relative path
                             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
                             $host = $_SERVER['HTTP_HOST'];
                             $imageUrl = $protocol . "://" . $host . "/" . ltrim($image, '/');
                         }
                         
-                        // Debug: log the image URL being generated
                         error_log("Email image URL: " . $imageUrl);
                         
-                        $body .= '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($event_header) . '" style="max-width: 100%; height: auto; margin: 20px 0; display: block;">';
+                        $body .= '<div style="text-align: center; margin: 30px 0;">';
+                        $body .= '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($event_header) . '" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">';
+                        $body .= '</div>';
                     }
                 }
                 
-                $body .= "<p>For more details, please visit our website.</p>";
+                // Event description
+                $body .= '<div style="font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 30px;">';
+                $body .= $event_description;
+                $body .= '</div>';
                 
-                // Add professional footer
-                $body .= '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
-                $body .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
-                $body .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+                // Call to action button
+                $body .= '<div style="text-align: center; margin: 40px 0;">';
+                $body .= '<a href="http://' . $_SERVER['HTTP_HOST'] . '/events.php" style="background-color: #007bff; color: white; padding: 15px 35px; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 16px; display: inline-block; transition: all 0.3s ease;">';
+                $body .= 'View All Events <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
+                $body .= '</a>';
+                $body .= '</div>';
+                
+                $body .= '</div>';
+                
+                // Professional footer
+                $body .= '<div style="background-color: #0084c7; padding: 30px; text-align: center; color: #ffffff; font-size: 12px;">';
+                $body .= '<p style="margin: 0 0 10px 0; font-weight: 600;">This email is sent for you because you are member of ESWPA</p>';
+                $body .= '<p style="margin: 0; opacity: 0.8;">Powered by Lebawi net trading</p>';
+                $body .= '</div>';
+                
                 $body .= '</div>';
                 
                 // Send the newsletter
