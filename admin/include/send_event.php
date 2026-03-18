@@ -64,10 +64,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             if (!empty($subscribers)) {
                 // Create email content
                 $subject = "New Event: " . $event_header;
-                $body = "<h1>" . $event_header . "</h1>";
-                $body .= "<h4>Event Date: " . $event_date . "</h4>";
-                $body .= "<p>" . nl2br($event_description) . "</p>";
+                $body = "<h1>" . htmlspecialchars($event_header) . "</h1>";
+                $body .= "<h4>Event Date: " . htmlspecialchars($event_date) . "</h4>";
+                $body .= "<div>" . $event_description . "</div>";
+                
+                // Add images to email if any were uploaded
+                if (!empty($uploaded_images)) {
+                    foreach ($uploaded_images as $image) {
+                        // Convert relative path to full URL - fix path resolution
+                        if (strpos($image, '../../') === 0) {
+                            // Handle ../../ prefix
+                            $cleanPath = str_replace('../../', '', $image);
+                            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                            $host = $_SERVER['HTTP_HOST'];
+                            $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+                        } elseif (strpos($image, '../') === 0) {
+                            // Handle ../ prefix
+                            $cleanPath = str_replace('../', '', $image);
+                            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                            $host = $_SERVER['HTTP_HOST'];
+                            $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+                        } else {
+                            // Regular relative path
+                            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+                            $host = $_SERVER['HTTP_HOST'];
+                            $imageUrl = $protocol . "://" . $host . "/" . ltrim($image, '/');
+                        }
+                        
+                        // Debug: log the image URL being generated
+                        error_log("Email image URL: " . $imageUrl);
+                        
+                        $body .= '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($event_header) . '" style="max-width: 100%; height: auto; margin: 20px 0; display: block;">';
+                    }
+                }
+                
                 $body .= "<p>For more details, please visit our website.</p>";
+                
+                // Add professional footer
+                $body .= '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
+                $body .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
+                $body .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+                $body .= '</div>';
                 
                 // Send the newsletter
                 sendNewsletter($subject, $body, $subscribers);

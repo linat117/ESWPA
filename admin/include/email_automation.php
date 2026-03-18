@@ -165,6 +165,13 @@ function generateEmailContent($content_type, $content_data, $template_id = null)
         if (!empty($content_data['link'])) {
             $body .= "<p><a href=\"" . htmlspecialchars($content_data['link']) . "\">Read more</a></p>";
         }
+        
+        // Add professional footer to basic template
+        $body .= '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
+        $body .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
+        $body .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+        $body .= '</div>';
+        
         return ['subject' => $subject, 'body' => $body];
     }
     
@@ -184,16 +191,46 @@ function generateEmailContent($content_type, $content_data, $template_id = null)
     $imageHtml = '';
     if (!empty($content_data['images']) && is_array($content_data['images']) && !empty($content_data['images'][0])) {
         $firstImage = $content_data['images'][0];
-        $imageUrl = (strpos($firstImage, 'http') === 0) ? $firstImage : 
-                    ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . 
-                     "://" . $_SERVER['HTTP_HOST'] . "/" . ltrim($firstImage, '/'));
-        $imageHtml = '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($title) . '" style="max-width: 100%; height: auto; margin: 20px 0;">';
+        
+        // Handle different image path formats
+        if (strpos($firstImage, 'http') === 0) {
+            // Already a full URL
+            $imageUrl = $firstImage;
+        } elseif (strpos($firstImage, '../../') === 0) {
+            // Relative path with ../../ prefix, resolve to web root
+            $cleanPath = str_replace('../../', '', $firstImage);
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $host = $_SERVER['HTTP_HOST'];
+            $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+        } elseif (strpos($firstImage, '../') === 0) {
+            // Relative path with ../ prefix, resolve to web root
+            $cleanPath = str_replace('../', '', $firstImage);
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $host = $_SERVER['HTTP_HOST'];
+            $imageUrl = $protocol . "://" . $host . "/" . $cleanPath;
+        } else {
+            // Regular relative path
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $host = $_SERVER['HTTP_HOST'];
+            $imageUrl = $protocol . "://" . $host . "/" . ltrim($firstImage, '/');
+        }
+        
+        // Debug: log the image URL being generated
+        error_log("Email automation image URL: " . $imageUrl);
+        
+        $imageHtml = '<img src="' . htmlspecialchars($imageUrl) . '" alt="' . htmlspecialchars($title) . '" style="max-width: 100%; height: auto; margin: 20px 0; display: block;">';
     }
     
     // Generate unsubscribe link (for subscribers)
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
     $host = $_SERVER['HTTP_HOST'];
     $unsubscribeLink = $protocol . "://" . $host . "/unsubscribe.php";
+    
+    // Generate professional footer
+    $footer = '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #ffffff; font-size: 12px; font-family: Arial, sans-serif; background-color: #0084c7;">';
+    $footer .= '<p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>';
+    $footer .= '<p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>';
+    $footer .= '</div>';
     
     // Replace template variables
     $subject = str_replace(
@@ -203,8 +240,8 @@ function generateEmailContent($content_type, $content_data, $template_id = null)
     );
     
     $body = str_replace(
-        ['{TITLE}', '{CONTENT}', '{EXCERPT}', '{AUTHOR}', '{DATE}', '{LINK}', '{TYPE}', '{IMAGE}', '{UNSUBSCRIBE_LINK}'],
-        [$title, nl2br($content), $excerpt, $author, $date, $link, $type, $imageHtml, $unsubscribeLink],
+        ['{TITLE}', '{CONTENT}', '{EXCERPT}', '{AUTHOR}', '{DATE}', '{LINK}', '{TYPE}', '{IMAGE}', '{UNSUBSCRIBE_LINK}', '{FOOTER}'],
+        [$title, nl2br($content), $excerpt, $author, $date, $link, $type, $imageHtml, $unsubscribeLink, $footer],
         $template['body']
     );
     

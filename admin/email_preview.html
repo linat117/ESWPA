@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .preview-header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .event-image {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            display: block;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #ffffff;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            background-color: #0084c7;
+        }
+        .debug-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="preview-header">
+            <h2>Email Template Preview</h2>
+            <p>Sample Event Email</p>
+        </div>
+
+        <!-- Email Content Start -->
+        <h1>Coming Together to Support Our Community</h1>
+        <h4>Event Date: 2026-03-21</h4>
+        
+        <div>
+            <p>Join us for an inspiring community gathering where we'll come together to make a positive impact. This event will feature:</p>
+            <ul>
+                <li>Community networking opportunities</li>
+                <li>Guest speakers from local organizations</li>
+                <li>Interactive workshops and activities</li>
+                <li>Refreshments and networking</li>
+            </ul>
+            <p>Don't miss this opportunity to connect with fellow community members and contribute to meaningful causes.</p>
+        </div>
+
+        <!-- Sample Image -->
+        <img src="http://ethiosocialworker.org/uploads/1739366799_IMG_20250212_162455_839.jpg" 
+             alt="Coming Together to Support Our Community" 
+             class="event-image"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display: none; color: #666; text-align: center; padding: 20px; border: 1px dashed #ccc;">
+            [Image would appear here: Coming Together to Support Our Community]
+        </div>
+
+        <p>For more details, please visit our website.</p>
+
+        <!-- View Event Button -->
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="http://ethiosocialworker.org/events.php" 
+               style="background-color: #007bff; color: white; padding: 12px 30px; text-decoration: none; 
+                      border-radius: 5px; font-weight: bold; display: inline-block;">
+                View Event
+            </a>
+        </div>
+
+        <!-- Professional Footer -->
+        <div class="footer">
+            <p style="margin: 0 0 10px 0; color: #ffffff;">This email was sent by Ethio Social Works</p>
+            <p style="margin: 0; color: #ffffff;">Powered by Lebawi net trading</p>
+        </div>
+        <!-- Email Content End -->
+
+        <!-- Debug Information -->
+        <div class="debug-info">
+            <h3>Debug Information:</h3>
+            <p><strong>Image URL:</strong> http://ethiosocialworker.org/uploads/1739366799_IMG_20250212_162455_839.jpg</p>
+            <p><strong>Image Path Processing:</strong> ../../uploads/filename.jpg → http://domain.com/uploads/filename.jpg</p>
+            <p><strong>Footer Included:</strong> Yes - "Powered by Lebawi net trading"</p>
+            <p><strong>Email Type:</strong> Event Notification</p>
+        </div>
+    </div>
+
+    <script>
+        // Test image loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const img = document.querySelector('.event-image');
+            if (img.complete && img.naturalHeight === 0) {
+                img.style.display = 'none';
+                img.nextElementSibling.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

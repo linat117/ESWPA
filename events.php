@@ -15,6 +15,105 @@ function strip_outer_p($html) {
 }
 ?>
 
+<style>
+/* Modern Event Card Styles */
+.event-card-modern {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.event-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.event-card-modern .card-img-wrapper {
+    overflow: hidden;
+}
+
+.event-card-modern .card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.event-card-modern:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.event-date-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.event-date-badge .badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.event-card-modern .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.event-card-modern .card-title a {
+    transition: color 0.3s ease;
+}
+
+.event-card-modern .card-title a:hover {
+    color: #007bff !important;
+}
+
+.event-card-modern .card-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #6c757d;
+}
+
+.event-card-modern .event-meta {
+    font-size: 0.85rem;
+}
+
+.event-card-modern .btn {
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.event-card-modern .btn:hover {
+    transform: translateX(3px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-card-modern .card-title {
+        font-size: 1rem;
+    }
+    
+    .event-date-badge .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+}
+
+/* Empty state styling */
+.empty-state {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-state i {
+    color: #dee2e6;
+    margin-bottom: 20px;
+}
+</style>
+
 <body>
 
     <?php
@@ -74,33 +173,53 @@ function strip_outer_p($html) {
                             $first = reset($event_images);
                             $image_path = "uploads/" . basename($first);
                         }
+                        
+                        // Create excerpt from description
+                        $description = strip_outer_p($row['event_description']);
+                        $excerpt = strlen($description) > 120 ? substr($description, 0, 120) . '...' : $description;
                     ?>
-                        <div class="col-sm-6 col-lg-4 col-xl-3">
-                            <div class="event-card-upcoming wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="thumb">
-                                    <a href="events.php">
-                                        <?php if ($image_path): ?>
-                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image" style="width: 100%; height: 220px; object-fit: cover;">
-                                        <?php else: ?>
-                                            <img src="assets/img/default-event.jpg" alt="No Image Available" style="width: 100%; height: 220px; object-fit: cover;">
-                                        <?php endif; ?>
-                                        <span class="overlay">
-                                            <?php echo date("M j, Y", strtotime($row['event_date'])); ?>
+                        <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
+                            <div class="event-card-modern card h-100 shadow-sm">
+                                <div class="card-img-wrapper position-relative">
+                                    <?php if ($image_path): ?>
+                                        <img src="<?php echo htmlspecialchars($image_path); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['event_header']); ?>" style="height: 200px; object-fit: cover;">
+                                    <?php else: ?>
+                                        <img src="assets/img/default-event.jpg" class="card-img-top" alt="No Image Available" style="height: 200px; object-fit: cover;">
+                                    <?php endif; ?>
+                                    <div class="event-date-badge">
+                                        <span class="badge bg-primary text-white">
+                                            <?php echo date("M j", strtotime($row['event_date'])); ?>
                                         </span>
-                                    </a>
+                                    </div>
                                 </div>
-                                <div class="info">
-                                    <h4>
-                                        <a href="events.php"><?php echo htmlspecialchars($row['event_header']); ?></a>
-                                    </h4>
-                                    <p><?php echo strip_outer_p($row['event_description']); ?></p>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">
+                                        <a href="event-details.php?id=<?php echo $row['id']; ?>&type=upcoming" class="text-decoration-none text-dark">
+                                            <?php echo htmlspecialchars($row['event_header']); ?>
+                                        </a>
+                                    </h5>
+                                    <div class="event-meta text-muted small mb-2">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        <?php echo date("F j, Y", strtotime($row['event_date'])); ?>
+                                    </div>
+                                    <p class="card-text flex-grow-1">
+                                        <?php echo htmlspecialchars($excerpt); ?>
+                                    </p>
+                                    <div class="mt-auto">
+                                        <a href="event-details.php?id=<?php echo $row['id']; ?>&type=upcoming" class="btn btn-primary btn-sm">
+                                            View Details <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     <?php endwhile; ?>
                 </div>
             <?php else: ?>
-                <p class="text-center text-muted mb-0">There are no upcoming events at the moment. Please check back soon.</p>
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">There are no upcoming events at the moment. Please check back soon.</p>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -130,49 +249,57 @@ function strip_outer_p($html) {
             <div class="heading-divider"></div>
         </div>
         <div class="container">
-            <div class="causes-items">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <?php while ($row = $result->fetch_assoc()) {
-                            $event_images = json_decode($row['event_images'], true);
-                        ?>
-                            <!-- Single Item -->
-                            <div class="grid-item wow fadeInUp" data-wow-delay="0.15s">
-                                <div class="row">
-                                    <div class="thumb col-lg-5">
-                                        <?php
-                                        $image_path = null;
-                                        if (!empty($event_images) && is_array($event_images)) {
-                                            $first = reset($event_images);
-                                            $image_path = "uploads/" . basename($first);
-                                        }
-                                        ?>
-                                        <?php if ($image_path): ?>
-                                            <img src="<?php echo htmlspecialchars($image_path); ?>" alt="Event Image"
-                                                style="width: 100%; height: 260px; object-fit: cover; border-radius: 8px;">
-                                        <?php else : ?>
-                                            <img src="assets/img/default-event.jpg" alt="No Image Available"
-                                                style="width: 100%; height: 260px; object-fit: cover; border-radius: 8px;">
-                                        <?php endif; ?>
-                                    </div>
-
-                                    <div class="info col-lg-7">
-                                        <h3>
-                                            <a href="#"> <?php echo htmlspecialchars($row['event_header']); ?> </a>
-                                        </h3>
-                                        <p> <?php echo strip_outer_p($row['event_description']); ?> </p>
-                                        <div class="top-entry">
-                                            <div class="date">
-                                                <i class="fas fa-clock"></i> <?php echo date("M d, Y", strtotime($row['event_date'])); ?>
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="row">
+                <?php while ($row = $result->fetch_assoc()) {
+                    $event_images = json_decode($row['event_images'], true);
+                    $image_path = null;
+                    if (!empty($event_images) && is_array($event_images)) {
+                        $first = reset($event_images);
+                        $image_path = "uploads/" . basename($first);
+                    }
+                    
+                    // Create excerpt from description
+                    $description = strip_outer_p($row['event_description']);
+                    $excerpt = strlen($description) > 150 ? substr($description, 0, 150) . '...' : $description;
+                ?>
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="event-card-modern card h-100 shadow-sm">
+                            <div class="card-img-wrapper position-relative">
+                                <?php if ($image_path): ?>
+                                    <img src="<?php echo htmlspecialchars($image_path); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['event_header']); ?>" style="height: 200px; object-fit: cover;">
+                                <?php else: ?>
+                                    <img src="assets/img/default-event.jpg" class="card-img-top" alt="No Image Available" style="height: 200px; object-fit: cover;">
+                                <?php endif; ?>
+                                <div class="event-date-badge">
+                                    <span class="badge bg-secondary text-white">
+                                        <?php echo date("M j", strtotime($row['event_date'])); ?>
+                                    </span>
                                 </div>
                             </div>
-                            <!-- End Single Item -->
-                        <?php } ?>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">
+                                    <a href="event-details.php?id=<?php echo $row['id']; ?>&type=past" class="text-decoration-none text-dark">
+                                        <?php echo htmlspecialchars($row['event_header']); ?>
+                                    </a>
+                                </h5>
+                                <div class="event-meta text-muted small mb-2">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    <?php echo date("F j, Y", strtotime($row['event_date'])); ?>
+                                    <span class="ms-3"><i class="fas fa-history me-1"></i> Past Event</span>
+                                </div>
+                                <p class="card-text flex-grow-1">
+                                    <?php echo htmlspecialchars($excerpt); ?>
+                                </p>
+                                <div class="mt-auto">
+                                    <a href="event-details.php?id=<?php echo $row['id']; ?>&type=past" class="btn btn-outline-secondary btn-sm">
+                                        View Details <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
+            </div>
                 <!-- Pagination -->
                 <div class="donation-pagi text-center col-lg-12">
                     <nav aria-label="navigation">
