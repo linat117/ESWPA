@@ -170,6 +170,23 @@ function assignEventBadges($member_id) {
 }
 
 /**
+ * Remove duplicate badge entries for all members
+ */
+function removeDuplicateBadges() {
+    global $conn;
+    
+    // Find and remove duplicates, keeping only the most recent entry for each member-badge combination
+    $cleanupQuery = "DELETE mb1 FROM member_badges mb1
+                     INNER JOIN member_badges mb2 
+                     WHERE mb1.member_id = mb2.member_id 
+                     AND mb1.badge_name = mb2.badge_name 
+                     AND mb1.id < mb2.id";
+    
+    $result = $conn->query($cleanupQuery);
+    return $result;
+}
+
+/**
  * Assign a badge to a member (if not already assigned)
  */
 function assignBadge($member_id, $badge_name, $reason = '') {
@@ -193,30 +210,41 @@ function assignBadge($member_id, $badge_name, $reason = '') {
         $stmt->close();
     }
     
-    // Check if member already has this badge
-    $checkMemberQuery = "SELECT id FROM member_badges WHERE member_id = ? AND badge_name = ? AND is_active = 1";
+    // Check if member already has this badge (including inactive ones)
+    $checkMemberQuery = "SELECT id, is_active FROM member_badges WHERE member_id = ? AND badge_name = ? ORDER BY id DESC LIMIT 1";
     $stmt = $conn->prepare($checkMemberQuery);
     $stmt->bind_param("is", $member_id, $badge_name);
     $stmt->execute();
-    $hasBadge = $stmt->get_result()->num_rows > 0;
+    $existingBadge = $stmt->get_result()->fetch_assoc();
     $stmt->close();
     
-    if (!$hasBadge) {
-        // Assign badge to member
-        $assignQuery = "INSERT INTO member_badges (member_id, badge_name) VALUES (?, ?)";
-        $stmt = $conn->prepare($assignQuery);
-        $stmt->bind_param("is", $member_id, $badge_name);
-        $stmt->execute();
-        $stmt->close();
-        
-        // Log activity
-        logBadgeActivity($member_id, $badge_name, $reason);
-        
-        // Create notification
-        require_once __DIR__ . '/notifications_handler.php';
-        createNotification($member_id, 'badge_earned', 'New Badge Earned!', 
-            'Congratulations! You have earned the "' . $badge_name . '" badge. ' . $reason);
+    // If badge exists and is active, don't re-assign
+    if ($existingBadge && $existingBadge['is_active'] == 1) {
+        return; // Badge already exists and is active
     }
+    
+    // If badge exists but is inactive (manually removed by admin), don't re-assign
+    if ($existingBadge && $existingBadge['is_active'] == 0) {
+        // Log that we're respecting admin removal
+        error_log("Skipping assignment of '$badge_name' to member $member_id - badge was manually removed by admin");
+        return; // Badge was manually removed, respect admin decision
+    }
+    
+    // Assign new badge only if no record exists at all
+    $current_time = date('Y-m-d H:i:s');
+    $assignQuery = "INSERT INTO member_badges (member_id, badge_name, assigned_at) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($assignQuery);
+    $stmt->bind_param("iss", $member_id, $badge_name, $current_time);
+    $stmt->execute();
+    $stmt->close();
+    
+    // Log activity
+    logBadgeActivity($member_id, $badge_name, $reason);
+    
+    // Create notification
+    require_once __DIR__ . '/notifications_handler.php';
+    createNotification($member_id, 'badge_earned', 'New Badge Earned!', 
+        'Congratulations! You have earned the "' . $badge_name . '" badge. ' . $reason);
 }
 
 /**
@@ -256,11 +284,23 @@ function calculateAllBadges($member_id) {
 function getMemberBadges($member_id) {
     global $conn;
     
-    $query = "SELECT mb.*, bp.description, bp.resource_access, bp.research_access 
+    // Check if is_active column exists
+    $checkColumn = "SHOW COLUMNS FROM member_badges LIKE 'is_active'";
+    $columnResult = $conn->query($checkColumn);
+    $hasActiveColumn = $columnResult && $columnResult->num_rows > 0;
+    
+    $query = "SELECT DISTINCT mb.*, bp.description, bp.resource_access, bp.research_access 
               FROM member_badges mb
               LEFT JOIN badge_permissions bp ON mb.badge_name = bp.badge_name
-              WHERE mb.member_id = ? AND mb.is_active = 1
-              ORDER BY mb.earned_at DESC";
+              WHERE mb.member_id = ?";
+    
+    // Only add is_active filter if column exists
+    if ($hasActiveColumn) {
+        $query .= " AND mb.is_active = 1";
+    }
+    
+    $query .= " ORDER BY mb.earned_at DESC";
+    
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $member_id);
     $stmt->execute();

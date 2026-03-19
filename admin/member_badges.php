@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 
 try {
     include 'include/conn.php';
+    include_once '../include/badge_calculator.php';
     include 'header.php';
 } catch (Exception $e) {
     die("Error loading includes: " . $e->getMessage());
@@ -290,6 +291,7 @@ if ($table_exists) {
     $assigned_badges_result = $conn->query($assigned_badges_query);
     if ($assigned_badges_result) {
         $assigned_badges = $assigned_badges_result->fetch_all(MYSQLI_ASSOC);
+        
         // Add missing fields as empty if columns don't exist
         foreach ($assigned_badges as &$badge) {
             if (!$has_description && !isset($badge['badge_description'])) {
@@ -305,6 +307,9 @@ if ($table_exists) {
 } else {
     $assigned_badges = [];
 }
+
+// Clean up duplicate badges (run once)
+removeDuplicateBadges();
 
 // Get badge statistics
 $badge_stats = [];
@@ -555,26 +560,30 @@ $available_badges = [
                                                     <?php foreach ($assigned_badges as $badge): ?>
                                                         <tr>
                                                             <td>
-                                                                <strong><?php echo htmlspecialchars($badge['fullname']); ?></strong><br>
-                                                                <small class="text-muted"><?php echo htmlspecialchars($badge['email']); ?></small>
+                                                                <strong><?php echo htmlspecialchars($badge['fullname'] ?? 'Unknown Member'); ?></strong><br>
+                                                                <small class="text-muted"><?php echo htmlspecialchars($badge['email'] ?? 'N/A'); ?></small>
                                                             </td>
-                                                            <td><?php echo htmlspecialchars($badge['membership_id']); ?></td>
+                                                            <td><?php echo htmlspecialchars($badge['membership_id'] ?? 'N/A'); ?></td>
                                                             <td>
                                                                 <span class="badge bg-primary">
-                                                                    <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name']); ?>
+                                                                    <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name'] ?? 'Unknown Badge'); ?>
                                                                 </span>
                                                             </td>
-                                                            <td><?php echo htmlspecialchars($badge['badge_description'] ?: 'N/A'); ?></td>
-                                                            <td><?php echo htmlspecialchars($badge['assigned_by_name'] ?: 'System'); ?></td>
-                                                            <td><?php echo date('M d, Y', strtotime($badge['assigned_at'])); ?></td>
+                                                            <td><?php echo htmlspecialchars($badge['badge_description'] ?? 'N/A'); ?></td>
+                                                            <td><?php echo htmlspecialchars($badge['assigned_by_name'] ?? 'System'); ?></td>
+                                                            <td><?php echo ($badge['assigned_at'] ?? null) ? date('M d, Y', strtotime($badge['assigned_at'])) : 'N/A'; ?></td>
                                                             <td>
-                                                                <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to remove this badge?');">
-                                                                    <input type="hidden" name="action" value="remove_badge">
-                                                                    <input type="hidden" name="badge_id" value="<?php echo $badge['id']; ?>">
-                                                                    <button type="submit" class="btn btn-sm btn-danger">
-                                                                        <i class="ri-delete-bin-line"></i> Remove
-                                                                    </button>
-                                                                </form>
+                                                                <?php if (!empty($badge['id']) && is_numeric($badge['id'])): ?>
+                                                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to remove this badge?');">
+                                                                        <input type="hidden" name="action" value="remove_badge">
+                                                                        <input type="hidden" name="badge_id" value="<?php echo $badge['id']; ?>">
+                                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                                            <i class="ri-delete-bin-line"></i> Remove
+                                                                        </button>
+                                                                    </form>
+                                                                <?php else: ?>
+                                                                    <span class="text-muted">N/A</span>
+                                                                <?php endif; ?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -592,14 +601,14 @@ $available_badges = [
                                                             <span class="badge bg-primary rounded-pill"><?php echo $badgeIndex++; ?></span>
                                                             <div class="d-flex flex-column">
                                                                 <span class="fw-semibold text-truncate" style="max-width: 160px;">
-                                                                    <?php echo htmlspecialchars($badge['fullname']); ?>
+                                                                    <?php echo htmlspecialchars($badge['fullname'] ?? 'Unknown Member'); ?>
                                                                 </span>
                                                                 <small class="text-muted">
-                                                                    ID: <?php echo htmlspecialchars($badge['membership_id']); ?>
+                                                                    ID: <?php echo htmlspecialchars($badge['membership_id'] ?? 'N/A'); ?>
                                                                 </small>
                                                                 <small>
                                                                     <span class="badge bg-primary mt-1">
-                                                                        <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name']); ?>
+                                                                        <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name'] ?? 'Unknown Badge'); ?>
                                                                     </span>
                                                                 </small>
                                                             </div>
@@ -613,36 +622,40 @@ $available_badges = [
 
                                                     <!-- Hidden detail for modal -->
                                                     <div class="d-none mobile-badge-detail-content">
-                                                        <h5 class="mb-1"><?php echo htmlspecialchars($badge['fullname']); ?></h5>
+                                                        <h5 class="mb-1"><?php echo htmlspecialchars($badge['fullname'] ?? 'Unknown Member'); ?></h5>
                                                         <p class="mb-1">
                                                             <strong>Membership ID:</strong>
-                                                            <code><?php echo htmlspecialchars($badge['membership_id']); ?></code>
+                                                            <code><?php echo htmlspecialchars($badge['membership_id'] ?? 'N/A'); ?></code>
                                                         </p>
                                                         <p class="mb-1">
                                                             <strong>Badge:</strong>
                                                             <span class="badge bg-primary">
-                                                                <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name']); ?>
+                                                                <i class="ri-award-line"></i> <?php echo htmlspecialchars($badge['badge_name'] ?? 'Unknown Badge'); ?>
                                                             </span>
                                                         </p>
                                                         <p class="mb-1">
                                                             <strong>Description:</strong>
-                                                            <?php echo htmlspecialchars($badge['badge_description'] ?: 'N/A'); ?>
+                                                            <?php echo htmlspecialchars($badge['badge_description'] ?? 'N/A'); ?>
                                                         </p>
                                                         <p class="mb-1">
                                                             <strong>Assigned By:</strong>
-                                                            <?php echo htmlspecialchars($badge['assigned_by_name'] ?: 'System'); ?>
+                                                            <?php echo htmlspecialchars($badge['assigned_by_name'] ?? 'System'); ?>
                                                         </p>
                                                         <p class="mb-3">
                                                             <strong>Assigned Date:</strong>
-                                                            <?php echo date('M d, Y', strtotime($badge['assigned_at'])); ?>
+                                                            <?php echo ($badge['assigned_at'] ?? null) ? date('M d, Y', strtotime($badge['assigned_at'])) : 'N/A'; ?>
                                                         </p>
-                                                        <form method="POST" onsubmit="return confirm('Are you sure you want to remove this badge?');">
-                                                            <input type="hidden" name="action" value="remove_badge">
-                                                            <input type="hidden" name="badge_id" value="<?php echo $badge['id']; ?>">
-                                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                                <i class="ri-delete-bin-line"></i> Remove Badge
-                                                            </button>
-                                                        </form>
+                                                        <?php if (!empty($badge['id']) && is_numeric($badge['id'])): ?>
+                                                            <form method="POST" onsubmit="return confirm('Are you sure you want to remove this badge?');">
+                                                                <input type="hidden" name="action" value="remove_badge">
+                                                                <input type="hidden" name="badge_id" value="<?php echo $badge['id']; ?>">
+                                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                                    <i class="ri-delete-bin-line"></i> Remove Badge
+                                                                </button>
+                                                            </form>
+                                                        <?php else: ?>
+                                                            <span class="text-muted">Cannot remove invalid badge entry</span>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
