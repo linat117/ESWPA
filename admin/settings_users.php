@@ -173,14 +173,9 @@ $current_user_id = (int) $_SESSION['user_id'];
                         <div class="col-12">
                             <div class="page-title-box d-flex justify-content-between align-items-center">
                                 <h4 class="page-title">User Management</h4>
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                                        <i class="ri-user-add-line"></i> Add User
-                                    </button>
-                                    <a href="settings.php" class="btn btn-secondary">
-                                        <i class="ri-arrow-left-line"></i> Back to Settings
-                                    </a>
-                                </div>
+                                <a href="settings.php" class="btn btn-secondary">
+                                    <i class="ri-arrow-left-line"></i> Back to Settings
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -236,7 +231,11 @@ $current_user_id = (int) $_SESSION['user_id'];
                                                 </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm">
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $user['id']; ?>">
+                                                        <button type="button" class="btn btn-primary edit-user-btn" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $user['id']; ?>" 
+                                                    data-user-id="<?php echo $user['id']; ?>" 
+                                                    data-username="<?php echo htmlspecialchars($user['username']); ?>" 
+                                                    data-role="<?php echo $user['role']; ?>" 
+                                                    data-permissions='<?php echo htmlspecialchars(json_encode($user['permissions_arr'])); ?>'>
                                                             <i class="ri-pencil-line"></i> Edit
                                                         </button>
                                                         <?php if ($user['id'] != $current_user_id): ?>
@@ -373,6 +372,28 @@ $current_user_id = (int) $_SESSION['user_id'];
         $(document).ready(function() {
             $('.datatable').DataTable({
                 responsive: true
+            });
+            
+            // Handle edit user button clicks
+            $('.edit-user-btn').on('click', function() {
+                var userId = $(this).data('user-id');
+                var username = $(this).data('username');
+                var role = $(this).data('role');
+                var permissions = $(this).data('permissions');
+                
+                // Populate edit modal with user data
+                $('#edit_username_' + userId).val(username);
+                $('#edit_role_' + userId).val(role);
+                
+                // Set permissions checkboxes
+                $('input[name="permissions[]"]').each(function() {
+                    var permId = $(this).val();
+                    if (permissions.includes(permId)) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
             });
         });
     </script>
