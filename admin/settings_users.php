@@ -202,6 +202,8 @@ $current_user_id = (int) $_SESSION['user_id'];
                                         <i class="ri-user-add-line"></i> Add User
                                     </button>
                                 </div>
+                            </div>
+                            <div class="card">
                                 <div class="card-body">
                                     <table class="table table-striped datatable">
                                         <thead>
@@ -209,6 +211,7 @@ $current_user_id = (int) $_SESSION['user_id'];
                                                 <th>ID</th>
                                                 <th>Username</th>
                                                 <th>Current Role</th>
+                                                <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -248,64 +251,6 @@ $current_user_id = (int) $_SESSION['user_id'];
                                                     </div>
                                                 </td>
                                             </tr>
-
-                                            <!-- Edit User Modal -->
-                                            <div class="modal fade" id="editModal<?php echo $user['id']; ?>" tabindex="-1">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <form method="POST">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Edit User: <?php echo htmlspecialchars($user['username']); ?></h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                                                <div class="row">
-                                                                    <div class="col-md-6 mb-3">
-                                                                        <label for="edit_username_<?php echo $user['id']; ?>" class="form-label">Username</label>
-                                                                        <input type="text" class="form-control" id="edit_username_<?php echo $user['id']; ?>" name="username" required minlength="3" value="<?php echo htmlspecialchars($user['username']); ?>">
-                                                                    </div>
-                                                                    <div class="col-md-6 mb-3">
-                                                                        <label for="edit_role_<?php echo $user['id']; ?>" class="form-label">Role</label>
-                                                                        <select class="form-control" id="edit_role_<?php echo $user['id']; ?>" name="role" required>
-                                                                            <?php foreach ($available_roles as $rval => $rlabel): ?>
-                                                                            <option value="<?php echo $rval; ?>" <?php echo $role_value === $rval ? 'selected' : ''; ?>><?php echo $rlabel; ?></option>
-                                                                            <?php endforeach; ?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-6 mb-3">
-                                                                        <label for="edit_password_<?php echo $user['id']; ?>" class="form-label">New Password <small class="text-muted">(leave blank to keep current)</small></label>
-                                                                        <input type="password" class="form-control" id="edit_password_<?php echo $user['id']; ?>" name="password" minlength="6" placeholder="Optional">
-                                                                    </div>
-                                                                    <div class="col-md-6 mb-3">
-                                                                        <label for="edit_confirm_<?php echo $user['id']; ?>" class="form-label">Confirm New Password</label>
-                                                                        <input type="password" class="form-control" id="edit_confirm_<?php echo $user['id']; ?>" name="confirm_password" minlength="6" placeholder="If changing password">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Permissions</label>
-                                                                    <div class="row g-2">
-                                                                        <?php foreach ($admin_permissions as $perm_id => $perm_label): ?>
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input" type="checkbox" name="permissions[]" value="<?php echo htmlspecialchars($perm_id); ?>" id="perm_<?php echo $user['id']; ?>_<?php echo $perm_id; ?>" <?php echo in_array($perm_id, $user['permissions_arr']) ? 'checked' : ''; ?>>
-                                                                                <label class="form-check-label" for="perm_<?php echo $user['id']; ?>_<?php echo $perm_id; ?>"><?php echo htmlspecialchars($perm_label); ?></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <?php endforeach; ?>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" name="edit_user" class="btn btn-primary">Save Changes</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -313,6 +258,69 @@ $current_user_id = (int) $_SESSION['user_id'];
                             </div>
                         </div>
                     </div>
+
+                    <!-- Edit User Modals (moved outside table) -->
+                    <?php foreach ($users_list as $user): 
+                        $role_display = $user['role'] ?? 'No Role';
+                        $role_value = ($role_display === 'super_admin') ? 'admin' : $role_display;
+                    ?>
+                    <div class="modal fade" id="editModal<?php echo $user['id']; ?>" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit User: <?php echo htmlspecialchars($user['username']); ?></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="edit_username_<?php echo $user['id']; ?>" class="form-label">Username</label>
+                                                <input type="text" class="form-control" id="edit_username_<?php echo $user['id']; ?>" name="username" required minlength="3" value="<?php echo htmlspecialchars($user['username']); ?>">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="edit_role_<?php echo $user['id']; ?>" class="form-label">Role</label>
+                                                <select class="form-control" id="edit_role_<?php echo $user['id']; ?>" name="role" required>
+                                                    <?php foreach ($available_roles as $rval => $rlabel): ?>
+                                                    <option value="<?php echo $rval; ?>" <?php echo $role_value === $rval ? 'selected' : ''; ?>><?php echo $rlabel; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="edit_password_<?php echo $user['id']; ?>" class="form-label">New Password <small class="text-muted">(leave blank to keep current)</small></label>
+                                                <input type="password" class="form-control" id="edit_password_<?php echo $user['id']; ?>" name="password" minlength="6" placeholder="Optional">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="edit_confirm_<?php echo $user['id']; ?>" class="form-label">Confirm New Password</label>
+                                                <input type="password" class="form-control" id="edit_confirm_<?php echo $user['id']; ?>" name="confirm_password" minlength="6" placeholder="If changing password">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Permissions</label>
+                                            <div class="row g-2">
+                                                <?php foreach ($admin_permissions as $perm_id => $perm_label): ?>
+                                                <div class="col-md-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="permissions[]" value="<?php echo htmlspecialchars($perm_id); ?>" id="perm_<?php echo $user['id']; ?>_<?php echo $perm_id; ?>" <?php echo in_array($perm_id, $user['permissions_arr']) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="perm_<?php echo $user['id']; ?>_<?php echo $perm_id; ?>"><?php echo htmlspecialchars($perm_label); ?></label>
+                                                    </div>
+                                                </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" name="edit_user" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
 
                     <!-- Add User Modal -->
                     <div class="modal fade" id="addUserModal" tabindex="-1">
@@ -375,25 +383,36 @@ $current_user_id = (int) $_SESSION['user_id'];
             });
             
             // Handle edit user button clicks
-            $('.edit-user-btn').on('click', function() {
-                var userId = $(this).data('user-id');
-                var username = $(this).data('username');
-                var role = $(this).data('role');
-                var permissions = $(this).data('permissions');
-                
-                // Populate edit modal with user data
-                $('#edit_username_' + userId).val(username);
-                $('#edit_role_' + userId).val(role);
-                
-                // Set permissions checkboxes
-                $('input[name="permissions[]"]').each(function() {
-                    var permId = $(this).val();
-                    if (permissions.includes(permId)) {
-                        $(this).prop('checked', true);
-                    } else {
-                        $(this).prop('checked', false);
-                    }
-                });
+            $('.edit-user-btn').on('click', function(e) {
+                e.preventDefault();
+                try {
+                    var userId = $(this).data('user-id');
+                    var username = $(this).data('username');
+                    var role = $(this).data('role');
+                    var permissions = $(this).data('permissions');
+                    
+                    console.log('Edit button clicked - User ID:', userId, 'Username:', username, 'Role:', role, 'Permissions:', permissions);
+                    
+                    // Wait a bit before populating modal
+                    setTimeout(function() {
+                        // Populate edit modal with user data
+                        $('#edit_username_' + userId).val(username);
+                        $('#edit_role_' + userId).val(role);
+                        
+                        // Set permissions checkboxes only for this modal
+                        $('#editModal' + userId + ' input[name="permissions[]"]').each(function() {
+                            var permId = $(this).val();
+                            if (permissions.includes(permId)) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
+                            }
+                        });
+                    }, 100);
+                } catch (error) {
+                    console.error('Error in edit modal:', error);
+                    alert('Error loading user data. Please check console for details.');
+                }
             });
         });
     </script>
