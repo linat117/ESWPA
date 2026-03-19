@@ -7,12 +7,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include 'include/conn.php';
-include 'header.php';
 
-$success_message = '';
-$error_message = '';
-
-// Handle CSV export
+// Handle CSV export - MUST be before any HTML output
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=members_export_' . date('Y-m-d') . '.csv');
@@ -22,15 +18,15 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     // CSV headers
     fputcsv($output, ['ID', 'Membership ID', 'Full Name', 'Email', 'Phone', 'Sex', 'Qualification', 'Address', 'Approval Status', 'Expiry Date', 'Registered Date']);
     
-    // Fetch all members
-    $query = "SELECT id, membership_id, fullname, email, phone, sex, qualification, address, approval_status, expiry_date, created_at 
-              FROM registrations 
+    // Fetch all members with row number
+    $query = "SELECT (@row_number:=@row_number + 1) AS row_num, id, membership_id, fullname, email, phone, sex, qualification, address, approval_status, expiry_date, created_at 
+              FROM registrations, (SELECT @row_number:=0) AS t
               ORDER BY created_at DESC";
     $result = $conn->query($query);
     
     while ($row = $result->fetch_assoc()) {
         fputcsv($output, [
-            $row['id'],
+            $row['row_num'], // Use sequential row number instead of database ID
             $row['membership_id'],
             $row['fullname'],
             $row['email'],
@@ -47,6 +43,11 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     fclose($output);
     exit();
 }
+
+include 'header.php';
+
+$success_message = '';
+$error_message = '';
 
 // Handle CSV import
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {

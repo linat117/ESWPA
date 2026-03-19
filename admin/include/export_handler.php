@@ -59,8 +59,7 @@ function exportToJSON($data, $filename = 'export') {
 }
 
 /**
- * Export data to Excel (XLSX) format using simple HTML table
- * Note: For true XLSX format, consider using a library like PhpSpreadsheet
+ * Export data to Excel (XLSX) format using proper XML structure
  * 
  * @param array $data - Array of associative arrays (rows)
  * @param array $headers - Column headers
@@ -71,36 +70,43 @@ function exportToExcel($data, $headers, $filename = 'export') {
     header('Content-Disposition: attachment; filename=' . $filename . '_' . date('Y-m-d') . '.xlsx');
     header('Pragma: no-cache');
     header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Content-Transfer-Encoding: binary');
     
-    echo '<?xml version="1.0" encoding="UTF-8"?>';
-    echo '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ';
-    echo 'xmlns:o="urn:schemas-microsoft-com:office:office" ';
-    echo 'xmlns:x="urn:schemas-microsoft-com:office:excel" ';
-    echo 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ';
-    echo 'xmlns:html="http://www.w3.org/TR/REC-html40">';
-    echo '<Worksheet ss:Name="Sheet1">';
-    echo '<Table>';
+    // Clean output buffer
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
+    
+    echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    echo '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">' . "\n";
+    echo '  <Worksheet ss:Name="Sheet1">' . "\n";
+    echo '    <Table>' . "\n";
     
     // Headers row
-    echo '<Row>';
+    echo '      <Row>' . "\n";
     foreach ($headers as $header) {
-        echo '<Cell><Data ss:Type="String">' . htmlspecialchars($header) . '</Data></Cell>';
+        $clean_header = htmlspecialchars(strip_tags($header), ENT_QUOTES, 'UTF-8');
+        echo '        <Cell><Data ss:Type="String">' . $clean_header . '</Data></Cell>' . "\n";
     }
-    echo '</Row>';
+    echo '      </Row>' . "\n";
     
     // Data rows
     foreach ($data as $row) {
-        echo '<Row>';
+        echo '      <Row>' . "\n";
         foreach ($headers as $header) {
             $value = getNestedValue($row, $header);
-            echo '<Cell><Data ss:Type="String">' . htmlspecialchars($value) . '</Data></Cell>';
+            // Clean the value - remove HTML tags and special characters
+            $clean_value = htmlspecialchars(strip_tags($value), ENT_QUOTES, 'UTF-8');
+            echo '        <Cell><Data ss:Type="String">' . $clean_value . '</Data></Cell>' . "\n";
         }
-        echo '</Row>';
+        echo '      </Row>' . "\n";
     }
     
-    echo '</Table>';
-    echo '</Worksheet>';
-    echo '</Workbook>';
+    echo '    </Table>' . "\n";
+    echo '  </Worksheet>' . "\n";
+    echo '</Workbook>' . "\n";
+    
     exit();
 }
 

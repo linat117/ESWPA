@@ -16,17 +16,16 @@ $end_date = $_GET['end_date'] ?? date('Y-m-d');
 // In production, you would use TCPDF or similar library
 
 if ($export_format == 'excel') {
-    // Excel export
-    header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment; filename="report_' . $report_type . '_' . date('Y-m-d') . '.xls"');
+    // Use the clean export handler
+    require_once __DIR__ . '/export_handler.php';
     
-    // Generate Excel content (simple HTML table)
-    echo '<table border="1">';
-    echo '<tr><th colspan="5">' . ucfirst($report_type) . ' Report - ' . date('F d, Y') . '</th></tr>';
-    echo '<tr><th>Date Range:</th><td colspan="4">' . $start_date . ' to ' . $end_date . '</td></tr>';
-    // Add report-specific data here
-    echo '</table>';
+    // Generate sample data for now (replace with actual report data)
+    $sample_data = [
+        ['Report Type' => ucfirst($report_type), 'Date' => date('Y-m-d'), 'Status' => 'Generated']
+    ];
+    $headers = ['Report Type', 'Date', 'Status'];
     
+    exportToExcel($sample_data, $headers, 'report_' . $report_type);
 } else {
     // PDF export (using browser print for now)
     header('Content-Type: text/html; charset=utf-8');
